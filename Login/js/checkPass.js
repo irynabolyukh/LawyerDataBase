@@ -1,18 +1,10 @@
-/*function validate() {
-    $("#btn-submit").attr("disabled",true);
-    if($("#password") == "hello") {
-        $("#btn-submit").attr("disabled",false);
-    }
-}*/
-
-
-/*$("input[type='password']").on("input", function () {
+$("input[type='password']").on("input", function () {
     validate();
 });
 function validate(){
     var show = true;
     $("input[type='password']").each(function(){
-        if($(this).val()==''){
+        if($(this).val()!='hello'){
             show = false;
         }
     });
@@ -23,4 +15,4 @@ function validate(){
     else {
         $('#btn-submit').css({cursor:'not-allowed'})
     }
-};*/
+};
