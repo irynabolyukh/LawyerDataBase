@@ -8,6 +8,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        table {
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+        th{
+            width: 15%;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">    <!-- Links -->
@@ -43,7 +52,7 @@
     <form class="form-inline">
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>    <table class="table">
+    </form>    <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
             <th>Code</th>
