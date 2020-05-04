@@ -1,0 +1,19 @@
+{
+  "name": "lawyerdatabase",
+  "version": "1.0.0",
+  "description": "Lawyer database project CS-02 2020y",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irynabolyukh/LawyerDataBase.git"
+  },
+  "author": "AloUh, pMaxsym, IrynaBolyukh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irynabolyukh/LawyerDataBase/issues"
+  },
+  "homepage": "https://github.com/irynabolyukh/LawyerDataBase#readme"
+}
