@@ -65,12 +65,7 @@ class Client(models.Model):
         abstract = True
         ordering = ['first_name']
 
-class CPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='phones')
 
-    class Meta:
-        db_table = 'CPhone'
 
 class Client_natural(Client):
     num_client_n = models.CharField(max_length=10, primary_key=True)
@@ -81,6 +76,12 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+class NPhone(models.Model):
+    phone_num = models.CharField(max_length=10)
+    client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
+
+    class Meta:
+        db_table = 'NPhone'
 
 class Client_juridical(Client):
     num_client_j = models.CharField(max_length=8, primary_key=True)
@@ -91,6 +92,12 @@ class Client_juridical(Client):
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
 
+class JPhone(models.Model):
+    phone_num = models.CharField(max_length=10)
+    client_juridical = models.ForeignKey(Client_juridical, on_delete=models.CASCADE, related_name='phones')
+
+    class Meta:
+        db_table = 'JPhone'
 
 class Dossier(models.Model):
     DOS_STATUS = [
