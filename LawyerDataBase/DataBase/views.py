@@ -1,5 +1,16 @@
 from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+class LawyerDetailView(generic.DetailView):
+
+
+
+
 def index(request):
-    return render(request, 'docs/index.html', {})
+    return render(request, 'static/docs/index.html', {})
+
+def test(request):
+    return render(request, 'test.html', {})
+
+def lawyers(request):
+    return render(request, 'lawyers.html', {})
