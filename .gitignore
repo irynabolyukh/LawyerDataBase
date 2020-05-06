@@ -3,3 +3,4 @@ node_modules/
 myenv/
 docs/*
 /venv/
+__pycache__
