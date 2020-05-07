@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import ModelForm
-from django import forms
 # Create your models here.
 
 class Work_days(models.Model):
@@ -15,8 +13,12 @@ class Work_days(models.Model):
     ]
     day = models.CharField(max_length=3, choices=DAYS)
 
+    def __str__(self):
+        return f'{self.day}'
+
     class Meta:
         db_table = 'Work_days'
+        ordering = ['id']
 
 class Services(models.Model):
     service_code = models.CharField(max_length=5, primary_key=True)
@@ -24,19 +26,11 @@ class Services(models.Model):
     nominal_value = models.DecimalField(max_digits=6, decimal_places=2)
     bonus_value = models.DecimalField(max_digits=6, decimal_places=2)
 
+    def __str__(self):
+        return f'{self.service_code} : {self.name_service}'
+
     class Meta:
         db_table = 'Services'
-
-class ServicesForm(ModelForm):
-    class Meta:
-        model = Services
-        fields = ['service_code', 'name_service', 'nominal_value', 'bonus_value']
-
-class ServicesForm(forms.Form):
-    service_code = forms.CharField(max_length=5)
-    name_service = forms.CharField(max_length=50)
-    nominal_value = forms.DecimalField(max_digits=6, decimal_places=2)
-    bonus_value = forms.DecimalField(max_digits=6, decimal_places=2)
 
 
 class Lawyer(models.Model):
@@ -49,32 +43,22 @@ class Lawyer(models.Model):
     service = models.ManyToManyField(Services)
     work_days = models.ManyToManyField(Work_days)
 
+    def __str__(self):
+        return f'{self.lawyer_code} : {self.first_name} {self.surname}'
+
     class Meta:
+
         db_table = 'Lawyer'
         ordering = ['first_name']
 
-class LawyerForm(ModelForm):
-    class Meta:
-        model = Lawyer
-        fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization', 'mail_info','phone', 'service', 'work_days']
-
-class LawyerForm(forms.Form):
-    lawyer_code = forms.CharField(max_length=8, primary_key=True)
-    first_name = forms.CharField(max_length=25)
-    surname = forms.CharField(max_length=25)
-    mid_name = forms.CharField(max_length=25)
-    specialization = forms.CharField(max_length=20)
-    mail_info = forms.EmailField(max_length=30)
-    service = forms.ModelMultipleChoiceField(queryset=Services.objects.all().order_by('id'), required=True)
-    work_days = forms.ModelMultipleChoiceField(queryset=Work_days.objects.all().order_by('id'), required=True)
-    phone = forms.CharField(max_length=10)
 
 class LPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
         db_table = 'LPhone'
+
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
@@ -89,6 +73,7 @@ class Client(models.Model):
         abstract = True
         ordering = ['first_name']
 
+
 class Client_natural(Client):
     num_client_n = models.CharField(max_length=10, primary_key=True)
     birth_date = models.DateField()
@@ -98,12 +83,14 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+
 class NPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
         db_table = 'NPhone'
+
 
 class Client_juridical(Client):
     num_client_j = models.CharField(max_length=8, primary_key=True)
@@ -114,12 +101,17 @@ class Client_juridical(Client):
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
 
+
 class JPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     client_juridical = models.ForeignKey(Client_juridical, on_delete=models.CASCADE, related_name='phones')
+
+    def __str__(self):
+        return f'{self.phone_num} : {self.client_juridical.num_client_j}'
 
     class Meta:
         db_table = 'JPhone'
+
 
 class Dossier(models.Model):
     DOS_STATUS = [
@@ -134,10 +126,10 @@ class Dossier(models.Model):
     date_closed = models.DateField(blank=True)
     fee = models.DecimalField(max_digits=7, decimal_places=2)
     paid = models.BooleanField(default=False)
-    court_name = models.CharField(max_length=50, blank=True)
-    court_adr = models.CharField(max_length=50, blank=True)
-    court_date = models.DateTimeField(blank=True)
-    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING, blank=True)
+    court_name = models.CharField(max_length=50, blank=True, null=True)
+    court_adr = models.CharField(max_length=50, blank=True, null=True)
+    court_date = models.DateTimeField(blank=True, null=True)
+    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -162,7 +154,7 @@ class Dossier_J(Dossier):
 class Appointment(models.Model):
     app_date = models.DateField()
     app_time = models.TimeField()
-    comment = models.TextField(blank=True)
+    comment = models.TextField(blank=True, null=True)
     service = models.ManyToManyField(Services)
 
     class Meta:
