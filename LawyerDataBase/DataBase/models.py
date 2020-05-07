@@ -71,6 +71,7 @@ class LPhone(models.Model):
     class Meta:
         db_table = 'LPhone'
 
+
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
     surname = models.CharField(max_length=25)
@@ -110,6 +111,7 @@ class NPhone(models.Model):
 
     class Meta:
         db_table = 'NPhone'
+
 
 class Client_juridical(Client):
     num_client_j = models.CharField(max_length=8, help_text='EDRPOU code', primary_key=True)
