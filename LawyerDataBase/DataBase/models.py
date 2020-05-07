@@ -116,10 +116,10 @@ class Dossier(models.Model):
     date_closed = models.DateField(blank=True)
     fee = models.DecimalField(max_digits=7, decimal_places=2)
     paid = models.BooleanField(default=False)
-    court_name = models.CharField(max_length=50, blank=True)
-    court_adr = models.CharField(max_length=50, blank=True)
-    court_date = models.DateTimeField(null=True)
-    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING)
+    court_name = models.CharField(max_length=50, blank=True, null=True)
+    court_adr = models.CharField(max_length=50, blank=True, null=True)
+    court_date = models.DateTimeField(blank=True, null=True)
+    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -144,7 +144,7 @@ class Dossier_J(Dossier):
 class Appointment(models.Model):
     app_date = models.DateField()
     app_time = models.TimeField()
-    comment = models.TextField()
+    comment = models.TextField(blank=True, null=True)
     service = models.ManyToManyField(Services)
 
     class Meta:
