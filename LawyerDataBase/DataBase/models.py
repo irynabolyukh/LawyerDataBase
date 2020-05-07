@@ -71,6 +71,7 @@ class LPhone(models.Model):
     class Meta:
         db_table = 'LPhone'
 
+
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
     surname = models.CharField(max_length=25)
