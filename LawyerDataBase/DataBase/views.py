@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, Appointment_JForm
+from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
+    Appointment_JForm
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \

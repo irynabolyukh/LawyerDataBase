@@ -7,6 +7,7 @@ from .models import *
 admin.site.register(Lawyer)
 admin.site.register(Work_days)
 admin.site.register(Services)
+admin.site.register(NPhone)
 admin.site.register(JPhone)
 admin.site.register(Dossier_J)
 admin.site.register(Dossier_N)
