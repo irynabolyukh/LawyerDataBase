@@ -3,7 +3,8 @@ from .forms import LawyerForm, ServicesForm
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
-    Dossier_N, Client_natural, Client_juridical, Services, LPhone
+    Dossier_N, Client_natural, Client_juridical, Services, \
+    LPhone, Appointment_J, Appointment_N
 from django.views import generic
 
 
@@ -20,9 +21,12 @@ class LawyerDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        context['phones'] = LPhone.objects.filter(lawyer=self.kwargs['pk'])
-        print(context['phones'])
+        la_code = self.kwargs['pk']
+        context['phones'] = LPhone.objects.filter(lawyer= la_code)
+        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)
+        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)
+        context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
+        context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
         return context
 
 
@@ -30,6 +34,11 @@ class DossierDetailJView(generic.DetailView):
     model = Dossier_J
     context_object_name = "dossier"
     template_name = "dossier_detail_j.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
+        return context
 
 
 class DossierDetailNView(generic.DetailView):

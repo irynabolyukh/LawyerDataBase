@@ -53,6 +53,9 @@ class Lawyer(models.Model):
     def __str__(self):
         return f'{self.lawyer_code} : {self.first_name} {self.surname}'
 
+    def getfullname(self):
+        return f'{self.first_name} {self.surname} {self.mid_name}'
+
     class Meta:
         db_table = 'Lawyer'
         ordering = ['first_name']
@@ -123,6 +126,9 @@ class Client_juridical(Client):
 
     def __str__(self):
         return f'{self.num_client_j} - {self.first_name} {self.surname}'
+
+    def getfullname(self):
+        return f'{self.first_name} {self.surname} {self.mid_name}'
 
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
