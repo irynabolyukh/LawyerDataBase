@@ -71,9 +71,6 @@ class LPhone(models.Model):
     class Meta:
         db_table = 'LPhone'
 
-
-
-
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
     surname = models.CharField(max_length=25)
@@ -95,7 +92,7 @@ class Client_natural(Client):
     passport_authority = models.CharField(max_length=6)
 
     def __str__(self):
-        return f'{self.num_client_n} - {self.first_name} {self.surname}'
+        return f'{self.num_client_n} : {self.first_name} {self.surname}'
 
     class Meta(Client.Meta):
         db_table = 'Client_natural'
@@ -114,15 +111,14 @@ class NPhone(models.Model):
     class Meta:
         db_table = 'NPhone'
 
-
 class Client_juridical(Client):
-    num_client_j = models.CharField(max_length=8, primary_key=True)
+    num_client_j = models.CharField(max_length=8, help_text='EDRPOU code', primary_key=True)
     client_position = models.CharField(max_length=25)
     name_of_company = models.CharField(max_length=25)
     iban = models.CharField(max_length=29)
 
     def __str__(self):
-        return f'{self.num_client_j} - {self.first_name} {self.surname}'
+        return f'{self.num_client_j} : {self.first_name} {self.surname}'
 
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
