@@ -1,10 +1,12 @@
+from django.forms import modelformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
     Appointment_JForm
+from django.forms.formsets import formset_factory
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
-    Dossier_N, Client_natural, Client_juridical, Services
+    Dossier_N, Client_natural, Client_juridical, Services, NPhone
 from django.views import generic
 
 class LawyerDetailView(generic.DetailView):

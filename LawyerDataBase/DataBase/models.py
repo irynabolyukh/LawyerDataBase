@@ -100,7 +100,6 @@ class Client_natural(Client):
     def get_absolute_url(self):
         return reverse("client-detailed-view-n", kwargs={"pk": self.num_client_n})
 
-
 class NPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
