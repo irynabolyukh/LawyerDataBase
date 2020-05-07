@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+{% block navbar %}
+ <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <div>Service code : {{ service.service_code }}</div>
+    <div>Name service : {{ service.name_service }}</div>
+    <div>Nominal value : {{ service.nominal_value }}</div>
+    <div>Bonus value : {{ service.bonus_value }}</div>
+{% endblock %}

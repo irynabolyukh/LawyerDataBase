@@ -3,14 +3,27 @@ from .forms import LawyerForm, ServicesForm
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
-    Dossier_N, Client_natural, Client_juridical
+    Dossier_N, Client_natural, Client_juridical, Services, LPhone
 from django.views import generic
+
+
+class ServiceDetailView(generic.DetailView):
+    model = Services
+    context_object_name = "service"
+    template_name = "service_detail.html"
 
 
 class LawyerDetailView(generic.DetailView):
     model = Lawyer
     context_object_name = "lawyer"
     template_name = "lawyer_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['phones'] = LPhone.objects.filter(lawyer=self.kwargs['pk'])
+        print(context['phones'])
+        return context
 
 
 class DossierDetailJView(generic.DetailView):
@@ -24,15 +37,18 @@ class DossierDetailNView(generic.DetailView):
     context_object_name = "dossier"
     template_name = "dossier_detail_j.html"
 
+
 class ClientNDetailView(generic.DetailView):
     model = Client_natural
     context_object_name = "client"
     template_name = "client_detail_n.html"
 
+
 class ClientJDetailView(generic.DetailView):
-    model = Client_natural
+    model = Client_juridical
     context_object_name = "client"
     template_name = "client_detail_j.html"
+
 
 def test(request):
     return render(request, 'test.html', {})
