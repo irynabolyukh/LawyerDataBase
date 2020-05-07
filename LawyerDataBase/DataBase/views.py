@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import LawyerForm, ServicesForm
 
 # Create your views here.
-from .models import Lawyer, Dossier_J, Dossier_N
+from .models import Lawyer, Dossier_J, \
+    Dossier_N, Client_natural, Client_juridical
 from django.views import generic
 
 
@@ -15,14 +16,23 @@ class LawyerDetailView(generic.DetailView):
 class DossierDetailJView(generic.DetailView):
     model = Dossier_J
     context_object_name = "dossier"
-    template_name = "dossier_detail.html"
+    template_name = "dossier_detail_j.html"
 
 
 class DossierDetailNView(generic.DetailView):
     model = Dossier_N
     context_object_name = "dossier"
-    template_name = "dossier_detail.html"
+    template_name = "dossier_detail_j.html"
 
+class ClientNDetailView(generic.DetailView):
+    model = Client_natural
+    context_object_name = "client"
+    template_name = "client_detail_n.html"
+
+class ClientJDetailView(generic.DetailView):
+    model = Client_natural
+    context_object_name = "client"
+    template_name = "client_detail_j.html"
 
 def test(request):
     return render(request, 'test.html', {})

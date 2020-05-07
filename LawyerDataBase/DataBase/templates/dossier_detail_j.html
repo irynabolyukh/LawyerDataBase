@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %}
+{% block navbar %}
+ <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <div>Code of dossier: {{ dossier.code_dossier_j }}</div>
+    <div>Issue: {{ dossier.issue }}</div>
+    <div>status: {{ dossier.status }}</div>
+    <div>Date signed: {{ dossier.date_signed }}</div>
+    <div>Date expiration: {{ dossier.date_expired }}</div>
+    <div>fee: {{ dossier.fee }}</div>
+    <div>
+        <a href="{% url 'lawyer-detailed-view'  dossier.lawyer_code.lawyer_code %}">
+        lawyer_code: {{ dossier.lawyer_code }}
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
+        num_client_j: {{ dossier.num_client_j }}
+        </a>
+    </div>
+{% endblock %}
