@@ -80,6 +80,9 @@ class Client_natural(Client):
     passport_date = models.DateField()
     passport_authority = models.CharField(max_length=6)
 
+    def __str__(self):
+        return f'{self.num_client_n} : {self.first_name} {self.surname}'
+
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
@@ -88,15 +91,20 @@ class NPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
 
+    def __str__(self):
+        return f'{self.phone_num} : {self.client_natural.num_client_n}'
+
     class Meta:
         db_table = 'NPhone'
 
-
 class Client_juridical(Client):
-    num_client_j = models.CharField(max_length=8, primary_key=True)
-    clint_position = models.CharField(max_length=25)
+    num_client_j = models.CharField(max_length=8, help_text='EDRPOU code', primary_key=True)
+    client_position = models.CharField(max_length=25)
     name_of_company = models.CharField(max_length=25)
     iban = models.CharField(max_length=29)
+
+    def __str__(self):
+        return f'{self.num_client_j} : {self.first_name} {self.surname}'
 
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
