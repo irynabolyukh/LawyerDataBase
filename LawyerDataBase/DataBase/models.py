@@ -52,7 +52,7 @@ class Lawyer(models.Model):
 
 
 class LPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
@@ -84,7 +84,7 @@ class Client_natural(Client):
 
 
 class NPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
