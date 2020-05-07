@@ -3,16 +3,6 @@ from django.db import models
 
 # Create your models here.
 
-class Phone(models.Model):
-    phone_num = models.CharField(max_length=10)
-
-    def __str__(self):
-        return f'{self.phone_num}'
-
-    class Meta:
-        db_table = 'Phone'
-
-
 class Work_days(models.Model):
     DAYS = [
         ('Mon', 'Monday'),
@@ -46,7 +36,6 @@ class Services(models.Model):
         db_table = 'Services'
 
 
-
 class Lawyer(models.Model):
     lawyer_code = models.CharField(max_length=8, primary_key=True)
     first_name = models.CharField(max_length=25)
@@ -61,12 +50,14 @@ class Lawyer(models.Model):
         db_table = 'Lawyer'
         ordering = ['first_name']
 
+
 class LPhone(models.Model):
     phone_num = models.CharField(max_length=10)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
         db_table = 'LPhone'
+
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
@@ -82,7 +73,6 @@ class Client(models.Model):
         ordering = ['first_name']
 
 
-
 class Client_natural(Client):
     num_client_n = models.CharField(max_length=10, primary_key=True)
     birth_date = models.DateField()
@@ -92,12 +82,14 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+
 class NPhone(models.Model):
     phone_num = models.CharField(max_length=10)
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
 
     class Meta:
         db_table = 'NPhone'
+
 
 class Client_juridical(Client):
     num_client_j = models.CharField(max_length=8, primary_key=True)
@@ -108,12 +100,17 @@ class Client_juridical(Client):
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
 
+
 class JPhone(models.Model):
-    phone_num = models.CharField(max_length=10)
+    phone_num = models.CharField(max_length=10, primary_key=True)
     client_juridical = models.ForeignKey(Client_juridical, on_delete=models.CASCADE, related_name='phones')
+
+    def __str__(self):
+        return f'{self.phone_num} : {self.client_juridical.num_client_j}'
 
     class Meta:
         db_table = 'JPhone'
+
 
 class Dossier(models.Model):
     DOS_STATUS = [
@@ -130,7 +127,7 @@ class Dossier(models.Model):
     paid = models.BooleanField(default=False)
     court_name = models.CharField(max_length=50, blank=True)
     court_adr = models.CharField(max_length=50, blank=True)
-    court_date = models.DateTimeField(null=True)
+    court_date = models.DateTimeField(null=True, blank=True)
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING)
 
     class Meta:
