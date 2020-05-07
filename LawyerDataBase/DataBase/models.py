@@ -46,6 +46,7 @@ class Services(models.Model):
         db_table = 'Services'
 
 
+
 class Lawyer(models.Model):
     lawyer_code = models.CharField(max_length=8, primary_key=True)
     first_name = models.CharField(max_length=25)
@@ -53,32 +54,33 @@ class Lawyer(models.Model):
     mid_name = models.CharField(max_length=25)
     specialization = models.CharField(max_length=20)
     mail_info = models.EmailField(max_length=30)
-    phone_num = models.ManyToManyField(Phone)
     service = models.ManyToManyField(Services)
     work_days = models.ManyToManyField(Work_days)
-
-    # TODO CHECK IS IT CORRECT
 
     class Meta:
         db_table = 'Lawyer'
         ordering = ['first_name']
 
+class LPhone(models.Model):
+    phone_num = models.CharField(max_length=10)
+    lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
+
+    class Meta:
+        db_table = 'LPhone'
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
     surname = models.CharField(max_length=25)
     mid_name = models.CharField(max_length=25)
     adr_city = models.CharField(max_length=30)
-    adr_street = models.TextField()
+    adr_street = models.CharField(max_length=20)
     adr_build = models.IntegerField()
     mail_info = models.EmailField(max_length=30)
-    phone_num = models.ManyToManyField(Phone)
-
-    # TODO CHECK IS IT CORRECT
 
     class Meta:
         abstract = True
         ordering = ['first_name']
+
 
 
 class Client_natural(Client):
@@ -90,6 +92,12 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+class NPhone(models.Model):
+    phone_num = models.CharField(max_length=10)
+    client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
+
+    class Meta:
+        db_table = 'NPhone'
 
 class Client_juridical(Client):
     num_client_j = models.CharField(max_length=8, primary_key=True)
@@ -100,6 +108,12 @@ class Client_juridical(Client):
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
 
+class JPhone(models.Model):
+    phone_num = models.CharField(max_length=10)
+    client_juridical = models.ForeignKey(Client_juridical, on_delete=models.CASCADE, related_name='phones')
+
+    class Meta:
+        db_table = 'JPhone'
 
 class Dossier(models.Model):
     DOS_STATUS = [
@@ -112,7 +126,7 @@ class Dossier(models.Model):
     date_signed = models.DateField()
     date_expired = models.DateField()
     date_closed = models.DateField(blank=True)
-    # TODO fee
+    fee = models.DecimalField(max_digits=7, decimal_places=2)
     paid = models.BooleanField(default=False)
     court_name = models.CharField(max_length=50, blank=True)
     court_adr = models.CharField(max_length=50, blank=True)
@@ -143,10 +157,7 @@ class Appointment(models.Model):
     app_date = models.DateField()
     app_time = models.TimeField()
     comment = models.TextField()
-    phone_num = models.ManyToManyField(Phone)
     service = models.ManyToManyField(Services)
-
-    # TODO CHECK IS IT CORRECT
 
     class Meta:
         abstract = True
