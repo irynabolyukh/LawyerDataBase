@@ -1,4 +1,7 @@
 from django.db import models
+from django.urls import reverse
+
+
 # Create your models here.
 
 class Work_days(models.Model):
@@ -20,6 +23,7 @@ class Work_days(models.Model):
         db_table = 'Work_days'
         ordering = ['id']
 
+
 class Services(models.Model):
     service_code = models.CharField(max_length=5, primary_key=True)
     name_service = models.CharField(max_length=50)
@@ -31,6 +35,9 @@ class Services(models.Model):
 
     class Meta:
         db_table = 'Services'
+
+    def get_absolute_url(self):
+        return reverse("service-detailed-view", kwargs={"pk": self.service_code})
 
 
 class Lawyer(models.Model):
@@ -47,18 +54,22 @@ class Lawyer(models.Model):
         return f'{self.lawyer_code} : {self.first_name} {self.surname}'
 
     class Meta:
-
         db_table = 'Lawyer'
         ordering = ['first_name']
+
+    def get_absolute_url(self):
+        return reverse("lawyer-detailed-view", kwargs={"pk": self.lawyer_code})
 
 
 class LPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
+    def __str__(self):
+        return f'{self.phone_num} : {self.lawyer.lawyer_code}'
+
     class Meta:
         db_table = 'LPhone'
-
 
 class Client(models.Model):
     first_name = models.CharField(max_length=25)
@@ -86,6 +97,9 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+    def get_absolute_url(self):
+        return reverse("client-detailed-view-n", kwargs={"pk": self.num_client_n})
+
 
 class NPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
@@ -109,6 +123,9 @@ class Client_juridical(Client):
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
 
+    def get_absolute_url(self):
+        return reverse("client-detailed-view-j", kwargs={"pk": self.num_client_j})
+
 
 class JPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
@@ -131,13 +148,14 @@ class Dossier(models.Model):
     status = models.CharField(max_length=10, choices=DOS_STATUS, default='open')
     date_signed = models.DateField()
     date_expired = models.DateField()
-    date_closed = models.DateField(blank=True)
+    date_closed = models.DateField(blank=True, null=True)
     fee = models.DecimalField(max_digits=7, decimal_places=2)
     paid = models.BooleanField(default=False)
     court_name = models.CharField(max_length=50, blank=True, null=True)
     court_adr = models.CharField(max_length=50, blank=True, null=True)
     court_date = models.DateTimeField(blank=True, null=True)
-    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING, blank=True, null=True)
+    lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING,
+                                    blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -147,16 +165,28 @@ class Dossier_N(Dossier):
     code_dossier_n = models.CharField(max_length=8, primary_key=True)
     num_client_n = models.ForeignKey(Client_natural, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return f'{self.code_dossier_n} : {self.num_client_n}'
+
     class Meta(Dossier.Meta):
         db_table = 'Dossier_N'
+
+    def get_absolute_url(self):
+        return reverse("dossier-detailed-n", kwargs={"pk": self.code_dossier_n})
 
 
 class Dossier_J(Dossier):
     code_dossier_j = models.CharField(max_length=8, primary_key=True)
     num_client_j = models.ForeignKey(Client_juridical, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return f'{self.code_dossier_j} : {self.num_client_j}'
+
     class Meta(Dossier.Meta):
         db_table = 'Dossier_J'
+
+    def get_absolute_url(self):
+        return reverse("dossier-detailed-j", kwargs={"pk": self.code_dossier_j})
 
 
 class Appointment(models.Model):

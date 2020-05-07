@@ -26,7 +26,7 @@ class Client_juridicalForm(ModelForm):
     class Meta:
         model = Client_juridical
         fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
-                  'mail_info','client_position', 'name_of_company','iban',
+                  'mail_info', 'client_position', 'name_of_company','iban',
                   'adr_city', 'adr_street', 'adr_build']
 
 class Appointment_NForm(ModelForm):
