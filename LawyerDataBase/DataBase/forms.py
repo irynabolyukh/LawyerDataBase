@@ -34,6 +34,17 @@ class Client_juridicalForm(ModelForm):
                   'mail_info', 'client_position', 'name_of_company', 'iban',
                   'adr_city', 'adr_street', 'adr_build']
 
+class NPhoneForm(ModelForm):
+    client_natural = forms.ModelChoiceField(queryset=Client_natural.objects.all())
+    class Meta:
+        model = NPhone
+        fields = ['phone_num', 'client_natural']
+
+class JPhoneForm(ModelForm):
+    client_juridical = forms.ModelChoiceField(queryset=Client_juridical.objects.all())
+    class Meta:
+        model = NPhone
+        fields = ['phone_num', 'client_juridical']
 
 class Appointment_NForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)
