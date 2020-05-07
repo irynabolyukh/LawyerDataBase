@@ -1,6 +1,4 @@
 from django.db import models
-from django.forms import ModelForm
-from django import forms
 # Create your models here.
 
 class Work_days(models.Model):
@@ -34,16 +32,6 @@ class Services(models.Model):
     class Meta:
         db_table = 'Services'
 
-class ServicesForm(ModelForm):
-    class Meta:
-        model = Services
-        fields = ['service_code', 'name_service', 'nominal_value', 'bonus_value']
-
-class ServicesForm(forms.Form):
-    service_code = forms.CharField(max_length=5)
-    name_service = forms.CharField(max_length=50)
-    nominal_value = forms.DecimalField(max_digits=6, decimal_places=2)
-    bonus_value = forms.DecimalField(max_digits=6, decimal_places=2)
 
 class Lawyer(models.Model):
     lawyer_code = models.CharField(max_length=8, primary_key=True)
@@ -55,26 +43,14 @@ class Lawyer(models.Model):
     service = models.ManyToManyField(Services)
     work_days = models.ManyToManyField(Work_days)
 
+    def __str__(self):
+        return f'{self.lawyer_code} : {self.first_name} {self.surname}'
+
     class Meta:
+
         db_table = 'Lawyer'
         ordering = ['first_name']
 
-
-class LawyerForm(ModelForm):
-    class Meta:
-        model = Lawyer
-        fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization', 'mail_info','phone', 'service', 'work_days']
-
-class LawyerForm(forms.Form):
-    lawyer_code = forms.CharField(max_length=8, primary_key=True)
-    first_name = forms.CharField(max_length=25)
-    surname = forms.CharField(max_length=25)
-    mid_name = forms.CharField(max_length=25)
-    specialization = forms.CharField(max_length=20)
-    mail_info = forms.EmailField(max_length=30)
-    service = forms.ModelMultipleChoiceField(queryset=Services.objects.all().order_by('id'), required=True)
-    work_days = forms.ModelMultipleChoiceField(queryset=Work_days.objects.all().order_by('id'), required=True)
-    phone = forms.CharField(max_length=10)
 
 class LPhone(models.Model):
     phone_num = models.CharField(max_length=10, primary_key=True)
