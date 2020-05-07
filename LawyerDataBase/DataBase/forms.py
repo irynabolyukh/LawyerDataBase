@@ -34,15 +34,17 @@ class Appointment_NForm(ModelForm):
     service = forms.ModelMultipleChoiceField(queryset=Services.objects.all(), widget=forms.CheckboxSelectMultiple)
     num_client_n = forms.ModelChoiceField(queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(queryset=Lawyer.objects.all())
+    code_dossier_n = forms.ModelChoiceField(queryset=Dossier_N.objects.all())
     class Meta:
         model = Appointment_N
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code']
+        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code', 'code_dossier_n']
 
 class Appointment_JForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(queryset=Services.objects.all(), widget=forms.CheckboxSelectMultiple)
     num_client_n = forms.ModelChoiceField(queryset=Client_juridical.objects.all())
     lawyer_code = forms.ModelChoiceField(queryset=Lawyer.objects.all())
+    code_dossier_j = forms.ModelChoiceField(queryset=Dossier_J.objects.all())
     class Meta:
         model = Appointment_J
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code']
+        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
