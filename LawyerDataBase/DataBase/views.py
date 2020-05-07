@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import LawyerForm, ServicesForm
 
 # Create your views here.
-from .models import Lawyer, Services
+from .models import Lawyer, Dossier_J, Dossier_N
 from django.views import generic
 
 
@@ -10,6 +10,18 @@ class LawyerDetailView(generic.DetailView):
     model = Lawyer
     context_object_name = "lawyer"
     template_name = "lawyer_detail.html"
+
+
+class DossierDetailJView(generic.DetailView):
+    model = Dossier_J
+    context_object_name = "dossier"
+    template_name = "dossier_detail.html"
+
+
+class DossierDetailNView(generic.DetailView):
+    model = Dossier_N
+    context_object_name = "dossier"
+    template_name = "dossier_detail.html"
 
 
 def test(request):
@@ -41,7 +53,7 @@ def edit_lawyer(request, pk):
         form = LawyerForm(request.POST, instance=lawyer)
         if form.is_valid():
             form.save()
-        return render(request,'/lawyer/pk',{})
+        return render(request, '/lawyer/pk', {})
     else:
         form = LawyerForm(instance=lawyer)
     return render(request, '/edit_lawyer.html', {'form': form})
