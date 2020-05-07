@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title%}Welcome{%endblock%}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
     {% load static %}
     <link rel="stylesheet" href="{% static 'docs/css/main.css' %}">
     <link rel="icon" type="image/png" href=" {% static 'Login/images/scale.png' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <ul class="navbar-nav">
-        {% block navbar%}
+    {% block navbar%}
 
-        {%endblock%}
-    </ul>
+    {%endblock%}
 </nav>
 <div class="container">
     {% block content %}

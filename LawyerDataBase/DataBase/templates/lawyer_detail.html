@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+{% block navbar %}
+    <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-4">
+            <h2>About Lawyer</h2>
+            <h4 id="specialization">{{ lawyer.specialization }}</h4>
+            <hr>
+            <h3>Dossiers</h3>
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">dossier1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">dossier2</a>
+                </li>
+            </ul>
+            <hr>
+            <h3>Appointments</h3>
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">appoint1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">appoint2</a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+        <div class="col-sm-8">
+            <h2>TITLE HEADING</h2>
+            <h5>Title description, Dec 7, 2017</h5>
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <br>
+            <h2>TITLE HEADING</h2>
+            <h5>Title description, Sep 2, 2017</h5>
+            <p>Some text..</p>
+            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+        </div>
+    </div>
+{% endblock %}
