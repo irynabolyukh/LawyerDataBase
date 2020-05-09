@@ -16,6 +16,12 @@ class ServiceDetailView(generic.DetailView):
     template_name = "service_detail.html"
 
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
+        return context
+
+
 class LawyerDetailView(generic.DetailView):
     model = Lawyer
     context_object_name = "lawyer"
@@ -40,19 +46,32 @@ class DossierDetailJView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
+
+
         return context
 
 
 class DossierDetailNView(generic.DetailView):
     model = Dossier_N
     context_object_name = "dossier"
-    template_name = "dossier_detail_j.html"
+    template_name = "dossier_detail_n.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
+
+        return context
 
 class ClientNDetailView(generic.DetailView):
     model = Client_natural
     context_object_name = "client"
     template_name = "client_detail_n.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk'])
+        context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
+        return context
 
 
 class ClientJDetailView(generic.DetailView):
@@ -60,9 +79,11 @@ class ClientJDetailView(generic.DetailView):
     context_object_name = "client"
     template_name = "client_detail_j.html"
 
-
-def test(request):
-    return render(request, 'test.html', {})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
+        context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
+        return context
 
 
 def lawyers(request):

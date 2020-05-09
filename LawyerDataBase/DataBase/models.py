@@ -101,6 +101,9 @@ class Client_natural(Client):
     class Meta(Client.Meta):
         db_table = 'Client_natural'
 
+    def getfullname(self):
+        return f'{self.first_name} {self.surname} {self.mid_name}'
+
     def get_absolute_url(self):
         return reverse("client-detailed-view-n", kwargs={"pk": self.num_client_n})
 
@@ -211,6 +214,9 @@ class Appointment_N(Appointment):
     num_client_n = models.ForeignKey(Client_natural, on_delete=models.DO_NOTHING)
     code_dossier_n = models.ForeignKey(Dossier_N, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return f'{self.appoint_code_n} : {self.num_client_n.getfullname()}'
+
     class Meta(Appointment.Meta):
         db_table = 'Appointment_N'
 
@@ -220,6 +226,9 @@ class Appointment_J(Appointment):
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING)
     num_client_j = models.ForeignKey(Client_juridical, on_delete=models.DO_NOTHING)
     code_dossier_j = models.ForeignKey(Dossier_J, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return f'{self.appoint_code_j} : {self.num_client_j.getfullname()}'
 
     class Meta(Appointment.Meta):
         db_table = 'Appointment_J'

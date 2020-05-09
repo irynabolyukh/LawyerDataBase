@@ -13,4 +13,90 @@
     <div>client_position: {{ client.name_of_company }}{{ client.client_position }}</div>
     <div>IBAN: {{ client.iban }}</div>
     <div>email: {{ client.mail_info }}</div>
+    {% if appointments %}
+    <div class="container">
+    <h5>Записи</h5>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Дата</th>
+            <th>Час</th>
+            <th>Сервіс</th>
+            <th>Адвокат</th>
+            <th>Досье</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for appointment in appointments.all %}
+        <tr>
+            <td>{{ appointment.app_date }}</td>
+            <td>{{ appointment.app_time }}</td>
+            {% for service in appointment.service.all %}
+            <td>
+                <a href="{% url 'service-detailed-view' service.service_code %}">
+                {{ service.name_service }}
+                </a>
+            </td>
+            {% endfor %}
+            <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
+                    {{appointment.lawyer_code.getfullname}}
+                </a></td>
+            <td>
+                <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
+                    {{ appointment.code_dossier_j.code_dossier_j }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    {% endif %}
+    {% if dossiers %}
+        <div class="container">
+    <h5>Досье</h5>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Код</th>
+            <th>Суть справи</th>
+            <th>Гонорар</th>
+            <th>Дата підписання</th>
+            <th>Дата спливу</th>
+            <th>Статус</th>
+            <th>Оплачено</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for dossier in dossiers.all %}
+        <tr>
+            <td><a href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.code_dossier_j }}</a></td>
+            <td>{{ dossier.issue }}</td>
+            <td>{{ dossier.fee }} UAH</td>
+            <td>{{ dossier.date_signed }}</td>
+            <td>{{ dossier.date_expired }}</td>
+            {% if dossier.status == 'open' %}
+            <td>Відкрита</td>
+            {% elif dossier.status == 'closed' %}
+            <td>Закрита</td>
+            {% else %}
+            <td>Закрита(виграна)</td>
+            {% endif %}
+            {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
+            <td>{{ dossier.date_closed }}</td>
+            {% endif %}
+            {% if dossier.paid is True %}
+            <td>Оплачено</td>
+            {% else %}
+            <td>Не оплачено</td>
+            {% endif %}
+
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    {% endif %}
 {% endblock %}
