@@ -11,4 +11,29 @@
     <div>Name service : {{ service.name_service }}</div>
     <div>Nominal value : {{ service.nominal_value }}</div>
     <div>Bonus value : {{ service.bonus_value }}</div>
+
+    {% if lawyers %}
+    <div class="container">
+    <h5>Адвокати</h5>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Lawyer</th>
+            <th>Specialization</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lawyer in lawyers.all %}
+        <tr>
+            <td><a href="{% url 'lawyer-detailed-view'  lawyer.lawyer_code %}">
+                    {{lawyer.getfullname}}
+                </a></td>
+            <td>{{ lawyer.specialization }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    {% endif %}
 {% endblock %}

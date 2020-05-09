@@ -23,8 +23,9 @@
             {% for day in lawyer.work_days.all %}
                 <h6 id="work_days">{{ day }}</h6>
             {% endfor %}
-            <hr>
         {% if dossier_j or dossier_n %}
+            <hr>
+
             <h3>Dossiers</h3>
 
             <ul class="nav nav-pills flex-column">
@@ -40,9 +41,10 @@
             {% endfor %}
             </ul>
         {% endif %}
+        {% if appointments_j or appointments_n %}
             <hr>
             <h3>Appointments</h3>
-        {% if appointments_j or appointments_n %}
+
             <ul class="nav nav-pills flex-column">
             {% for appointment in appointments_j %}
                 <li class="nav-item">
@@ -66,8 +68,9 @@
             {% endfor %}
             </ul>
 
-        {% endif %}
+
             <hr>
+        {% endif %}
         </div>
         <div class="col-sm-8">
             <h2>TITLE HEADING</h2>
