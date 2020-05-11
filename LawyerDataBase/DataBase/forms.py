@@ -1,5 +1,6 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, inlineformset_factory
 from django import forms
+
 from .models import *
 
 
@@ -12,39 +13,43 @@ class LawyerForm(ModelForm):
         fields = ['lawyer_code', 'first_name', 'surname',
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 
-
 class ServicesForm(ModelForm):
     class Meta:
         model = Services
         fields = '__all__'
 
-
 class Client_naturalForm(ModelForm):
+    num_client_n = forms.CharField(label="Client ID", max_length=8)
     class Meta:
         model = Client_natural
         fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
                   'mail_info', 'adr_city', 'adr_street', 'adr_build',
                   'birth_date', 'passport_date', 'passport_authority']
 
+class NPhoneForm(ModelForm):
+    class Meta:
+        model = NPhone
+        exclude = ()
+        #fields = ['phone_num', 'client_natural']
+
+NPhoneFormset = inlineformset_factory(Client_natural, NPhone, fields=['phone_num'])
 
 class Client_juridicalForm(ModelForm):
+    num_client_j = forms.CharField(label="EDRPOU code", max_length=8)
     class Meta:
         model = Client_juridical
         fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
                   'mail_info', 'client_position', 'name_of_company', 'iban',
                   'adr_city', 'adr_street', 'adr_build']
 
-class NPhoneForm(ModelForm):
-    client_natural = forms.ModelChoiceField(queryset=Client_natural.objects.all())
-    class Meta:
-        model = NPhone
-        fields = ['phone_num', 'client_natural']
-
 class JPhoneForm(ModelForm):
-    client_juridical = forms.ModelChoiceField(queryset=Client_juridical.objects.all())
+    client_juridical = forms.ModelChoiceField(label="EDRPOU code", queryset=Client_juridical.objects.all())
     class Meta:
-        model = NPhone
-        fields = ['phone_num', 'client_juridical']
+        model = JPhone
+        exclude = ()
+        #fields = ['phone_num', 'client_juridical']
+
+JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, fields=['phone_num'])
 
 class Appointment_NForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)

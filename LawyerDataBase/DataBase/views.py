@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+from django.views.generic import CreateView
+
 from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
-    Appointment_JForm, Dossier_JForm, Dossier_NForm
+    Appointment_JForm, Dossier_JForm, Dossier_NForm, NPhoneFormset, JPhoneFormset
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
@@ -9,12 +12,10 @@ from .models import Lawyer, Dossier_J, \
 
 from django.views import generic
 
-
 class ServiceDetailView(generic.DetailView):
     model = Services
     context_object_name = "service"
     template_name = "service_detail.html"
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -46,7 +47,6 @@ class DossierDetailJView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
-
 
         return context
 
@@ -138,27 +138,74 @@ def edit_service(request, pk):
         form = ServicesForm(instance=service)
     return render(request, '/edit_service.html', {'form': form})
 
+# def create_client_natural(request):
+#     if request.method == "POST":
+#         client_form = Client_naturalForm(request.POST)
+#         if client_form.is_valid():
+#             client_form.save()
+#             return redirect(request.POST['num_client_n'])
+#     else:
+#         form = Client_naturalForm()
+#     return render(request, 'create_client_natural.html', {'form': form})
 
-def create_client_natural(request):
-    if request.method == "POST":
-        form = Client_naturalForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.POST['num_client_n'])
-    else:
-        form = Client_naturalForm()
-    return render(request, 'create_client_natural.html', {'form': form})
+class Client_naturalCreateView(CreateView):
+    model = Client_natural
+    template_name = 'create_client_natural.html'
+    fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
+                  'mail_info', 'adr_city', 'adr_street', 'adr_build',
+                  'birth_date', 'passport_date', 'passport_authority']
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["nphone"] = NPhoneFormset(self.request.POST)
+        else:
+            data["nphone"] = NPhoneFormset()
+        return data
+    def form_valid(self, form):
+        context = self.get_context_data()
+        nphone = context["nphone"]
+        self.object = form.save()
+        if nphone.is_valid():
+            nphone.instance = self.object
+            nphone.save()
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse("сlient_N/create")
+
+# def create_client_juridical(request):
+#     if request.method == "POST":
+#         form = Client_juridicalForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(request.POST['num_client_j'])
+#     else:
+#         form = Client_juridicalForm()
+#     return render(request, 'create_client_juridical.html', {'form': form})
 
 
-def create_client_juridical(request):
-    if request.method == "POST":
-        form = Client_juridicalForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.POST['num_client_j'])
-    else:
-        form = Client_juridicalForm()
-    return render(request, 'create_client_juridical.html', {'form': form})
+class Client_juridicalCreateView(CreateView):
+    model = Client_juridical
+    template_name = 'create_client_juridical.html'
+    fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
+                  'mail_info', 'client_position', 'name_of_company', 'iban',
+                  'adr_city', 'adr_street', 'adr_build']
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["jphone"] = JPhoneFormset(self.request.POST)
+        else:
+            data["jphone"] = JPhoneFormset()
+        return data
+    def form_valid(self, form):
+        context = self.get_context_data()
+        jphone = context["jphone"]
+        self.object = form.save()
+        if jphone.is_valid():
+            jphone.instance = self.object
+            jphone.save()
+        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse("сlient_J/create")
 
 
 def create_appointment_n(request):
