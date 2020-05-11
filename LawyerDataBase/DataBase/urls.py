@@ -5,6 +5,7 @@ from . import forms
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('test/', views.sqltest, name='sqltest'),
     path('lawyers/', views.lawyers, name='lawyers'),
     path('lawyer/<pk>/', views.LawyerDetailView.as_view(), name='lawyer-detailed-view'),
     path('lawyer/create', views.LawyerCreateView.as_view(), name='lawyer-form'),
