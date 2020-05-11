@@ -17,12 +17,20 @@
             <h6 id="mail">{{ lawyer.mail_info}} </h6>
             <h5>Надає послуги:</h5>
             {% for service in lawyer.service.all %}
-                <h6 id="service"><a href=" {% url 'service-detailed-view' service.service_code %}">{{ service.name_service }}</a></h6>
+                <h6 id="service">
+                    <a href=" {% url 'service-detailed-view' service.service_code %}">
+                        {{ service.name_service }}
+                    </a>
+                </h6>
             {% endfor %}
             <h5>Робочі дні:</h5>
             {% for day in lawyer.work_days.all %}
                 <h6 id="work_days">{{ day }}</h6>
             {% endfor %}
+            <h5>Телефони:</h5>
+               {% for phone in phones %}
+            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                {% endfor %}
         {% if dossier_j or dossier_n %}
             <hr>
 
@@ -41,52 +49,79 @@
             {% endfor %}
             </ul>
         {% endif %}
-        {% if appointments_j or appointments_n %}
-            <hr>
-            <h3>Appointments</h3>
-
-            <ul class="nav nav-pills flex-column">
-            {% for appointment in appointments_j %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">{{appointment}}</a>
-                    <div>
-                        {% for service in  appointment.service.all%}
-                            {{ service.name_service }}
-                        {% endfor %}
-                    </div>
-                </li>
-            {% endfor %}
-            {% for appointment in appointments_n %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">{{appointment}}</a>
-                    <div>
-                        {% for service in  appointment.service.all%}
-                            {{ service.name_service }}
-                        {% endfor %}
-                    </div>
-                </li>
-            {% endfor %}
-            </ul>
-
-
-            <hr>
-        {% endif %}
         </div>
         <div class="col-sm-8">
-            <h2>TITLE HEADING</h2>
-            <h5>Title description, Dec 7, 2017</h5>
-            <p>Some text..</p>
-            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <h2>Всього закрито справ</h2>
+{#            <h5>Title description, Dec 7, 2017</h5>#}
+            {% for obj in closed_dossiers_n %}
+                  <p>Натуральних: {{obj.counted_dossiers}}</p>
+            {% endfor %}
+            {% for obj1 in closed_dossiers_j %}
+                <p>Юридичних: {{obj1.counted_dossiers}}</p>
+            {% endfor %}
+
+
+            <p></p>
             <br>
-            <h2>TITLE HEADING</h2>
-            <h5>Title description, Sep 2, 2017</h5>
+
+            <h2 >Загальний дохід</h2>
+            <h5>Загалом: <b id="income_total">0</b></h5>
+            <h5 id="income_nom">Номінальний: {{ nominal_value }}</h5>
+            <h5 id="income_bonus">Бонусний: {{ bonus_value }}</h5>
             <p>Some text..</p>
             <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
         </div>
-    <div>
-        {% for phone in phones %}
-            <div>Phone num: {{phone.phone_num}}</div>
-        {% endfor %}
     </div>
-    </div>
+            <hr>
+    {% if appointments_j or appointments_n %}
+    <div class="row">
+        <div class="container">
+            <h2>Passed Appointments</h2>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Comment</th>
+                    <th>Dossier Issue</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for appointment in appointments_j %}
+                <tr>
+                    <td>{{appointment.num_client_j.getfullname }}</td>
+                    <td>
+                    {% for service in appointment.service.all %}
+                    {{service.name_service }}
+                    {% endfor %}
+                    </td>
+                    <td>{{appointment.app_date}}</td>
+                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.comment}}</td>
+                    <td>{{appointment.code_dossier_j.issue }}</td>
+                </tr>
+                {% endfor %}
+                {% for appointment in appointments_n %}
+                <tr>
+                    <td>{{appointment.num_client_n.getfullname }}</td>
+                    <td>
+                    {% for service in appointment.service.all %}
+                    {{service.name_service }}
+                    {% endfor %}
+                    </td>
+                    <td>{{appointment.app_date}}</td>
+                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.comment}}</td>
+                    <td>{{appointment.code_dossier_n.issue }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+    {% endif %}
+
+
 {% endblock %}

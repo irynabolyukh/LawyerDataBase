@@ -232,3 +232,4 @@ class Appointment_J(Appointment):
 
     class Meta(Appointment.Meta):
         db_table = 'Appointment_J'
+        ordering = ['-app_date']
