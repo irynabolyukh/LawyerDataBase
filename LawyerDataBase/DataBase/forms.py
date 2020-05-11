@@ -14,7 +14,6 @@ class LawyerForm(ModelForm):
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 
 
-
 class LPhoneForm(ModelForm):
     class Meta:
         model = LPhone
@@ -22,6 +21,12 @@ class LPhoneForm(ModelForm):
 
 
 LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, fields=['phone_num'])
+
+
+class ServicesForm(ModelForm):
+    class Meta:
+        model = Services
+        fields = '__all__'
 
 
 class ServicesForm(ModelForm):

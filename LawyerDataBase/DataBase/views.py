@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
+from django.views.generic import CreateView
 from django.views import generic
 from .forms import *
 from .models import *
