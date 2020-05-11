@@ -18,7 +18,7 @@ urlpatterns = [
     path('dossier_J/create', views.create_dossier_j, name='dossier_j-form'),
     path('service/<pk>/', views.LawyerDetailView.as_view(), name='service-detailed-view'),
     path('client_N/<pk>/', views.ClientNDetailView.as_view(), name='client-detailed-view-n'),
-    path('client_J/<pk>/', views.LawyerDetailView.as_view(), name='client-detailed-view-j'),
+    path('client_J/<pk>/', views.ClientJDetailView.as_view(), name='client-detailed-view-j'),
     path('dossier_N/<pk>/', views.DossierDetailNView.as_view(), name='dossier-detailed-n'),
     path('dossier_J/<pk>/', views.DossierDetailJView.as_view(), name='dossier-detailed-j')
 ]

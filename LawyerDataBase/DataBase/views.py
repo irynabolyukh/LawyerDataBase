@@ -1,11 +1,25 @@
+from django.db import transaction
+from django.forms import formset_factory
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView
+
 from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
-    Appointment_JForm, Dossier_JForm, Dossier_NForm
+    Appointment_JForm, Dossier_JForm, Dossier_NForm, NPhoneForm, NPhoneFormSet
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
-    Dossier_N, Client_natural, Client_juridical, Services
+    Dossier_N, Client_natural, Client_juridical, Services, \
+    LPhone, Appointment_J, Appointment_N
+
 from django.views import generic
+
+
+class ServiceDetailView(generic.DetailView):
+    model = Services
+    context_object_name = "service"
+    template_name = "service_detail.html"
 
 
 class LawyerDetailView(generic.DetailView):
@@ -13,11 +27,26 @@ class LawyerDetailView(generic.DetailView):
     context_object_name = "lawyer"
     template_name = "lawyer_detail.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        la_code = self.kwargs['pk']
+        context['phones'] = LPhone.objects.filter(lawyer= la_code)
+        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)
+        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)
+        context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
+        context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
+        return context
+
 
 class DossierDetailJView(generic.DetailView):
     model = Dossier_J
     context_object_name = "dossier"
     template_name = "dossier_detail_j.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
+        return context
 
 
 class DossierDetailNView(generic.DetailView):
@@ -33,7 +62,7 @@ class ClientNDetailView(generic.DetailView):
 
 
 class ClientJDetailView(generic.DetailView):
-    model = Client_natural
+    model = Client_juridical
     context_object_name = "client"
     template_name = "client_detail_j.html"
 
@@ -94,12 +123,11 @@ def edit_service(request, pk):
         form = ServicesForm(instance=service)
     return render(request, '/edit_service.html', {'form': form})
 
-
 def create_client_natural(request):
     if request.method == "POST":
-        form = Client_naturalForm(request.POST)
-        if form.is_valid():
-            form.save()
+        client_form = Client_naturalForm(request.POST)
+        if client_form.is_valid():
+            client_form.save()
             return redirect(request.POST['num_client_n'])
     else:
         form = Client_naturalForm()

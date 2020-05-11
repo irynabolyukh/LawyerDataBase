@@ -7,6 +7,96 @@
 {% endblock %}
 
 {% block content %}
+    <h2>About Dossier</h2>
+    <table class="table" style="width: max-content">
+        <tbody>
+        <tr>
+            <th>Code</th>
+            <td>{{ dossier.code_dossier_j }}</td>
+        </tr>
+        <tr>
+            <th>Issue</th>
+            <td>{{ dossier.issue }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ dossier.status }}</td>
+        </tr>
+        <tr>
+            <th>Date signed</th>
+            <td>{{dossier.date_signed|date}}</td>
+        </tr>
+         <tr>
+            <th>Date expired</th>
+            <td>{{dossier.date_expired|date}}</td>
+        </tr>
+        {% if dossier.date_closed %}
+        <tr>
+            <th>Date closed</th>
+            <td>{{dossier.date_closed|date}}</td>
+        </tr>
+        {% endif %}
+         <tr>
+            <th>Fee</th>
+            <td>${{dossier.fee}}</td>
+        </tr>
+         <tr>
+            <th>Paid</th>
+            <td>{{dossier.paid}}</td>
+        </tr>
+        {% if dossier.court_adr %}
+         <tr>
+            <th>Court</th>
+            <td>textextextextext</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Client</th>
+            <td>
+                <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
+                    {{ dossier.num_client_j.getfullname }}
+                </a>
+            </td>
+        </tr>
+        {% if dossier.lawyer_code %}
+        <tr>
+            <th>Lawyer</th>
+            <td>
+                <a href="{% url 'lawyer-detailed-view'  dossier.lawyer_code.lawyer_code %}">
+                    {{ dossier.lawyer_code.getfullname }}
+                </a>
+            </td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+    {% if dossier.ap %}
+<div class="container">
+    <h2>Appointments</h2>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Code</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Comment</th>
+            <th>Dossier</th>
+            <th>Lawyer</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>3232324</td>
+            <td>24.04.2020</td>
+            <td>13:55</td>
+            <td>Textextext</td>
+            <td>DON676</td>
+            <td>John Smith</td>
+        </tr>
+        </tbody>
+    </table>
+
     <div>Code of dossier: {{ dossier.code_dossier_j }}</div>
     <div>Issue: {{ dossier.issue }}</div>
     <div>status: {{ dossier.status }}</div>
@@ -23,4 +113,6 @@
         num_client_j: {{ dossier.num_client_j }}
         </a>
     </div>
+</div>
+{% endif %}
 {% endblock %}
