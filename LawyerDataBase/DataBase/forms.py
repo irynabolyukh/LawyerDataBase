@@ -29,46 +29,15 @@ class ServicesForm(ModelForm):
         fields = '__all__'
 
 
-class Client_naturalForm(ModelForm):
-    num_client_n = forms.CharField(label="Client ID", max_length=8)
-
+class ServicesForm(ModelForm):
     class Meta:
-        model = Client_natural
-        fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
-                  'mail_info', 'adr_city', 'adr_street', 'adr_build',
-                  'birth_date', 'passport_date', 'passport_authority']
+        model = Services
+        fields = '__all__'
 
 
-class NPhoneForm(ModelForm):
-    class Meta:
-        model = NPhone
-        exclude = ()
-        # fields = ['phone_num', 'client_natural']
+NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=3, fields=['phone_num'])
 
-
-NPhoneFormset = inlineformset_factory(Client_natural, NPhone, fields=['phone_num'])
-
-
-class Client_juridicalForm(ModelForm):
-    num_client_j = forms.CharField(label="EDRPOU code", max_length=8)
-
-    class Meta:
-        model = Client_juridical
-        fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
-                  'mail_info', 'client_position', 'name_of_company', 'iban',
-                  'adr_city', 'adr_street', 'adr_build']
-
-
-class JPhoneForm(ModelForm):
-    client_juridical = forms.ModelChoiceField(label="EDRPOU code", queryset=Client_juridical.objects.all())
-
-    class Meta:
-        model = JPhone
-        exclude = ()
-        # fields = ['phone_num', 'client_juridical']
-
-
-JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, fields=['phone_num'])
+JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=3, fields=['phone_num'])
 
 
 class Appointment_NForm(ModelForm):

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, UpdateView
 from django.views.generic import CreateView
 from django.views import generic
 from .forms import *
@@ -124,11 +125,13 @@ class DossierDetailNView(generic.DetailView):
 
 class ClientNDetailView(generic.DetailView):
     model = Client_natural
-    context_object_name = "client"
+    context_object_name = "client_natural"
     template_name = "client_detail_n.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        client_code = self.kwargs['pk']
+        context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk'])
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
@@ -136,11 +139,13 @@ class ClientNDetailView(generic.DetailView):
 
 class ClientJDetailView(generic.DetailView):
     model = Client_juridical
-    context_object_name = "client"
+    context_object_name = "client_juridical"
     template_name = "client_detail_j.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        client_code = self.kwargs['pk']
+        context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
         return context
@@ -225,16 +230,6 @@ def edit_service(request, pk):
     return render(request, '/edit_service.html', {'form': form})
 
 
-# def create_client_natural(request):
-#     if request.method == "POST":
-#         client_form = Client_naturalForm(request.POST)
-#         if client_form.is_valid():
-#             client_form.save()
-#             return redirect(request.POST['num_client_n'])
-#     else:
-#         form = Client_naturalForm()
-#     return render(request, 'create_client_natural.html', {'form': form})
-
 class Client_naturalCreateView(CreateView):
     model = Client_natural
     template_name = 'create_client_natural.html'
@@ -260,18 +255,41 @@ class Client_naturalCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("сlient_N/create")
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
-# def create_client_juridical(request):
-#     if request.method == "POST":
-#         form = Client_juridicalForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect(request.POST['num_client_j'])
-#     else:
-#         form = Client_juridicalForm()
-#     return render(request, 'create_client_juridical.html', {'form': form})
+class Client_naturalUpdateView(UpdateView):
+    model = Client_natural
+    template_name = 'update_client_natural.html'
+    fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
+              'mail_info', 'adr_city', 'adr_street', 'adr_build',
+              'birth_date', 'passport_date', 'passport_authority']
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["nphone"] = NPhoneFormset(self.request.POST, instance=self.object)
+        else:
+            data["nphone"] = NPhoneFormset(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        nphone = context["nphone"]
+        self.object = form.save()
+        if nphone.is_valid():
+            nphone.instance = self.object
+            nphone.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
+
+
+class Client_naturalDeleteView(DeleteView):
+    model = Client_natural
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('index')
 
 
 class Client_juridicalCreateView(CreateView):
@@ -299,7 +317,41 @@ class Client_juridicalCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("сlient_J/create")
+        return reverse("client-detailed-view-j")
+
+
+class Client_juridicalUpdateView(UpdateView):
+    model = Client_juridical
+    template_name = 'update_client_juridical.html'
+    fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
+              'mail_info', 'client_position', 'name_of_company', 'iban',
+              'adr_city', 'adr_street', 'adr_build']
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["jphone"] = JPhoneFormset(self.request.POST, instance=self.object)
+        else:
+            data["jphone"] = JPhoneFormset(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        jphone = context["jphone"]
+        self.object = form.save()
+        if jphone.is_valid():
+            jphone.instance = self.object
+            jphone.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
+
+
+class Client_juridicalDeleteView(DeleteView):
+    model = Client_juridical
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('index')
 
 
 def create_appointment_n(request):

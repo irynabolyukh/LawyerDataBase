@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from . import forms
+
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -10,9 +10,11 @@ urlpatterns = [
     path('lawyer/<pk>/', views.LawyerDetailView.as_view(), name='lawyer-detailed-view'),
     path('lawyer/create', views.LawyerCreateView.as_view(), name='lawyer-form'),
     path('client_N/create', views.Client_naturalCreateView.as_view(), name='client_natural-form'),
-   # path('client_N/create', views.create_client_natural, name='client_natural-form'),
+    path('client_N/<pk>/update', views.Client_naturalUpdateView.as_view(), name='client_natural-update'),
+    path('client_N/<pk>/delete', views.Client_naturalDeleteView.as_view(), name='client_natural-delete'),
     path('client_J/create', views.Client_juridicalCreateView.as_view(), name='client_juridical-form'),
-    # path('client_J/create', views.create_client_juridical, name='client_juridical-form'),
+    path('client_J/<pk>/update', views.Client_juridicalUpdateView.as_view(), name='client_juridical-update'),
+    path('client_J/<pk>/delete', views.Client_juridicalDeleteView.as_view(), name='client_juridical-delete'),
     path('appointment_N/create', views.create_appointment_n, name='appointment_n-form'),
     path('appointment_J/create', views.create_appointment_j, name='appointment_j-form'),
     path('service/create', views.create_service, name='service-form'),
