@@ -101,6 +101,7 @@
         </tbody>
     </table>
             <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
+            <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Delete</a>
         </div>
     {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
-from django.views.generic import CreateView, UpdateView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from .forms import LawyerForm, ServicesForm, Appointment_NForm, \
     Appointment_JForm, Dossier_JForm, Dossier_NForm, NPhoneFormset, JPhoneFormset
@@ -191,6 +191,13 @@ class Client_naturalUpdateView(UpdateView):
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
+
+class Client_naturalDeleteView(DeleteView):
+    model = Client_natural
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('index')
+
+
 class Client_juridicalCreateView(CreateView):
     model = Client_juridical
     template_name = 'create_client_juridical.html'
@@ -239,6 +246,12 @@ class Client_juridicalUpdateView(UpdateView):
         return super().form_valid(form)
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
+
+
+class Client_juridicalDeleteView(DeleteView):
+    model = Client_juridical
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('index')
 
 
 def create_appointment_n(request):
