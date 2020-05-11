@@ -67,16 +67,15 @@ class LawyerDetailView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         la_code = self.kwargs['pk']
         context['phones'] = LPhone.objects.filter(lawyer=la_code)
-
-        # context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
-        #                             .filter(app_date <date.today()).order_by('-app_date')
+        today = date.today()
+        context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+                                    .filter(app_date__gte=today).order_by('-app_date')
+        context['upcoming_app_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+                                    .filter(app_date__gte=today).order_by('-app_date')
         context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)\
-                                    .order_by('-app_date')
+                                    .filter(app_date__lt=today).order_by('-app_date')
         context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)\
-                                    .order_by('-app_date')
-        print(context['appointments_n'])
-
-
+                                    .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
         context['closed_dossiers_n'] = Dossier_N.objects.raw(
