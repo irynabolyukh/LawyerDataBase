@@ -102,6 +102,7 @@
         {% endfor %}
         </tbody>
     </table>
-    </div>
+            <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Update</a>
+        </div>
     {% endif %}
 {% endblock %}

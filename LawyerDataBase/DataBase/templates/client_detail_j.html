@@ -96,12 +96,11 @@
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
-
-
         </tr>
         {% endfor %}
         </tbody>
     </table>
-    </div>
+            <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
+        </div>
     {% endif %}
 {% endblock %}
