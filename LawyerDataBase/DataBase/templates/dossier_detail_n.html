@@ -12,7 +12,7 @@
         <tbody>
         <tr>
             <th>Code</th>
-            <td>{{ dossier.code_dossier_j }}</td>
+            <td>{{ dossier.code_dossier_n }}</td>
         </tr>
         <tr>
             <th>Issue</th>
@@ -53,8 +53,8 @@
         <tr>
             <th>Client</th>
             <td>
-                <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
-                    {{ dossier.num_client_j.getfullname }}
+                <a href="{% url 'client-detailed-view-n'  dossier.num_client_n.num_client_n %}">
+                    {{ dossier.num_client_n.getfullname }}
                 </a>
             </td>
         </tr>
@@ -88,7 +88,7 @@
         <tbody>
         {% for appointment in appointments.all %}
         <tr>
-            <td>{{ appointment.appoint_code_j }}</td>
+            <td>{{ appointment.appoint_code_n }}</td>
             <td>{{appointment.app_date}}</td>
             <td>{{appointment.app_time}}</td>
             <td>{{appointment.comment}}</td>
@@ -100,5 +100,5 @@
         </tbody>
     </table>
 </div>
-{% endif %}
+    {% endif %}
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="jcustomers.html">Back to JClients</a>
+    <a class="navbar-brand" href="ncustomers.html">Back to NClients</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,6 +12,8 @@
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
+         {{ jphone.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
+
 {% endblock %}
