@@ -1,16 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView
+from django.views import generic
+from .forms import *
+from .models import *
 
-from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
-    Appointment_JForm, Dossier_JForm, Dossier_NForm, NPhoneFormset, JPhoneFormset
 
 # Create your views here.
-from .models import Lawyer, Dossier_J, \
-    Dossier_N, Client_natural, Client_juridical, Services, \
-    LPhone, Appointment_J, Appointment_N
 
-from django.views import generic
 
 class ServiceDetailView(generic.DetailView):
     model = Services
@@ -31,7 +28,7 @@ class LawyerDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         la_code = self.kwargs['pk']
-        context['phones'] = LPhone.objects.filter(lawyer= la_code)
+        context['phones'] = LPhone.objects.filter(lawyer=la_code)
         context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)
         context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
@@ -61,6 +58,7 @@ class DossierDetailNView(generic.DetailView):
         context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
 
         return context
+
 
 class ClientNDetailView(generic.DetailView):
     model = Client_natural
@@ -94,15 +92,41 @@ def index(request):
     return render(request, 'test.html', {})
 
 
-def create_lawyer(request):
-    if request.method == "POST":
-        form = LawyerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.POST['lawyer_code'])
-    else:
-        form = LawyerForm()
-    return render(request, 'create_lawyer.html', {'form': form})
+# def create_lawyer(request):
+#     if request.method == "POST":
+#         form = LawyerForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(request.POST['lawyer_code'])
+#     else:
+#         form = LawyerForm()
+#     return render(request, 'create_lawyer.html', {'form': form})
+
+class LawyerCreateView(CreateView):
+    model = Lawyer
+    template_name = 'create_lawyer.html'
+    fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
+              'mail_info', 'service', 'work_days']
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["lphone"] = LPhoneFormSet(self.request.POST)
+        else:
+            data["lphone"] = LPhoneFormSet()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        lphone = context["lphone"]
+        self.object = form.save()
+        if lphone.is_valid():
+            lphone.instance = self.object
+            lphone.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("lawyer/create")
 
 
 def edit_lawyer(request, pk):
@@ -138,6 +162,7 @@ def edit_service(request, pk):
         form = ServicesForm(instance=service)
     return render(request, '/edit_service.html', {'form': form})
 
+
 # def create_client_natural(request):
 #     if request.method == "POST":
 #         client_form = Client_naturalForm(request.POST)
@@ -152,8 +177,9 @@ class Client_naturalCreateView(CreateView):
     model = Client_natural
     template_name = 'create_client_natural.html'
     fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
-                  'mail_info', 'adr_city', 'adr_street', 'adr_build',
-                  'birth_date', 'passport_date', 'passport_authority']
+              'mail_info', 'adr_city', 'adr_street', 'adr_build',
+              'birth_date', 'passport_date', 'passport_authority']
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -161,6 +187,7 @@ class Client_naturalCreateView(CreateView):
         else:
             data["nphone"] = NPhoneFormset()
         return data
+
     def form_valid(self, form):
         context = self.get_context_data()
         nphone = context["nphone"]
@@ -169,8 +196,10 @@ class Client_naturalCreateView(CreateView):
             nphone.instance = self.object
             nphone.save()
         return super().form_valid(form)
+
     def get_success_url(self):
         return reverse("сlient_N/create")
+
 
 # def create_client_juridical(request):
 #     if request.method == "POST":
@@ -187,8 +216,9 @@ class Client_juridicalCreateView(CreateView):
     model = Client_juridical
     template_name = 'create_client_juridical.html'
     fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
-                  'mail_info', 'client_position', 'name_of_company', 'iban',
-                  'adr_city', 'adr_street', 'adr_build']
+              'mail_info', 'client_position', 'name_of_company', 'iban',
+              'adr_city', 'adr_street', 'adr_build']
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -196,6 +226,7 @@ class Client_juridicalCreateView(CreateView):
         else:
             data["jphone"] = JPhoneFormset()
         return data
+
     def form_valid(self, form):
         context = self.get_context_data()
         jphone = context["jphone"]
@@ -204,6 +235,7 @@ class Client_juridicalCreateView(CreateView):
             jphone.instance = self.object
             jphone.save()
         return super().form_valid(form)
+
     def get_success_url(self):
         return reverse("сlient_J/create")
 
