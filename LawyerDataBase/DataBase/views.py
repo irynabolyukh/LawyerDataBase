@@ -2,13 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView
 
-from .forms import LawyerForm, ServicesForm, Client_naturalForm, Client_juridicalForm, Appointment_NForm, \
+from .forms import LawyerForm, ServicesForm, Appointment_NForm, \
     Appointment_JForm, Dossier_JForm, Dossier_NForm, NPhoneFormset, JPhoneFormset
 
 # Create your views here.
 from .models import Lawyer, Dossier_J, \
     Dossier_N, Client_natural, Client_juridical, Services, \
-    LPhone, Appointment_J, Appointment_N
+    LPhone, Appointment_J, Appointment_N, NPhone, JPhone
 
 from django.views import generic
 
@@ -31,7 +31,7 @@ class LawyerDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         la_code = self.kwargs['pk']
-        context['phones'] = LPhone.objects.filter(lawyer= la_code)
+        context['phones'] = LPhone.objects.filter(lawyer=la_code)
         context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)
         context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
@@ -64,11 +64,13 @@ class DossierDetailNView(generic.DetailView):
 
 class ClientNDetailView(generic.DetailView):
     model = Client_natural
-    context_object_name = "client"
+    context_object_name = "client_natural"
     template_name = "client_detail_n.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        client_code = self.kwargs['pk']
+        context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk'])
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
@@ -76,11 +78,13 @@ class ClientNDetailView(generic.DetailView):
 
 class ClientJDetailView(generic.DetailView):
     model = Client_juridical
-    context_object_name = "client"
+    context_object_name = "client_juridical"
     template_name = "client_detail_j.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        client_code = self.kwargs['pk']
+        context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
         return context
@@ -138,15 +142,6 @@ def edit_service(request, pk):
         form = ServicesForm(instance=service)
     return render(request, '/edit_service.html', {'form': form})
 
-# def create_client_natural(request):
-#     if request.method == "POST":
-#         client_form = Client_naturalForm(request.POST)
-#         if client_form.is_valid():
-#             client_form.save()
-#             return redirect(request.POST['num_client_n'])
-#     else:
-#         form = Client_naturalForm()
-#     return render(request, 'create_client_natural.html', {'form': form})
 
 class Client_naturalCreateView(CreateView):
     model = Client_natural
@@ -171,16 +166,6 @@ class Client_naturalCreateView(CreateView):
         return super().form_valid(form)
     def get_success_url(self):
         return reverse("сlient_N/create")
-
-# def create_client_juridical(request):
-#     if request.method == "POST":
-#         form = Client_juridicalForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect(request.POST['num_client_j'])
-#     else:
-#         form = Client_juridicalForm()
-#     return render(request, 'create_client_juridical.html', {'form': form})
 
 
 class Client_juridicalCreateView(CreateView):

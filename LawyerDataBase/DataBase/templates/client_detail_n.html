@@ -1,18 +1,23 @@
 {% extends "base_generic.html" %}
 {% block navbar %}
- <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
+ <a class="navbar-brand" href="lawyers.html">Back to Clients</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
 {% endblock %}
 
 {% block content %}
-    <div> {{ client.first_name }} {{ client.surname }} {{ client.mid_name }}</div>
-    <div>Code of client: {{ client.num_client_n }}</div>
-    <div>Adr: {{ client.adr_city }} {{ client.adr_street }} {{ client.adr_build }}</div>
-    <div>birth_date: {{ client.birth_date|date }}</div>
-    <div>Passport info: {{ client.passport_date }}  {{ client.passport_authority }}</div>
-    <div>email: {{ client.mail_info }}</div>
+    <div> {{ client_natural.first_name }} {{ client_natural.surname }} {{ client_natural.mid_name }}</div>
+    <div>Code of client: {{ client_natural.num_client_n }}</div>
+    <div>Adr: {{ client_natural.adr_city }} {{ client_natural.adr_street }} {{ client_natural.adr_build }}</div>
+    <div>birth_date: {{ client_natural.birth_date|date }}</div>
+    <div>Passport info: {{ client_natural.passport_date }}  {{ client_natural.passport_authority }}</div>
+    <div>email: {{ client_natural.mail_info }}</div>
+    <div>
+        {% for phone in phones %}
+            <div>Phone num: {{phone.phone_num}}</div>
+        {% endfor %}
+    </div>
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
