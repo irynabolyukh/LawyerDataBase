@@ -155,6 +155,14 @@ def lawyers(request):
     return render(request, 'lawyers.html', {})
 
 
+def ncustomers(request):
+    return render(request, 'ncustomers.html', {})
+
+
+def jcustomers(request):
+    return render(request, 'jcustomers.html', {})
+
+
 def index(request):
     return render(request, 'test.html', {})
 
@@ -193,19 +201,40 @@ class LawyerCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("lawyer/create")
+        return reverse("lawyer-detailed-view")
 
 
-def edit_lawyer(request, pk):
-    lawyer = get_object_or_404(Lawyer, pk=pk)
-    if request.method == "POST":
-        form = LawyerForm(request.POST, instance=lawyer)
-        if form.is_valid():
-            form.save()
-        return render(request, '/lawyer/pk', {})
-    else:
-        form = LawyerForm(instance=lawyer)
-    return render(request, '/edit_lawyer.html', {'form': form})
+class LawyerUpdateView(UpdateView):
+    model = Lawyer
+    template_name = 'update_lawyer.html'
+    fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
+              'mail_info', 'service', 'work_days']
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data["lphone"] = LPhoneFormSet(self.request.POST, instance=self.object)
+        else:
+            data["lphone"] = LPhoneFormSet(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        lphone = context["lphone"]
+        self.object = form.save()
+        if lphone.is_valid():
+            lphone.instance = self.object
+            lphone.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
+
+
+class LawyerDeleteView(DeleteView):
+    model = Lawyer
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('lawyers')
 
 
 def create_service(request):
@@ -289,7 +318,7 @@ class Client_naturalUpdateView(UpdateView):
 class Client_naturalDeleteView(DeleteView):
     model = Client_natural
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('ncustomers')
 
 
 class Client_juridicalCreateView(CreateView):
@@ -351,7 +380,7 @@ class Client_juridicalUpdateView(UpdateView):
 class Client_juridicalDeleteView(DeleteView):
     model = Client_juridical
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('jcustomers')
 
 
 def create_appointment_n(request):

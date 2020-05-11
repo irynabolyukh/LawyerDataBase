@@ -11,7 +11,6 @@
         <div class="col-sm-4">
             <h2>About Lawyer</h2>
             <h4 id="specialization">{{ lawyer.specialization }}</h4>
-
             <h6 id="la_code">{{ lawyer.lawyer_code }}</h6>
             <h6 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h6>
             <h6 id="mail">{{ lawyer.mail_info}} </h6>
@@ -71,6 +70,8 @@
             <p>Some text..</p>
             <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
         </div>
+         <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Update</a>
+        <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Delete</a>
     </div>
             <hr>
     {% if appointments_j or appointments_n %}
@@ -119,7 +120,9 @@
                 {% endfor %}
                 </tbody>
             </table>
+
         </div>
+
         </div>
     {% endif %}
 
