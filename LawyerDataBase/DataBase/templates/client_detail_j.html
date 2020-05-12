@@ -18,6 +18,8 @@
             <div>Phone num: {{phone.phone_num}}</div>
         {% endfor %}
     </div>
+    <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Update</a>
+    <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Delete</a>
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
