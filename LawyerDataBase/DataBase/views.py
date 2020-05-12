@@ -71,9 +71,9 @@ class LawyerDetailView(generic.DetailView):
         context['phones'] = LPhone.objects.filter(lawyer=la_code)
         today = date.today()
         context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
-                                    .filter(app_date__gte=today).order_by('-app_date')
+                                    .filter(app_date__gte=today).order_by('app_date')
         context['upcoming_app_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
-                                    .filter(app_date__gte=today).order_by('-app_date')
+                                    .filter(app_date__gte=today).order_by('app_date')
         context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)\
                                     .filter(app_date__lt=today).order_by('-app_date')
         context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)\
