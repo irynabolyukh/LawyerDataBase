@@ -175,16 +175,6 @@ def index(request):
     return render(request, 'test.html', {})
 
 
-# def create_lawyer(request):
-#     if request.method == "POST":
-#         form = LawyerForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect(request.POST['lawyer_code'])
-#     else:
-#         form = LawyerForm()
-#     return render(request, 'create_lawyer.html', {'form': form})
-
 class LawyerCreateView(CreateView):
     model = Lawyer
     template_name = 'create_lawyer.html'
