@@ -74,66 +74,13 @@
         <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Delete</a>
     </div>
             <hr>
-    {% if appointments_j or appointments_n %}
-    <div class="row">
-        <div class="container">
-            <h2>Appointments</h2>
-            <h4>Upcoming</h4>
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Client</th>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Comment</th>
-                    <th>Dossier Issue</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for appointment in appointments_j %}
-                <tr>
-                    <td>{{appointment.num_client_j.getfullname }}</td>
-                    <td>
-                    {% for service in appointment.service.all %}
-                    <a href=" {% url 'service-detailed-view' service.service_code %}">
-                        {{ service.name_service }}
-                    </a>
-                    {% endfor %}
-                    </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
-                    <td>{{appointment.comment}}</td>
-                    <td>{{appointment.code_dossier_j.issue }}</td>
-                </tr>
-                {% endfor %}
-                {% for appointment in appointments_n %}
-                <tr>
-                    <td>{{appointment.num_client_n.getfullname }}</td>
-                    <td>
-                    {% for service in appointment.service.all %}
-                    <a href=" {% url 'service-detailed-view' service.service_code %}">
-                        {{ service.name_service }}
-                    </a>
-                    {% endfor %}
-                    </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
-                    <td>{{appointment.comment}}</td>
-                    <td>{{appointment.code_dossier_n.issue }}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
 
-        </div>
-    </div>
-    {% endif %}
 
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row">
         <div class="container">
-            <h4>Passed</h4>
+            <h2>Appointments</h2>
+            <h4>Upcoming</h4>
             <table class="table table-striped">
                 <thead class="thead-dark">
                 <tr>
@@ -184,6 +131,60 @@
     </div>
     {% endif %}
 
+    {% if appointments_j or appointments_n %}
+    <div class="row">
+        <div class="container">
+            <h4>Passed</h4>
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Client</th>
+                    <th>Service</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Comment</th>
+                    <th>Dossier Issue</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for appointment in appointments_j %}
+                <tr>
+                    <td>{{appointment.num_client_j.getfullname }}</td>
+                    <td>
+                    {% for service in appointment.service.all %}
+                    <a href=" {% url 'service-detailed-view' service.service_code %}">
+                        {{ service.name_service }}
+                    </a>
+                    {% endfor %}
+                    </td>
+                    <td>{{appointment.app_date}}</td>
+                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.comment}}</td>
+                    <td>{{appointment.code_dossier_j.issue }}</td>
+                </tr>
+                {% endfor %}
+                {% for appointment in appointments_n %}
+                <tr>
+                    <td>{{appointment.num_client_n.getfullname }}</td>
+                    <td>
+                    {% for service in appointment.service.all %}
+                    <a href=" {% url 'service-detailed-view' service.service_code %}">
+                        {{ service.name_service }}
+                    </a>
+                    {% endfor %}
+                    </td>
+                    <td>{{appointment.app_date}}</td>
+                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.comment}}</td>
+                    <td>{{appointment.code_dossier_n.issue }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block script %}
