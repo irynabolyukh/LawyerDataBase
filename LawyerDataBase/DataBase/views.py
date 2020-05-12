@@ -175,21 +175,10 @@ def index(request):
     return render(request, 'test.html', {})
 
 
-# def create_lawyer(request):
-#     if request.method == "POST":
-#         form = LawyerForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect(request.POST['lawyer_code'])
-#     else:
-#         form = LawyerForm()
-#     return render(request, 'create_lawyer.html', {'form': form})
-
 class LawyerCreateView(CreateView):
     model = Lawyer
+    form_class = LawyerForm
     template_name = 'create_lawyer.html'
-    fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
-              'mail_info', 'service', 'work_days']
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

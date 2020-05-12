@@ -13,4 +13,3 @@ __pycache__/
 *.pyc
 LawyerDataBase/DataBase/migrations/*
 LawyerDataBase/__pycache__/
-LawyerDataBase/db.sqlite3
