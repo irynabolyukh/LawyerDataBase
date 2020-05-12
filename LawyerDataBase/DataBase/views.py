@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, UpdateView
@@ -160,6 +161,14 @@ def ncustomers(request):
 
 def jcustomers(request):
     return render(request, 'jcustomers.html', {})
+
+
+def ndossiers(request):
+    return render(request, 'ndossiers.html', {})
+
+
+def jdossiers(request):
+    return render(request, 'jdossiers.html', {})
 
 
 def index(request):
@@ -409,7 +418,8 @@ def create_dossier_j(request):
         form = Dossier_JForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request.POST['code_dossier_j'])
+            return HttpResponseRedirect(reverse("jdossiers"))
+             # return redirect(request.POST['code_dossier_j'])
     else:
         form = Dossier_JForm()
     return render(request, 'create_dossier_j.html', {'form': form})
@@ -420,7 +430,8 @@ def create_dossier_n(request):
         form = Dossier_NForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request.POST['code_dossier_n'])
+            return HttpResponseRedirect(reverse("ndossiers"))
+            #return redirect(request.POST['code_dossier_n'])
     else:
         form = Dossier_NForm()
     return render(request, 'create_dossier_n.html', {'form': form})
