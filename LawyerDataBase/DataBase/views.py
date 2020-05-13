@@ -234,26 +234,44 @@ class LawyerDeleteView(DeleteView):
     success_url = reverse_lazy('lawyers')
 
 
-def create_service(request):
-    if request.method == "POST":
-        form = ServicesForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('service-detailed-view', request.POST['service_code'])
-    else:
-        form = ServicesForm()
-    return render(request, 'create_service.html', {'form': form})
+class ServicesCreateView(CreateView):
+    model = Services
+    form_class = ServicesForm
+    template_name = 'create_service.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
 
 
-def edit_service(request, pk):
-    service = get_object_or_404(Services, pk=pk)
-    if request.method == "POST":
-        form = LawyerForm(request.POST, instance=service)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ServicesForm(instance=service)
-    return render(request, '/edit_service.html', {'form': form})
+class ServicesUpdateView(UpdateView):
+    model = Services
+    form_class = ServicesForm
+    template_name = 'update_service.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
+
+
+class ServicesDeleteView(DeleteView):
+    model = Services
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('lawyers')
 
 
 class Client_naturalCreateView(CreateView):
