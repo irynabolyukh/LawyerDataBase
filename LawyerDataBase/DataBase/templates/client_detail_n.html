@@ -20,6 +20,8 @@
     </div>
         <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Update</a>
         <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Delete</a>
+        <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Create Appointment</a>
+        <a class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Create Dossier</a>
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -28,9 +30,10 @@
         <tr>
             <th>Дата</th>
             <th>Час</th>
+            <th>Коментар</th>
             <th>Сервіс</th>
             <th>Адвокат</th>
-            <th>Досье</th>
+            <th>Досьє</th>
         </tr>
         </thead>
         <tbody>
@@ -38,13 +41,14 @@
         <tr>
             <td>{{ appointment.app_date }}</td>
             <td>{{ appointment.app_time }}</td>
-            {% for service in appointment.service.all %}
+            <td>{{ appointment.comment }}</td>
             <td>
+                {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
                 {{ service.name_service }}
-                </a>
-            </td>
+                </a> ;
             {% endfor %}
+            </td>
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
@@ -52,6 +56,10 @@
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_n.code_dossier_n%}">
                     {{ appointment.code_dossier_n.code_dossier_n }}
                 </a>
+            </td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -98,8 +106,10 @@
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
-
-
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Delete</a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>

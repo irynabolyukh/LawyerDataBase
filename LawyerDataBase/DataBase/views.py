@@ -179,9 +179,8 @@ def index(request):
 
 class LawyerCreateView(CreateView):
     model = Lawyer
+    form_class = LawyerForm
     template_name = 'create_lawyer.html'
-    fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
-              'mail_info', 'service', 'work_days']
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -201,7 +200,7 @@ class LawyerCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("lawyer-detailed-view")
+        return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
 class LawyerUpdateView(UpdateView):
@@ -237,26 +236,44 @@ class LawyerDeleteView(DeleteView):
     success_url = reverse_lazy('lawyers')
 
 
-def create_service(request):
-    if request.method == "POST":
-        form = ServicesForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('service-detailed-view', request.POST['service_code'])
-    else:
-        form = ServicesForm()
-    return render(request, 'create_service.html', {'form': form})
+class ServicesCreateView(CreateView):
+    model = Services
+    form_class = ServicesForm
+    template_name = 'create_service.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
 
 
-def edit_service(request, pk):
-    service = get_object_or_404(Services, pk=pk)
-    if request.method == "POST":
-        form = LawyerForm(request.POST, instance=service)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ServicesForm(instance=service)
-    return render(request, '/edit_service.html', {'form': form})
+class ServicesUpdateView(UpdateView):
+    model = Services
+    form_class = ServicesForm
+    template_name = 'update_service.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
+
+
+class ServicesDeleteView(DeleteView):
+    model = Services
+    template_name = 'confirm_delete.html'
+    success_url = reverse_lazy('lawyers')
 
 
 class Client_naturalCreateView(CreateView):
@@ -346,7 +363,7 @@ class Client_juridicalCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-j")
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
 class Client_juridicalUpdateView(UpdateView):
@@ -383,47 +400,167 @@ class Client_juridicalDeleteView(DeleteView):
     success_url = reverse_lazy('jcustomers')
 
 
-def create_appointment_n(request):
-    if request.method == "POST":
-        form = Appointment_NForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.POST['appoint_code_n'])
-    else:
-        form = Appointment_NForm()
-    return render(request, 'create_appointment_n.html', {'form': form})
+class Appointment_NCreateView(CreateView):
+    model = Appointment_N
+    form_class = Appointment_NForm
+    template_name = 'create_appointment_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-def create_appointment_j(request):
-    if request.method == "POST":
-        form = Appointment_JForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect(request.POST['appoint_code_j'])
-    else:
-        form = Appointment_JForm()
-    return render(request, 'create_appointment_j.html', {'form': form})
+class Appointment_NUpdateView(UpdateView):
+    model = Appointment_N
+    fields = ['app_date', 'app_time', 'comment']
+    template_name = 'update_appointment.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-def create_dossier_j(request):
-    if request.method == "POST":
-        form = Dossier_JForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("jdossiers"))
-            # return redirect(request.POST['code_dossier_j'])
-    else:
-        form = Dossier_JForm()
-    return render(request, 'create_dossier_j.html', {'form': form})
+class Appointment_NDeleteView(DeleteView):
+    model = Appointment_N
+    template_name = 'confirm_delete.html'
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-def create_dossier_n(request):
-    if request.method == "POST":
-        form = Dossier_NForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse("ndossiers"))
-            # return redirect(request.POST['code_dossier_n'])
-    else:
-        form = Dossier_NForm()
-    return render(request, 'create_dossier_n.html', {'form': form})
+class Appointment_JCreateView(CreateView):
+    model = Appointment_J
+    form_class = Appointment_JForm
+    template_name = 'create_appointment_j.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class Appointment_JUpdateView(UpdateView):
+    model = Appointment_J
+    fields = ['app_date', 'app_time', 'comment']
+    template_name = 'update_appointment.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class Appointment_JDeleteView(DeleteView):
+    model = Appointment_J
+    template_name = 'confirm_delete.html'
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class Dossier_NCreateView(CreateView):
+    model = Dossier_N
+    form_class = Dossier_NForm
+    template_name = 'create_dossier_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+
+
+class Dossier_NUpdateView(UpdateView):
+    model = Dossier_N
+    fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+    template_name = 'update_dossier_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+
+
+class Dossier_NDeleteView(DeleteView):
+    model = Dossier_N
+    template_name = 'confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+
+
+class Dossier_JCreateView(CreateView):
+    model = Dossier_J
+    form_class = Dossier_JForm
+    template_name = 'create_dossier_j.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class Dossier_JUpdateView(UpdateView):
+    model = Dossier_J
+    fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+    template_name = 'update_dossier_j.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class Dossier_JDeleteView(DeleteView):
+    model = Dossier_J
+    template_name = 'confirm_delete.html'
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
