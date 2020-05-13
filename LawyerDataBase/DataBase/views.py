@@ -240,7 +240,7 @@ def create_service(request):
         form = ServicesForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request.POST['service_code'])
+            return redirect('service-detailed-view', request.POST['service_code'])
     else:
         form = ServicesForm()
     return render(request, 'create_service.html', {'form': form})
