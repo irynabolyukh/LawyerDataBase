@@ -1,6 +1,6 @@
 {% extends "base_generic.html" %}
 {% block navbar %}
- <a class="navbar-brand" href="lawyers.html">Back to Clients</a>
+ <a class="navbar-brand" href="jcustomers.html.html">Back to Clients</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -18,8 +18,10 @@
             <div>Phone num: {{phone.phone_num}}</div>
         {% endfor %}
     </div>
-    <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Update</a>
-    <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Delete</a>
+    <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
+    <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Delete</a>
+    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Create Appointment</a>
+    <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Create Dossier</a>
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -28,9 +30,10 @@
         <tr>
             <th>Дата</th>
             <th>Час</th>
+            <th>Коментар</th>
             <th>Сервіс</th>
             <th>Адвокат</th>
-            <th>Досье</th>
+            <th>Досьє</th>
         </tr>
         </thead>
         <tbody>
@@ -38,13 +41,14 @@
         <tr>
             <td>{{ appointment.app_date }}</td>
             <td>{{ appointment.app_time }}</td>
-            {% for service in appointment.service.all %}
-            <td>
+            <td>{{ appointment.comment }}</td>
+           <td>
+               {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
                 {{ service.name_service }}
-                </a>
-            </td>
+                </a>;
             {% endfor %}
+           </td>
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
@@ -52,6 +56,10 @@
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
                     {{ appointment.code_dossier_j.code_dossier_j }}
                 </a>
+            </td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Delete</a>
             </td>
         </tr>
         {% endfor %}
@@ -98,12 +106,14 @@
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Delete</a>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
-            <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
-            <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Delete</a>
         </div>
     {% endif %}
 {% endblock %}
