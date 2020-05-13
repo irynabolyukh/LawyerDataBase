@@ -12,4 +12,4 @@ migrations/
 __pycache__/
 *.pyc
 LawyerDataBase/DataBase/migrations/*
-LawyerDataBase/__pycache__/
+LawyerDataBase/__pycache__/*
