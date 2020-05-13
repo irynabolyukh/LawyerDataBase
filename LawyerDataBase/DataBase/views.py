@@ -9,8 +9,6 @@ from .models import *
 
 from datetime import date
 
-
-
 from django.db import connection
 
 
@@ -18,9 +16,9 @@ def lawyer_nom_value(param):
     with connection.cursor() as cursor:
         cursor.execute(
             'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.nominal_value) AS nom '
-            'FROM (( Appointment_J_service AS AJS INNER JOIN Services AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN Appointment_J AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN Lawyer AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
+            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
+            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
+            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
             'WHERE lawyer_code == %s AND AJ.code_dossier_j_id not in '
             '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)'
             'GROUP BY lawyer_code', [param, 'closed-won']
@@ -71,23 +69,27 @@ class LawyerDetailView(generic.DetailView):
         context['phones'] = LPhone.objects.filter(lawyer=la_code)
         today = date.today()
         context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
-                                    .filter(app_date__gte=today).order_by('app_date')
+            .filter(app_date__gte=today).order_by('app_date')
         context['upcoming_app_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
-                                    .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code)\
-                                    .filter(app_date__lt=today).order_by('-app_date')
-        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code)\
-                                    .filter(app_date__lt=today).order_by('-app_date')
+            .filter(app_date__gte=today).order_by('app_date')
+        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+            .filter(app_date__lt=today).order_by('-app_date')
+        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+            .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
         context['closed_dossiers_n'] = Dossier_N.objects.raw(
             'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-            'FROM Dossier_N '
-            'WHERE lawyer_code_id = %s AND status is not "open" ', [la_code])
+            'FROM "Dossier_N" '
+            'WHERE lawyer_code_id = %s AND status <> %s '
+            'GROUP BY code_dossier_n',
+            [la_code,'open'])
         context['closed_dossiers_j'] = Dossier_J.objects.raw(
             'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
-            'FROM Dossier_J '
-            'WHERE lawyer_code_id = %s AND status is not "open" ', [la_code])
+            'FROM "Dossier_J" '
+            'WHERE lawyer_code_id = %s AND status <> %s '
+            'GROUP BY code_dossier_j',
+            [la_code,'open'])
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
         except:
@@ -426,7 +428,7 @@ def create_dossier_j(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse("jdossiers"))
-             # return redirect(request.POST['code_dossier_j'])
+            # return redirect(request.POST['code_dossier_j'])
     else:
         form = Dossier_JForm()
     return render(request, 'create_dossier_j.html', {'form': form})
@@ -438,7 +440,7 @@ def create_dossier_n(request):
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse("ndossiers"))
-            #return redirect(request.POST['code_dossier_n'])
+            # return redirect(request.POST['code_dossier_n'])
     else:
         form = Dossier_NForm()
     return render(request, 'create_dossier_n.html', {'form': form})
