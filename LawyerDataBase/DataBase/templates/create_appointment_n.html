@@ -9,31 +9,26 @@
 
 {% block content %}
     <h1>New Natural Appointment</h1>
-    <form method="POST" class="post-form">
+    <form method="POST" class="post-form" id="Appointment_NForm" data-lawyers-url="{% url 'ajax_load_lawyers' %}" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
-<script>
-    console.log("hey");
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
     $("#id_service").change(function () {
-        var service = $(this).val();
-        $.ajax({
-            url: '{% url "update_lawyers" %}',
-            data: {
-                'service': service,
-            },
-            success: function (response) {
-                var new_options = response;
-                alert(new_options[0].name);  // works
-                $('#id_lawyer').empty();
-                $.each(new_options, function (key, value) {
-                    $('#id_lawyer')
-                        .append($('<option>', {value: key})
-                            .text(value.name));
-                });
-            }
-        })
+      var url = $("#Appointment_NForm").attr("data-lawyers-url");  // get the url of the `load_lawyers` view
+      var serviceId = $(this).val();  // get the selected service ID from the HTML input
+      $.ajax({                       // initialize an AJAX request
+        url: url,                    // set the url of the request (= localhost:8000/ajax/load-lawyers/)
+        data: {
+          'service': serviceId       // add the service id to the GET parameters
+        },
+        success: function (data) {   // `data` is the return of the `load_lawyers` view function
+          $("#id_lawyer").html(data);  // replace the contents of the lawyer input with the data that came from the server
+        }
+      });
+
     });
-</script>
+  </script>
 {% endblock %}
