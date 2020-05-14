@@ -1,26 +1,40 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, UpdateView
-from django.views.generic import CreateView
+from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
+from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView
 from django.views import generic
 from .forms import *
 from .models import *
-
+from django.http import JsonResponse
 from datetime import date
 
 from django.db import connection
 
 
-def lawyer_nom_value(param):
+def nom_value():
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.nominal_value) AS nom '
+            'SELECT DISTINCT SUM(SE.nominal_value) AS nom '
             'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
             'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
             'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
             'WHERE lawyer_code == %s AND AJ.code_dossier_j_id not in '
-            '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)'
+            '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)', ['closed-won']
+        )
+        row = cursor.fetchone()
+    return row
+
+def lawyer_nom_value(param):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.nominal_value) AS nom '
+            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE '
+            'ON AJS.services_id = SE.service_code) '
+            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
+            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
+            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id not in '
+            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
             'GROUP BY lawyer_code', [param, 'closed-won']
         )
         row = cursor.fetchone()
@@ -31,20 +45,77 @@ def lawyer_extra_value(param):
     with connection.cursor() as cursor:
         cursor.execute(
             'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.bonus_value) AS nom '
-            'FROM (( Appointment_J_service AS AJS INNER JOIN Services AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN Appointment_J AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN Lawyer AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code == %s AND AJ.code_dossier_j_id in '
-            '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)'
+            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
+            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
+            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
+            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id in '
+            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
             'GROUP BY lawyer_code', [param, 'closed-won']
         )
         row = cursor.fetchone()
-
     return row
 
 
 def sqltest(request):
     return render(request, "test.html", {})
+
+
+class StatisticsView(TemplateView):
+    template_name = "stat_panel.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lawyers'] = Lawyer.objects.all()
+        try:
+            context['closed_dossiers_n'] = Dossier_N.objects.raw(
+                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
+                'FROM "Dossier_N" '
+                'WHERE status <> %s '
+                'GROUP BY code_dossier_n',
+                ['open'])[0].counted_dossiers
+        except:
+            context['closed_dossiers_n'] = 0
+        try:
+            context['closed_dossiers_j'] = Dossier_J.objects.raw(
+                'SELECT code_dossier_j, COUNT(*) AS counted_dossiers '
+                'FROM "Dossier_J" '
+                'WHERE status <> %s '
+                'GROUP BY code_dossier_j',
+                ['open'])[0].counted_dossiers
+        except:
+            context['closed_dossiers_j'] = 0
+        try:
+            context['open_dossiers_n'] = Dossier_N.objects.raw(
+                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
+                'FROM "Dossier_N" '
+                'WHERE status = %s '
+                'GROUP BY code_dossier_n',
+                ['open'])[0].counted_dossiers
+        except:
+            context['open_dossiers_n'] = 0
+        print(context['open_dossiers_n'])
+        try:
+            context['open_dossiers_j'] = Dossier_J.objects.raw(
+                'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
+                'FROM "Dossier_J" '
+                'WHERE status = %s '
+                'GROUP BY code_dossier_j',
+                ['open'])[0].counted_dossiers
+        except:
+            context['open_dossiers_j'] = 0
+        return context
+
+
+@requires_csrf_token
+def getStats(request):
+    if request.method == 'POST':
+        d = date(int(request.POST['year']),
+                 int(request.POST['month']),
+                 int(request.POST['day']))
+        print(d)
+        return JsonResponse({"success" : True})
+    else:
+        return JsonResponse({})
 
 
 class ServiceDetailView(generic.DetailView):
