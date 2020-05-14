@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('test/', views.sqltest, name='sqltest'),
+    path('statistics/', views.StatisticsView.as_view(), name='stats'),
     path('lawyers/', views.lawyers, name='lawyers'),
     path('ncustomers/', views.ncustomers, name='ncustomers'),
     path('jcustomers/', views.jcustomers, name='jcustomers'),
@@ -40,5 +41,6 @@ urlpatterns = [
     path('client_N/<pk>/', views.ClientNDetailView.as_view(), name='client-detailed-view-n'),
     path('client_J/<pk>/', views.ClientJDetailView.as_view(), name='client-detailed-view-j'),
     path('dossier_N/<pk>/', views.DossierDetailNView.as_view(), name='dossier-detailed-n'),
-    path('dossier_J/<pk>/', views.DossierDetailJView.as_view(), name='dossier-detailed-j')
+    path('dossier_J/<pk>/', views.DossierDetailJView.as_view(), name='dossier-detailed-j'),
+    path('getstats/', views.getStats, name='get-stats')
 ]

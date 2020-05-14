@@ -1,0 +1,55 @@
+{% extends "base_generic.html" %}
+{% block navbar %}
+ <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+            {% if lawyers %}
+                <h1>Усі адвокати</h1>
+
+                {% for lawyer in lawyers %}
+                    <div>
+                        <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
+                            {{ lawyer.getfullname }}
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+            <div class="col-sm-4">
+                    <h1>Статистика</h1>
+                    <div class="row">
+                        <p>
+                            <div class="container">
+                                <label for="date1">Початок</label>
+                                <input id="date1" name="date1" type="text">
+                                <label for="date2">Кінець</label>
+                                <input id="date2" name="date2" type="text">
+                            </div>
+                        </p>
+                    </div>
+                    <p>Закрито справ Юридичних: {{ closed_dossiers_j }}</p>
+
+                    <p>Закрито справ Натуральних: {{ closed_dossiers_n}}</p>
+
+
+                    <p>Відкрито справ Юридичних: {{ open_dossiers_j}}</p>
+
+                    <p>Відкрито справ Натуральних: {{ open_dossiers_n}}</p>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+        {% load static %}
+<script src="{% static 'docs/js/statistics.js' %}"></script>
+{% endblock %}
