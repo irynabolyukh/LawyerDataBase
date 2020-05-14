@@ -470,6 +470,13 @@ class Client_juridicalDeleteView(DeleteView):
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('jcustomers')
 
+def update_lawyers(request):
+    service = request.GET.get('service', None)
+    lawyer = list(Lawyer.objects.raw(
+        'SELECT lawyer_code_id'
+        'FROM "Lawyers" '
+        'WHERE lawyer_code_id = AK111111'))
+    return JsonResponse(lawyer, safe=False)
 
 class Appointment_NCreateView(CreateView):
     model = Appointment_N

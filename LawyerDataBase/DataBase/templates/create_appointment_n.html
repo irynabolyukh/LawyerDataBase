@@ -14,4 +14,26 @@
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
+<script>
+    console.log("hey");
+    $("#id_service").change(function () {
+        var service = $(this).val();
+        $.ajax({
+            url: '{% url "update_lawyers" %}',
+            data: {
+                'service': service,
+            },
+            success: function (response) {
+                var new_options = response;
+                alert(new_options[0].name);  // works
+                $('#id_lawyer').empty();
+                $.each(new_options, function (key, value) {
+                    $('#id_lawyer')
+                        .append($('<option>', {value: key})
+                            .text(value.name));
+                });
+            }
+        })
+    });
+</script>
 {% endblock %}
