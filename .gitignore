@@ -14,3 +14,5 @@ __pycache__/
 LawyerDataBase/DataBase/migrations/*
 LawyerDataBase/__pycache__/*
 LawyerDataBase/LawyerDataBase/settings.py
+LawyerDataBase/LawyerDataBase/__pycache__
+LawyerDataBase/DataBase/__pycache__
