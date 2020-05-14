@@ -11,7 +11,8 @@
     <div>Name service : {{ service.name_service }}</div>
     <div>Nominal value : {{ service.nominal_value }}</div>
     <div>Bonus value : {{ service.bonus_value }}</div>
-
+    <a class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Update</a>
+    <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Delete</a>
     {% if lawyers %}
     <div class="container">
     <h5>Адвокати</h5>
@@ -33,6 +34,7 @@
         {% endfor %}
         </tbody>
     </table>
+
     </div>
 
     {% endif %}
