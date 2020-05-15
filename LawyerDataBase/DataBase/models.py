@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 # Create your models here.
@@ -59,6 +61,14 @@ class Lawyer(models.Model):
     class Meta:
         db_table = 'Lawyer'
         ordering = ['first_name']
+        permissions = (
+            ("view_statistics", "Can view statistics"),
+            ("view_all_lawyers", "Can view all lawyers"),
+            ("view_all_nclients", "Can view all nclients"),
+            ("view_all_jclients", "Can view all jclients"),
+            ("view_all_ndossiers", "Can view all ndossiers"),
+            ("view_all_jdossiers", "Can view all jdossiers"),
+        )
 
     def get_absolute_url(self):
         return reverse("lawyer-detailed-view", kwargs={"pk": self.lawyer_code})
