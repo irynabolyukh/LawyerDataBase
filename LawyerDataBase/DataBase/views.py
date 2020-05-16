@@ -9,6 +9,9 @@ from .forms import *
 from .models import *
 from django.http import JsonResponse
 from datetime import date
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+#from braces import views
 
 from django.db import connection
 
@@ -49,6 +52,7 @@ def nom_value():
         row = cursor.fetchone()
     return row
 
+
 def lawyer_nom_value(param):
     with connection.cursor() as cursor:
         cursor.execute(
@@ -79,12 +83,13 @@ def lawyer_extra_value(param):
         row = cursor.fetchone()
     return row
 
-
+@login_required()
 def sqltest(request):
     return render(request, "test.html", {})
 
 
-class StatisticsView(TemplateView):
+class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    permission_required = 'DataBase.view_statistics'
     template_name = "stat_panel.html"
 
     def get_context_data(self, **kwargs):
@@ -129,7 +134,7 @@ class StatisticsView(TemplateView):
             context['open_dossiers_j'] = 0
         return context
 
-
+@login_required()
 @requires_csrf_token
 def getStats(request):
     if request.method == 'POST':
@@ -137,12 +142,13 @@ def getStats(request):
                  int(request.POST['month']),
                  int(request.POST['day']))
         print(d)
-        return JsonResponse({"success" : True})
+        return JsonResponse({"success": True})
     else:
         return JsonResponse({})
 
 
-class ServiceDetailView(generic.DetailView):
+class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_services'
     model = Services
     context_object_name = "service"
     template_name = "service_detail.html"
@@ -153,7 +159,8 @@ class ServiceDetailView(generic.DetailView):
         return context
 
 
-class LawyerDetailView(generic.DetailView):
+class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_lawyer'
     model = Lawyer
     context_object_name = "lawyer"
     template_name = "lawyer_detail.html"
@@ -178,13 +185,13 @@ class LawyerDetailView(generic.DetailView):
             'FROM "Dossier_N" '
             'WHERE lawyer_code_id = %s AND status <> %s '
             'GROUP BY code_dossier_n',
-            [la_code,'open'])
+            [la_code, 'open'])
         context['closed_dossiers_j'] = Dossier_J.objects.raw(
             'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
             'FROM "Dossier_J" '
             'WHERE lawyer_code_id = %s AND status <> %s '
             'GROUP BY code_dossier_j',
-            [la_code,'open'])
+            [la_code, 'open'])
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
         except:
@@ -196,7 +203,8 @@ class LawyerDetailView(generic.DetailView):
         return context
 
 
-class DossierDetailJView(generic.DetailView):
+class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_dossier_j'
     model = Dossier_J
     context_object_name = "dossier"
     template_name = "dossier_detail_j.html"
@@ -208,7 +216,8 @@ class DossierDetailJView(generic.DetailView):
         return context
 
 
-class DossierDetailNView(generic.DetailView):
+class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_dossier_n'
     model = Dossier_N
     context_object_name = "dossier"
     template_name = "dossier_detail_n.html"
@@ -220,7 +229,8 @@ class DossierDetailNView(generic.DetailView):
         return context
 
 
-class ClientNDetailView(generic.DetailView):
+class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_client_natural'
     model = Client_natural
     context_object_name = "client_natural"
     template_name = "client_detail_n.html"
@@ -234,7 +244,8 @@ class ClientNDetailView(generic.DetailView):
         return context
 
 
-class ClientJDetailView(generic.DetailView):
+class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+    permission_required = 'DataBase.view_client_juridical'
     model = Client_juridical
     context_object_name = "client_juridical"
     template_name = "client_detail_j.html"
@@ -247,32 +258,38 @@ class ClientJDetailView(generic.DetailView):
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
         return context
 
-
+@login_required()
+@permission_required('DataBase.view_all_lawyers')
 def lawyers(request):
     return render(request, 'lawyers.html', {})
 
-
+@login_required()
+@permission_required('DataBase.view_all_nclients')
 def ncustomers(request):
     return render(request, 'ncustomers.html', {})
 
-
+@login_required()
+@permission_required('DataBase.view_all_jclients')
 def jcustomers(request):
     return render(request, 'jcustomers.html', {})
 
-
+@login_required()
+@permission_required('DataBase.view_all_ndossiers')
 def ndossiers(request):
     return render(request, 'ndossiers.html', {})
 
-
+@login_required()
+@permission_required('DataBase.view_all_jdossiers')
 def jdossiers(request):
     return render(request, 'jdossiers.html', {})
 
-
+@login_required()
 def index(request):
     return render(request, 'test.html', {})
 
 
-class LawyerCreateView(CreateView):
+class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_lawyer'
     model = Lawyer
     form_class = LawyerForm
     template_name = 'create_lawyer.html'
@@ -298,7 +315,8 @@ class LawyerCreateView(CreateView):
         return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class LawyerUpdateView(UpdateView):
+class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_lawyer'
     model = Lawyer
     template_name = 'update_lawyer.html'
     fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
@@ -325,13 +343,15 @@ class LawyerUpdateView(UpdateView):
         return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class LawyerDeleteView(DeleteView):
+class LawyerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_lawyer'
     model = Lawyer
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('lawyers')
 
 
-class ServicesCreateView(CreateView):
+class ServicesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_services'
     model = Services
     form_class = ServicesForm
     template_name = 'create_service.html'
@@ -348,7 +368,8 @@ class ServicesCreateView(CreateView):
         return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class ServicesUpdateView(UpdateView):
+class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_services'
     model = Services
     form_class = ServicesForm
     template_name = 'update_service.html'
@@ -365,13 +386,15 @@ class ServicesUpdateView(UpdateView):
         return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class ServicesDeleteView(DeleteView):
+class ServicesDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_services'
     model = Services
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('lawyers')
 
 
-class Client_naturalCreateView(CreateView):
+class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_client_natural'
     model = Client_natural
     template_name = 'create_client_natural.html'
     fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
@@ -399,7 +422,8 @@ class Client_naturalCreateView(CreateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
-class Client_naturalUpdateView(UpdateView):
+class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_client_natural'
     model = Client_natural
     template_name = 'update_client_natural.html'
     fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
@@ -427,13 +451,15 @@ class Client_naturalUpdateView(UpdateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
-class Client_naturalDeleteView(DeleteView):
+class Client_naturalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_client_natural'
     model = Client_natural
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('ncustomers')
 
 
-class Client_juridicalCreateView(CreateView):
+class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_client_juridical'
     model = Client_juridical
     template_name = 'create_client_juridical.html'
     fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
@@ -461,7 +487,8 @@ class Client_juridicalCreateView(CreateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
-class Client_juridicalUpdateView(UpdateView):
+class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_client_juridical'
     model = Client_juridical
     template_name = 'update_client_juridical.html'
     fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
@@ -489,7 +516,8 @@ class Client_juridicalUpdateView(UpdateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
-class Client_juridicalDeleteView(DeleteView):
+class Client_juridicalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_client_juridical'
     model = Client_juridical
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('jcustomers')
@@ -506,7 +534,9 @@ def load_lawyers(request):
     return render(request, 'lawyer_dropdown_list_options.html', {'lawyers': lawyers})
 
 
-class Appointment_NCreateView(AjaxableResponseMixin, CreateView):
+
+class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_n'
     model = Appointment_N
     form_class = Appointment_NForm
     template_name = 'create_appointment_n.html'
@@ -523,7 +553,8 @@ class Appointment_NCreateView(AjaxableResponseMixin, CreateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Appointment_NUpdateView(UpdateView):
+class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
     fields = ['app_date', 'app_time', 'comment']
     template_name = 'update_appointment.html'
@@ -540,14 +571,17 @@ class Appointment_NUpdateView(UpdateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Appointment_NDeleteView(DeleteView):
+class Appointment_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_appointment_n'
     model = Appointment_N
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Appointment_JCreateView(CreateView):
+class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_j'
     model = Appointment_J
     form_class = Appointment_JForm
     template_name = 'create_appointment_j.html'
@@ -564,7 +598,8 @@ class Appointment_JCreateView(CreateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Appointment_JUpdateView(UpdateView):
+class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
     fields = ['app_date', 'app_time', 'comment']
     template_name = 'update_appointment.html'
@@ -581,14 +616,17 @@ class Appointment_JUpdateView(UpdateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Appointment_JDeleteView(DeleteView):
+class Appointment_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_appointment_j'
     model = Appointment_J
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Dossier_NCreateView(CreateView):
+class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_dossier_n'
     model = Dossier_N
     form_class = Dossier_NForm
     template_name = 'create_dossier_n.html'
@@ -605,7 +643,8 @@ class Dossier_NCreateView(CreateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Dossier_NUpdateView(UpdateView):
+class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_dossier_n'
     model = Dossier_N
     fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
     template_name = 'update_dossier_n.html'
@@ -622,7 +661,8 @@ class Dossier_NUpdateView(UpdateView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Dossier_NDeleteView(DeleteView):
+class Dossier_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_dossier_n'
     model = Dossier_N
     template_name = 'confirm_delete.html'
 
@@ -630,7 +670,8 @@ class Dossier_NDeleteView(DeleteView):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
-class Dossier_JCreateView(CreateView):
+class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_dossier_j'
     model = Dossier_J
     form_class = Dossier_JForm
     template_name = 'create_dossier_j.html'
@@ -647,7 +688,8 @@ class Dossier_JCreateView(CreateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Dossier_JUpdateView(UpdateView):
+class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'DataBase.change_dossier_j'
     model = Dossier_J
     fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
     template_name = 'update_dossier_j.html'
@@ -664,9 +706,10 @@ class Dossier_JUpdateView(UpdateView):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Dossier_JDeleteView(DeleteView):
+class Dossier_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    permission_required = 'DataBase.delete_dossier_j'
     model = Dossier_J
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
-
