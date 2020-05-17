@@ -1,6 +1,11 @@
 {% extends "base_generic.html" %}
 {% block title %}Client's profile{% endblock %}
-
+{% block navbar %}
+    <a class="navbar-brand" href="{% url 'ncustomers' %}">Back to NCustomers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
 {% block content %}
     <div> {{ client_natural.first_name }} {{ client_natural.surname }} {{ client_natural.mid_name }}</div>
     <div>Code of client: {{ client_natural.num_client_n }}</div>
@@ -65,7 +70,7 @@
     {% endif %}
     {% if dossiers %}
         <div class="container">
-    <h5>Досье</h5>
+    <h5>Досьє</h5>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -75,6 +80,7 @@
             <th>Дата підписання</th>
             <th>Дата спливу</th>
             <th>Статус</th>
+            <th>Дата закриття</th>
             <th>Оплачено</th>
         </tr>
         </thead>
@@ -95,6 +101,8 @@
             {% endif %}
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
             <td>{{ dossier.date_closed }}</td>
+            {% else %}
+            <td>-------</td>
             {% endif %}
             {% if dossier.paid is True %}
             <td>Оплачено</td>

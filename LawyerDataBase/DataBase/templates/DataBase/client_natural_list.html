@@ -1,0 +1,74 @@
+{% extends "base_generic.html" %}
+{% block title %}NCustomers{% endblock %}
+{% block navbar%}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+        </li>
+{%endblock%}
+
+{% block content %}
+<div class="container">
+     <h2>NCustomers</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'client_natural-create' %}">New Client</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Код</th>
+            <th>ПІБ</th>
+            <th>День народження</th>
+            <th>Паспортні дані</th>
+            <th>E-mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in object_list %}
+        <tr>
+            <td><a href="{{ client.get_absolute_url }}">{{ client.pk }}</a></td>
+            <td>{{ client.first_name }} {{ client.surname }} {{ client.mid_name }}</td>
+            <td>{{ client.birth_date }}</td>
+            <td>
+                <li> Номер:
+                 <!--{{ client.passport_date }}-->
+                    МК345423
+                </li>
+                <li> Дата:
+                 {{ client.passport_date }}
+                </li>
+                <li> Орган:
+                 {{ client.passport_authority }}
+                </li>
+            </td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=client.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=client.pk  %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

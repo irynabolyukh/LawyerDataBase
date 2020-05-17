@@ -32,6 +32,31 @@
 
 {% block content %}
 <div class="container">
-       <a class="btn btn-outline-info" href="{% url 'service-create' %}">New Service</a>
+     <h2>Services</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'service-create' %}">New Service</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Код</th>
+            <th>Назва</th>
+            <th>Номінальна вартість</th>
+            <th>Бонусна вартість</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for service in object_list %}
+        <tr>
+            <td><a href="{{ service.get_absolute_url }}">{{ service.pk }}</a></td>
+            <td>{{ service.name_service }}</td>
+            <td>{{ service.nominal_value }}</td>
+            <td>{{ service.bonus_value }}</td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'service-update' pk=service.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=service.pk  %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

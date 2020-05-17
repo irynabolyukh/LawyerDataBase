@@ -32,6 +32,35 @@
 
 {% block content %}
 <div class="container">
-       <a class="btn btn-outline-info" href="{% url 'client_juridical-create' %}">Register Juridical Client</a>
+     <h2>JCustomers</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'client_juridical-create' %}">New Client</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>ЄДРПОУ</th>
+            <th>IBAN</th>
+            <th>Назва</th>
+            <th>Представник</th>
+            <th>Посада</th>
+            <th>E-mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for client in object_list %}
+        <tr>
+            <td><a href="{{ client.get_absolute_url }}">{{ client.pk }}</a></td>
+            <td>{{ client.iban }}</td>
+            <td>{{ client.name_of_company }}</td>
+            <td>{{ client.first_name }} {{ client.surname }} {{ client.mid_name }}</td>
+            <td>{{ client.client_position }}</td>
+            <td>{{ client.mail_info }}</td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=client.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=client.pk  %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

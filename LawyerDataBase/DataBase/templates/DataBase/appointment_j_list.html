@@ -1,0 +1,74 @@
+{% extends "base_generic.html" %}
+{% block title %}JAppointments{% endblock %}
+{% block navbar%}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+        </li>
+{%endblock%}
+
+{% block content %}
+<div class="container">
+     <h2>JAppointments</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'appointment_j-create' %}">New Appointment</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Дата</th>
+            <th>Час</th>
+            <th>Коментарій</th>
+            <th>Послуги</th>
+            <th>Досьє</th>
+            <th>Адвокат</th>
+            <th>Клієнт</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for appointment in object_list %}
+        <tr>
+            <td>{{ appointment.app_date }}</td>
+            <td>{{ appointment.app_time }} </td>
+            <td>{{ appointment.comment }}</td>
+            <td>
+                {% for service in appointment.service.all %}
+                <a href="{% url 'service-detailed-view' service.service_code %}">
+                {{ service.name_service }}
+                </a>;
+            {% endfor %}
+            </td>
+            <td><a href="{{ appointment.code_dossier_j.get_absolute_url }}">{{ appointment.code_dossier_j.code_dossier_j }}</a></td>
+            <td><a href="{{ appointment.lawyer_code.get_absolute_url }}">{{ appointment.lawyer_code.getfullname }}</a></td>
+            <td><a href="{{ appointment.num_client_j.get_absolute_url }}">{{ appointment.num_client_j.getfullname }}</a></td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
