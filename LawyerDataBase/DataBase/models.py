@@ -45,7 +45,7 @@ class Lawyer(models.Model):
     first_name = models.CharField(max_length=25)
     surname = models.CharField(max_length=25)
     mid_name = models.CharField(max_length=25)
-    specialization = models.CharField(max_length=20)
+    specialization = models.CharField(max_length=50)
     mail_info = models.EmailField(max_length=30)
     service = models.ManyToManyField(Services)
     work_days = models.ManyToManyField(Work_days)

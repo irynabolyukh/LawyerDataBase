@@ -8,56 +8,9 @@ from .forms import *
 from .models import *
 from django.http import JsonResponse
 from datetime import date
-
-from django.db import connection
-
-
-def nom_value():
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT SUM(SE.nominal_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code == %s AND AJ.code_dossier_j_id not in '
-            '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)', ['closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-def lawyer_nom_value(param):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.nominal_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE '
-            'ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id not in '
-            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
-            'GROUP BY lawyer_code', [param, 'closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-
-def lawyer_extra_value(param):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.bonus_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id in '
-            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
-            'GROUP BY lawyer_code', [param, 'closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-
-def sqltest(request):
-    return render(request, "test.html", {})
+from django.core import serializers
+import json
+from .sql_querries import *
 
 
 class StatisticsView(TemplateView):
@@ -93,7 +46,6 @@ class StatisticsView(TemplateView):
                 ['open'])[0].counted_dossiers
         except:
             context['open_dossiers_n'] = 0
-        print(context['open_dossiers_n'])
         try:
             context['open_dossiers_j'] = Dossier_J.objects.raw(
                 'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
@@ -103,19 +55,37 @@ class StatisticsView(TemplateView):
                 ['open'])[0].counted_dossiers
         except:
             context['open_dossiers_j'] = 0
+        context['value'] = str(nom_value() + extra_value())
+        context['service_count'] = service_counter()
+        context['lawyer_counter'] = lawyer_counter()
+        context['appointments'] = appointment_getter()
+        context['won_dossiers'] = won_dossiers()
         return context
 
 
 @requires_csrf_token
 def getStats(request):
     if request.method == 'POST':
-        d = date(int(request.POST['year']),
-                 int(request.POST['month']),
-                 int(request.POST['day']))
-        print(d)
-        return JsonResponse({"success" : True})
+        dStart = date(int(request.POST['date1[year]']),
+                      int(request.POST['date1[month]']),
+                      int(request.POST['date1[day]']))
+        dEnd = date(int(request.POST['date2[year]']),
+                    int(request.POST['date2[month]']),
+                    int(request.POST['date2[day]']))
+        if dEnd < dStart:
+            print("error")
+        response = {}
+        response['closed_j'] = date_closed_dossier_j(dStart, dEnd)
+        response['closed_n'] = date_closed_dossier_n(dStart, dEnd)
+        response['open_n'] = date_open_dossier_n(dStart, dEnd)
+        response['open_j'] = date_open_dossier_j(dStart, dEnd)
+        response['service_count'] = date_service_counter(dStart, dEnd)
+        response['all_won_dossiers'] = date_won_dossiers(dStart, dEnd)
+        response['value'] = date_value(dStart, dEnd)
+        response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
+        return JsonResponse(response)
     else:
-        return JsonResponse({})
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
 
 class ServiceDetailView(generic.DetailView):
@@ -154,13 +124,13 @@ class LawyerDetailView(generic.DetailView):
             'FROM "Dossier_N" '
             'WHERE lawyer_code_id = %s AND status <> %s '
             'GROUP BY code_dossier_n',
-            [la_code,'open'])
+            [la_code, 'open'])
         context['closed_dossiers_j'] = Dossier_J.objects.raw(
             'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
             'FROM "Dossier_J" '
             'WHERE lawyer_code_id = %s AND status <> %s '
             'GROUP BY code_dossier_j',
-            [la_code,'open'])
+            [la_code, 'open'])
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
         except:
@@ -508,6 +478,7 @@ class Appointment_NUpdateView(UpdateView):
 class Appointment_NDeleteView(DeleteView):
     model = Appointment_N
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
@@ -549,6 +520,7 @@ class Appointment_JUpdateView(UpdateView):
 class Appointment_JDeleteView(DeleteView):
     model = Appointment_J
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
@@ -632,6 +604,6 @@ class Dossier_JUpdateView(UpdateView):
 class Dossier_JDeleteView(DeleteView):
     model = Dossier_J
     template_name = 'confirm_delete.html'
+
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
-
