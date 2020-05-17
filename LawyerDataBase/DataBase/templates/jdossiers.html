@@ -1,87 +1,37 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:td="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <title>JDossiers</title>
-    <link rel="icon" type="image/png" href="../static/Login/images/scale.png"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <style>
-        table {
-        table-layout: fixed;
-        word-wrap: break-word;
-        }
-        th{
-            width: 15%;
-        }
-    </style>
-</head>
-<body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">    <!-- Links -->
-    <ul class="navbar-nav">
+{% extends "base_generic.html" %}
+{% block title %}JDossiers{% endblock %}
+{% block navbar%}
         <li class="nav-item">
-            <a class="nav-link" href="lawyers.html">Lawyers</a>
+            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="jcustomers.html">JCustomers</a>
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="ncustomers.html">NCustomers</a>
+            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="jdossiers.html">JDossiers</a>
+            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="ndossiers.html">NDossiers</a>
+            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="jappointments.html">JAppointments</a>
+            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="nappointments.html">NAppointments</a>
+            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="statistics.html">Statistics</a>
+            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
         </li>
-    </ul>
-</nav>
-<h1>Juridical Dossiers</h1>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+        </li>
+{%endblock%}
+
+{% block content %}
 <div class="container">
-    <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>Code</th>
-            <th>Issue</th>
-            <th>Status</th>
-            <th>Date signed</th>
-            <th>Date expired</th>
-            <th>Date closed</th>
-            <th>Fee</th>
-            <th>Paid</th>
-            <th>Court</th>
-            <th>JClient</th>
-            <th>Lawyer</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>3232324</td>
-            <td>ocdwmdslkmkslnjdjncjnkncjnksdjks
-                cnsdkncsdjncksjcknsdjcnkdjc
-                nskjnjkcnsdkskncksnd</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        </tbody>
-    </table>
+       <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">New Dossier</a>
 </div>
-</body>
-</html>
+{% endblock %}

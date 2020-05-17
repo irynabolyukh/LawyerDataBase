@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
+{% block title %}New service{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="services.html">Back to Services</a>
+    <a class="navbar-brand" href="{% url 'services' %}">Back to Services</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>

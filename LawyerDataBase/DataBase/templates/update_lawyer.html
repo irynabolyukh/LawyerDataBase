@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
+{% block title %}Edit Lawyer's info{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="lawyers.html">Back to NClients</a>
+    <a class="navbar-brand" href="{% url 'lawyers' %}">Back to Lawyers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
