@@ -9,16 +9,14 @@ from .forms import *
 from .models import *
 from django.http import JsonResponse
 from datetime import date
-<<<<<<< HEAD
-from django.core import serializers
 import json
 from .sql_querries import *
-=======
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-#from braces import views
+# from braces import views
 
 from django.db import connection
+
 
 class AjaxableResponseMixin(object):
     def render_to_json_response(self, context, **response_kwargs):
@@ -42,56 +40,6 @@ class AjaxableResponseMixin(object):
             return self.render_to_json_response(data)
         else:
             return response
-
-
-def nom_value():
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT SUM(SE.nominal_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code == %s AND AJ.code_dossier_j_id not in '
-            '(SELECT code_dossier_j FROM dossier_j WHERE status==%s)', ['closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-
-def lawyer_nom_value(param):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.nominal_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE '
-            'ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id not in '
-            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
-            'GROUP BY lawyer_code', [param, 'closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-
-def lawyer_extra_value(param):
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT DISTINCT LA.lawyer_code AS la_code, SUM(SE.bonus_value) AS nom '
-            'FROM (( "Appointment_J_service" AS AJS INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code) '
-            'INNER JOIN "Appointment_J" AS AJ ON AJS.appointment_j_id = AJ.appoint_code_j) '
-            'INNER JOIN "Lawyer" AS LA ON LA.lawyer_code = AJ.lawyer_code_id '
-            'WHERE lawyer_code = %s AND AJ.code_dossier_j_id in '
-            '(SELECT code_dossier_j FROM "Dossier_J" WHERE status=%s)'
-            'GROUP BY lawyer_code', [param, 'closed-won']
-        )
-        row = cursor.fetchone()
-    return row
-
-@login_required()
-def sqltest(request):
-    return render(request, "test.html", {})
->>>>>>> 378912f48fc432ba22a297c3fb8b09d86b63414d
 
 
 class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
@@ -144,11 +92,11 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['won_dossiers'] = won_dossiers()
         return context
 
+
 @login_required()
 @requires_csrf_token
 def getStats(request):
     if request.method == 'POST':
-<<<<<<< HEAD
         dStart = date(int(request.POST['date1[year]']),
                       int(request.POST['date1[month]']),
                       int(request.POST['date1[day]']))
@@ -167,13 +115,6 @@ def getStats(request):
         response['value'] = date_value(dStart, dEnd)
         response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
         return JsonResponse(response)
-=======
-        d = date(int(request.POST['year']),
-                 int(request.POST['month']),
-                 int(request.POST['day']))
-        print(d)
-        return JsonResponse({"success": True})
->>>>>>> 378912f48fc432ba22a297c3fb8b09d86b63414d
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
@@ -289,45 +230,54 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
         return context
 
+
 @login_required()
 @permission_required('DataBase.view_all_lawyers')
 def lawyers(request):
     return render(request, 'lawyers.html', {})
+
 
 @login_required()
 @permission_required('DataBase.view_all_nclients')
 def ncustomers(request):
     return render(request, 'ncustomers.html', {})
 
+
 @login_required()
 @permission_required('DataBase.view_all_jclients')
 def jcustomers(request):
     return render(request, 'jcustomers.html', {})
+
 
 @login_required()
 @permission_required('DataBase.view_all_ndossiers')
 def ndossiers(request):
     return render(request, 'ndossiers.html', {})
 
+
 @login_required()
 @permission_required('DataBase.view_all_jdossiers')
 def jdossiers(request):
     return render(request, 'jdossiers.html', {})
+
 
 @login_required()
 @permission_required('DataBase.view_all_nappointments')
 def nappointments(request):
     return render(request, 'nappointments.html', {})
 
+
 @login_required()
 @permission_required('DataBase.view_all_jappointments')
 def jappointments(request):
     return render(request, 'jappointments.html', {})
 
+
 @login_required()
 @permission_required('DataBase.view_all_services')
 def services(request):
     return render(request, 'services.html', {})
+
 
 @login_required()
 def index(request):
@@ -568,6 +518,7 @@ class Client_juridicalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, De
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('jcustomers')
 
+
 def load_lawyers(request):
     service_id = request.GET.get('service')
     lawyers = Lawyer.objects.all()
@@ -578,7 +529,6 @@ def load_lawyers(request):
     #                             FROM "Lawyer" y
     #                             WHERE x.lawyer_code_id = y.lawyer_code_id)''')
     return render(request, 'lawyer_dropdown_list_options.html', {'lawyers': lawyers})
-
 
 
 class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
