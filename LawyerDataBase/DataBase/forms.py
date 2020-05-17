@@ -45,7 +45,7 @@ class Appointment_NForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)
     service = forms.ModelChoiceField(queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Client ID', queryset=Client_natural.objects.all())
-    # lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
+    lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
     code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.all())
 
     class Meta:
