@@ -1,10 +1,35 @@
 {% extends "base_generic.html" %}
-{% block navbar %}
- <a class="navbar-brand" href="lawyers.html">Back to Lawyers</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-{% endblock %}
+{% block title %}Statistics{% endblock %}
+
+{% block navbar%}
+         <li class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+        </li>
+{%endblock%}
 
 {% block content %}
     <div class="container">

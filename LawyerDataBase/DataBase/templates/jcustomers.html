@@ -1,147 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <title>JCustomers</title>
-    <link rel="icon" type="image/png" href="Login/images/scale.png"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+{% extends "base_generic.html" %}
+{% block title %}JCustomers{% endblock %}
+{% block navbar%}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Services</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+        </li>
+{%endblock%}
 
-</head>
-<body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">    <!-- Links -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="lawyers.html">Lawyers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="jcustomers.html">JCustomers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="ncustomers.html">NCustomers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="jdossiers.html">JDossiers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="ndossiers.html">NDossiers</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="jappointments.html">JAppointments</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="nappointments.html">NAppointments</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="statistics.html">Statistics</a>
-        </li>
-    </ul>
-</nav>
-<h1>Juridical customers</h1>
+{% block content %}
 <div class="container">
-    <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>EDRPOU code</th>
-            <th>Company</th>
-            <th>IBAN</th>
-            <th>First name</th>
-            <th>Middle name</th>
-            <th>Surname</th>
-            <th>Position</th>
-            <th>City</th>
-            <th>Street</th>
-            <th>Building</th>
-            <th>Index</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody >
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr> <tr>
-            <td><a href="JCustomer.html">
-                3232324
-            </a></td>
-            <td>John</td>
-            <td>David</td>
-            <td>Smith</td>
-            <td>head</td>
-            <td>john@example.com</td>
-        </tr>
-
-        </tbody>
-    </table>
+       <a class="btn btn-outline-info" href="{% url 'client_juridical-create' %}">Register Juridical Client</a>
 </div>
-</body>
-</html>
+{% endblock %}

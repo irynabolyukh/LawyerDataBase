@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
+{% block title %}Edit Dossier{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="jcustomers.html">Back to JClients</a>
+    <a class="navbar-brand" href="{% url 'jdossiers' %}">Back to JDossiers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
