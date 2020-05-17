@@ -34,9 +34,9 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-sm-4">
-            {% if lawyers %}
+            <div class="col-sm-5">
                 <h1>Усі адвокати</h1>
+                {% if lawyers %}
 
                 {% for lawyer in lawyers %}
                     <div>
@@ -44,30 +44,68 @@
                             {{ lawyer.getfullname }}
                         </a>
                     </div>
+                    <br>
                 {% endfor %}
             {% endif %}
             </div>
             <div class="col-sm-4">
                     <h1>Статистика</h1>
+
+                <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>
                     <div class="row">
-                        <p>
+
                             <div class="container">
-                                <label for="date1">Початок</label>
-                                <input id="date1" name="date1" type="text">
-                                <label for="date2">Кінець</label>
-                                <input id="date2" name="date2" type="text">
+                                <p><label for="date1">З</label>
+                                <input id="date1" name="date1" type="text" autocomplete="off">
+                                <p><label for="date2">По</label>
+                                <input id="date2" name="date2" type="text" autocomplete="off">
                             </div>
-                        </p>
+
                     </div>
-                    <p>Закрито справ Юридичних: {{ closed_dossiers_j }}</p>
+                <div><b>Виграно справ</b>: <div id="won_dossiers">{{ won_dossiers }}</div></div>
 
-                    <p>Закрито справ Натуральних: {{ closed_dossiers_n}}</p>
+                <div><b>Закрито справ Юридичних</b>: <div id="closed_dossiers_j">{{ closed_dossiers_j }}</div></div>
 
 
-                    <p>Відкрито справ Юридичних: {{ open_dossiers_j}}</p>
+                <div><b>Закрито справ Натуральних:</b> <div id="closed_dossiers_n">{{ closed_dossiers_n}}</div></div>
 
-                    <p>Відкрито справ Натуральних: {{ open_dossiers_n}}</p>
 
+                <div><b>Відкритих справ Юридичних:</b> <div id="open_dossier_j">{{ open_dossiers_j}}</div></div>
+
+                <div><b>Відкритих справ Натуральних:</b> <div id="open_dossier_n">{{ open_dossiers_n}}</div></div>
+
+                <div><b>Загальна сума :</b> <div id="total_value">{{ value }}</div></div>
+            <hr>
+            <div class="container_given_services">
+            <div><b>Надані послуги</b></div>
+                <div id="given_services" class="container_stat">
+                    {% for service in service_count %}
+                        <p>
+                        <a href="{% url 'service-detailed-view' service.service_code %}">{{ service.service_code }}</a> {{ service.count }}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="container_lawyer_service">
+            <div><b>Статистика Адвокатів</b></div>
+                <div id="lawyer_service" class="container_stat">
+                    {% for lawyer in lawyer_counter %}
+                        <p>
+                            <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">{{ lawyer.lawyer_code }}</a> - {{ lawyer.first_name }} {{ lawyer.surname }} : {{ lawyer.count }}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="container_past_appointments">
+            <p><div><b>Минулі записи</b></div>
+                <div id="past_appointments" class="container_stat">
+                    {% for item in appointments|dictsortreversed:"app_date" %}
+                        <div>{{ item.dossier }} : {{ item.app_date }}</div>
+                    {% endfor %}
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -76,5 +114,5 @@
 {% endblock %}
 {% block script %}
         {% load static %}
-<script src="{% static 'docs/js/statistics.js' %}"></script>
+        <script src="{% static 'docs/js/statistics.js' %}"></script>
 {% endblock %}

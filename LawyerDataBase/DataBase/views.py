@@ -9,6 +9,11 @@ from .forms import *
 from .models import *
 from django.http import JsonResponse
 from datetime import date
+<<<<<<< HEAD
+from django.core import serializers
+import json
+from .sql_querries import *
+=======
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 #from braces import views
@@ -86,6 +91,7 @@ def lawyer_extra_value(param):
 @login_required()
 def sqltest(request):
     return render(request, "test.html", {})
+>>>>>>> 378912f48fc432ba22a297c3fb8b09d86b63414d
 
 
 class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
@@ -122,7 +128,6 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                 ['open'])[0].counted_dossiers
         except:
             context['open_dossiers_n'] = 0
-        print(context['open_dossiers_n'])
         try:
             context['open_dossiers_j'] = Dossier_J.objects.raw(
                 'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
@@ -132,19 +137,45 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
                 ['open'])[0].counted_dossiers
         except:
             context['open_dossiers_j'] = 0
+        context['value'] = str(nom_value() + extra_value())
+        context['service_count'] = service_counter()
+        context['lawyer_counter'] = lawyer_counter()
+        context['appointments'] = appointment_getter()
+        context['won_dossiers'] = won_dossiers()
         return context
 
 @login_required()
 @requires_csrf_token
 def getStats(request):
     if request.method == 'POST':
+<<<<<<< HEAD
+        dStart = date(int(request.POST['date1[year]']),
+                      int(request.POST['date1[month]']),
+                      int(request.POST['date1[day]']))
+        dEnd = date(int(request.POST['date2[year]']),
+                    int(request.POST['date2[month]']),
+                    int(request.POST['date2[day]']))
+        if dEnd < dStart:
+            print("error")
+        response = {}
+        response['closed_j'] = date_closed_dossier_j(dStart, dEnd)
+        response['closed_n'] = date_closed_dossier_n(dStart, dEnd)
+        response['open_n'] = date_open_dossier_n(dStart, dEnd)
+        response['open_j'] = date_open_dossier_j(dStart, dEnd)
+        response['service_count'] = date_service_counter(dStart, dEnd)
+        response['all_won_dossiers'] = date_won_dossiers(dStart, dEnd)
+        response['value'] = date_value(dStart, dEnd)
+        response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
+        return JsonResponse(response)
+=======
         d = date(int(request.POST['year']),
                  int(request.POST['month']),
                  int(request.POST['day']))
         print(d)
         return JsonResponse({"success": True})
+>>>>>>> 378912f48fc432ba22a297c3fb8b09d86b63414d
     else:
-        return JsonResponse({})
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
 
 class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):

@@ -1,3 +1,7 @@
-input[type=text] {
-    float:left
+div{
+    display: inline-block;
+}
+
+.container_stat{
+    display: block;
 }
