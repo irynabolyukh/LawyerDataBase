@@ -1,0 +1,4 @@
+<option value="">select lawyer</option>
+{% for lawyer in lawyers %}
+<option value="{{ lawyer.pk }}">{{ lawyer.surname }}</option>
+{% endfor %}
