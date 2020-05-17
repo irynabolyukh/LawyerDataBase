@@ -67,7 +67,7 @@ class Appointment_NForm(ModelForm):
                     #                                 FROM "Lawyer" y
                     #                                 WHERE x.lawyer_code_id = y.lawyer_code_id)''')
             except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
+                pass  # invalid input from the client; ignore and fallback to empty Lawyer queryset
         elif self.instance.pk:
             self.fields['lawyer_code'].queryset = self.instance.service.lawyer_set
     # def __init__(self, user, *args, **kwargs):
