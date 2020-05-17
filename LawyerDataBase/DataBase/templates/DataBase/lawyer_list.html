@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-{% block title %}Services{% endblock %}
+{% block title %}Lawyers{% endblock %}
 {% block navbar%}
         <li class="nav-item">
             <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
@@ -32,6 +32,31 @@
 
 {% block content %}
 <div class="container">
-       <a class="btn btn-outline-info" href="{% url 'service-create' %}">New Service</a>
+     <h2>Lawyers</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'lawyer-create' %}">Register Lawyer</a>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Код</th>
+            <th>ПІБ</th>
+            <th>Спеціалізація</th>
+            <th>E-mail</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for lawyer in object_list %}
+        <tr>
+            <td><a href="{{ lawyer.get_absolute_url }}">{{ lawyer.pk }}</a></td>
+            <td>{{ lawyer.surname }} {{ lawyer.first_name }} {{ lawyer.mid_name }}</td>
+            <td>{{ lawyer.specialization }}</td>
+            <td>{{ lawyer.mail_info }}</td>
+            <td>
+                <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Update</a>
+                <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
