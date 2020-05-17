@@ -1,10 +1,5 @@
 {% extends "base_generic.html" %}
-{% block navbar %}
- <a class="navbar-brand" href="jcustomers.html.html">Back to Clients</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-{% endblock %}
+{% block title %}Client's profile{% endblock %}
 
 {% block content %}
     <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>

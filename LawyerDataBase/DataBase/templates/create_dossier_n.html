@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
+{% block title %}Create Dossier{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="ndossiers.html">Back to NDossiers</a>
+    <a class="navbar-brand" href="{% url 'ndossiers' %}">Back to NDossiers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>

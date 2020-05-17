@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-{% block title %}JAppointments{% endblock %}
+{% block title %}Lawyers{% endblock %}
 {% block navbar%}
         <li class="nav-item">
             <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
@@ -32,6 +32,6 @@
 
 {% block content %}
 <div class="container">
-       <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">New Appointment</a>
+       <a class="btn btn-outline-info" href="{% url 'lawyer-create' %}">Register Lawyer</a>
 </div>
 {% endblock %}

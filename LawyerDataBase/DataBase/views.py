@@ -284,6 +284,21 @@ def jdossiers(request):
     return render(request, 'jdossiers.html', {})
 
 @login_required()
+@permission_required('DataBase.view_all_nappointments')
+def nappointments(request):
+    return render(request, 'nappointments.html', {})
+
+@login_required()
+@permission_required('DataBase.view_all_jappointments')
+def jappointments(request):
+    return render(request, 'jappointments.html', {})
+
+@login_required()
+@permission_required('DataBase.view_all_services')
+def services(request):
+    return render(request, 'services.html', {})
+
+@login_required()
 def index(request):
     return render(request, 'test.html', {})
 
