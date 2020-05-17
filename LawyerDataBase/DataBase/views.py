@@ -1,4 +1,5 @@
-from django.http import HttpResponseRedirect
+from django.core.serializers import json
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
@@ -10,9 +11,32 @@ from django.http import JsonResponse
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from braces import views
+#from braces import views
 
 from django.db import connection
+
+class AjaxableResponseMixin(object):
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return response
 
 
 def nom_value():
@@ -497,6 +521,18 @@ class Client_juridicalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, De
     model = Client_juridical
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('jcustomers')
+
+def load_lawyers(request):
+    service_id = request.GET.get('service')
+    lawyers = Lawyer.objects.all()
+    # .raw(
+    #     '''SELECT Lawyer.lawyer_code_id
+    #        FROM "Lawyer" x
+    #        WHERE service_id IN (SELECT service
+    #                             FROM "Lawyer" y
+    #                             WHERE x.lawyer_code_id = y.lawyer_code_id)''')
+    return render(request, 'lawyer_dropdown_list_options.html', {'lawyers': lawyers})
+
 
 
 class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

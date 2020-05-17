@@ -42,5 +42,6 @@ urlpatterns = [
     path('client_J/<pk>/', views.ClientJDetailView.as_view(), name='client-detailed-view-j'),
     path('dossier_N/<pk>/', views.DossierDetailNView.as_view(), name='dossier-detailed-n'),
     path('dossier_J/<pk>/', views.DossierDetailJView.as_view(), name='dossier-detailed-j'),
-    path('getstats/', views.getStats, name='get-stats')
+    path('getstats/', views.getStats, name='get-stats'),
+    path('ajax/load-lawyers/', views.load_lawyers, name='ajax_load_lawyers')
 ]
