@@ -71,6 +71,7 @@ class Appointment_JForm(ModelForm):
         model = Appointment_J
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
 
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         print(user)

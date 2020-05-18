@@ -333,6 +333,7 @@ def date_lawyer_counter(date1, date2):
     return res
 
 
+
 def lawyers_appointment(services):
     with connection.cursor() as cursor:
         cursor.execute(
@@ -346,6 +347,73 @@ def lawyers_appointment(services):
             '               from "Lawyer_service" '
             '               WHERE services_id = ls.services_id))',
             [services])
+
+def appoint_N_nom_value(param): #count appointment nominal value if Dossier = closed
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AN.appoint_code_n, SUM(S.nominal_value) AS nom '
+            'FROM (("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
+            'ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS S '
+            'ON ANS.services_id = S.service_code) INNER JOIN "Dossier_N" AS DN'
+            'ON AN.code_dossier_n_id = DN.code_dossier_n'
+            'WHERE AN.appoint_code_n = %s AND status=%s)'
+            'GROUP BY AN.appoint_code_n;', [param, 'closed']
+        )
+        row = cursor.fetchone()
+    return row
+
+
+def appoint_N_extra_value(param): #count appointment bonus value if Dossier = closed-won
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AN.appoint_code_n, SUM(S.bonus_value) AS extra '
+            'FROM (("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
+            'ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS S '
+            'ON ANS.services_id = S.service_code) INNER JOIN "Dossier_N" AS DN'
+            'ON AN.code_dossier_n_id = DN.code_dossier_n'
+            'WHERE AN.appoint_code_n = %s AND status=%s)'
+            'GROUP BY AN.appoint_code_n;', [param, 'closed-won']
+        )
+        row = cursor.fetchone()
+    return row
+
+
+def appoint_J_nom_value(param): #count appointment nominal value if Dossier = closed
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AJ.appoint_code_j, SUM(S.nominal_value) AS nom '
+            'FROM (("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
+            'ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS S '
+            'ON AJS.services_id = S.service_code) INNER JOIN "Dossier_J" AS DJ'
+            'ON AJ.code_dossier_j_id = DJ.code_dossier_j'
+            'WHERE AJ.appoint_code_j = %s AND status=%s '
+            'GROUP BY AJ.appoint_code_j;', [param, 'closed']
+        )
+        row = cursor.fetchone()
+    return row
+
+
+def appoint_J_extra_value(param): #count appointment bonus value if Dossier = closed-won
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AJ.appoint_code_j, SUM(S.bonus_value) AS extra '
+            'FROM (("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
+            'ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS S '
+            'ON AJS.services_id = S.service_code) INNER JOIN "Dossier_J" AS DJ'
+            'ON AJ.code_dossier_j_id = DJ.code_dossier_j'
+            'WHERE AJ.appoint_code_j = %s AND status=%s '
+            'GROUP BY AJ.appoint_code_j;', [param, 'closed-won']
+        )
+        row = cursor.fetchone()
+    return row
+
+
+def filter_lawyer_by_specialization(param):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT lawyer_code, first_name, surname, specialization, mail_info '
+            'FROM "Lawyer"'
+            'WHERE specialization = %s;', [param])
         row = cursor.fetchall()
     res = []
     for record in row:
@@ -354,4 +422,46 @@ def lawyers_appointment(services):
                     'surname': record[2],
                     'mid_name': record[3],
                     'spec': record[4]})
+
     return res
+
+
+def filter_dossier_n_by_status(param): #filter Dossier N by status
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT code_dossier_n, status, date_signed, date_expired, date_closed, fee, paid, num_client_n_id '
+            'FROM "Dossier_N"'
+            'WHERE status = %s;', [param])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+        res.append({'code_dossier_n': record[0],
+                    'status': record[1],
+                    'date_signed': record[2],
+                    'date_expired': record[3],
+                    'date_closed': record[4],
+                    'fee': record[5],
+                    'paid': record[6],
+                    'num_client_n_id': record[7]})
+    return res
+
+
+def filter_dossier_j_by_status(param): #filter Dossier J by status
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT code_dossier_j, status, date_signed, date_expired, date_closed, fee, paid, num_client_j_id '
+            'FROM "Dossier_J"'
+            'WHERE status = %s;', [param])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+        res.append({'code_dossier_j': record[0],
+                    'status': record[1],
+                    'date_signed': record[2],
+                    'date_expired': record[3],
+                    'date_closed': record[4],
+                    'fee': record[5],
+                    'paid': record[6],
+                    'num_client_j_id': record[7]})
+    return res
+

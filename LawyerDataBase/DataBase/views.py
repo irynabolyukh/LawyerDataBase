@@ -16,6 +16,7 @@ import json
 from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
+
 # from braces import views
 
 from django.db import connection

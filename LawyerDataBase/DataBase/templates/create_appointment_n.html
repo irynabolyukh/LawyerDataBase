@@ -1,25 +1,29 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 {% block title %}Create appointment{% endblock %}
-
 {% block navbar %}
+{% if request.user|has_group:"Secretaries"%}
     <a class="navbar-brand" href="{% url 'nappointments' %}">Back to NAppointments</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
     <h1>New Natural Appointment</h1>
     <form method="POST" class="post-form" >
+
         {% csrf_token %}
          <table>
              {{ form.as_table }}
         </table>
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
+
 {% endblock %}
 
 {% block script %}
 {% load static %}
-    <script src="{% static 'docs/js/app_ajax.js' %}"></script>
+
 {% endblock %}
