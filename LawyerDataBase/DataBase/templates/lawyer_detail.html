@@ -1,11 +1,14 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 {% block title %}Lawyer details{% endblock %}
 
 {% block navbar %}
+{% if request.user|has_group:"Secretaries"%}
     <a class="navbar-brand" href="{% url 'lawyers' %}">Back to Lawyers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -69,11 +72,11 @@
             <h5>Загалом: <b id="income_total">0</b></h5>
             <h5 id="income_nom">Номінальний: {{ nominal_value }}</h5>
             <h5 id="income_bonus">Бонусний: {{ bonus_value }}</h5>
-            <p>Some text..</p>
-            <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
         </div>
+        {% if request.user|has_group:"Secretaries"%}
          <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Update</a>
         <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Delete</a>
+        {% endif %}
     </div>
             <hr>
 

@@ -1,10 +1,19 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 {% block title %}Dossier details{% endblock %}
 {% block navbar %}
+{% if request.user|has_group:"Secretaries"%}
  <a class="navbar-brand" href="{% url 'ndossiers' %}">Back to NDossiers</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+{% endif %}
+{% if request.user|has_group:"ClientsN"%}
+ <a class="navbar-brand" href="{% url 'client-detailed-view-n'  dossier.num_client_n.num_client_n %}">Back to Profile</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -62,11 +71,18 @@
         {% if dossier.lawyer_code %}
         <tr>
             <th>Lawyer</th>
+            {% if request.user|has_group:"Secretaries"%}
             <td>
                 <a href="{% url 'lawyer-detailed-view'  dossier.lawyer_code.lawyer_code %}">
                     {{ dossier.lawyer_code.getfullname }}
                 </a>
             </td>
+            {% endif %}
+             {% if request.user|has_group:"ClientsN"%}
+            <td>
+                    {{ dossier.lawyer_code.getfullname }}
+            </td>
+            {% endif %}
         </tr>
         {% endif %}
         </tbody>
@@ -93,9 +109,14 @@
             <td>{{appointment.app_date}}</td>
             <td>{{appointment.app_time}}</td>
             <td>{{appointment.comment}}</td>
+            {% if request.user|has_group:"Secretaries"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
+            {% endif %}
+            {% if request.user|has_group:"ClientsN"%}
+            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
         </tr>
         {% endfor %}
         </tbody>

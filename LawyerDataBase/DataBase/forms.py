@@ -87,11 +87,6 @@ class Appointment_JForm(ModelForm):
         model = Appointment_J
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
 
-    # def __init__(self, user, *args, **kwargs):
-    #     super(Appointment_JForm, self).__init__(*args, **kwargs)
-    #     self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(user=user)
-    #     self.fields['num_client_j'].queryset = Client_juridical.objects.filter(user=user)
-
 
 class Dossier_JForm(ModelForm):
     class Meta:

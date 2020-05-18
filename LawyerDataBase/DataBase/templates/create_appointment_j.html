@@ -1,10 +1,13 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 {% block title %}Create appointment{% endblock %}
 {% block navbar %}
+{% if request.user|has_group:"Secretaries"%}
     <a class="navbar-brand" href="{% url 'jappointments' %}">Back to JAppointments</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
