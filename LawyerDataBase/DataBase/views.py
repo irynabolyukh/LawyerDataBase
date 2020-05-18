@@ -13,7 +13,7 @@ from django.http import JsonResponse
 from datetime import date
 import json
 from .sql_querries import *
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
 # from braces import views
 
@@ -143,11 +143,20 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         return context
 
 
-class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, generic.DetailView):
     permission_required = 'DataBase.view_lawyer'
     model = Lawyer
     context_object_name = "lawyer"
     template_name = "lawyer_detail.html"
+
+    def test_func(self):
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "Lawyers":
+            la_code = self.kwargs['pk']
+            l_code = Lawyer.objects.get(mail_info=self.request.user.email).pk
+            return l_code == la_code
+        else:
+            return True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -213,11 +222,20 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
         return context
 
 
-class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, generic.DetailView):
     permission_required = 'DataBase.view_client_natural'
     model = Client_natural
     context_object_name = "client_natural"
     template_name = "client_detail_n.html"
+
+    def test_func(self):
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "ClientsN":
+            cl_code = self.kwargs['pk']
+            cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
+            return cl_pk == cl_code
+        else:
+            return True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -228,11 +246,20 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         return context
 
 
-class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, generic.DetailView):
     permission_required = 'DataBase.view_client_juridical'
     model = Client_juridical
     context_object_name = "client_juridical"
     template_name = "client_detail_j.html"
+
+    def test_func(self):
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "ClientsJ":
+            cl_code = self.kwargs['pk']
+            cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
+            return cl_pk == cl_code
+        else:
+            return True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -245,6 +272,18 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
 @login_required()
 def index(request):
+    group = request.user.groups.filter(user=request.user)[0]
+    if group.name == "Secretaries":
+        return HttpResponseRedirect(reverse('stats'))
+    elif group.name == "Lawyers":
+        l_code = Lawyer.objects.get(mail_info=request.user.email).pk
+        return HttpResponseRedirect('/database/lawyer/'+l_code)
+    elif group.name == "ClientsJ":
+        cl_code = Client_juridical.objects.get(mail_info=request.user.email).pk
+        return HttpResponseRedirect('/database/client_J/'+cl_code)
+    elif group.name == "ClientsN":
+        cl_code = Client_natural.objects.get(mail_info=request.user.email).pk
+        return HttpResponseRedirect('/database/client_N/'+cl_code)
     return render(request, 'index.html', {})
 
 
