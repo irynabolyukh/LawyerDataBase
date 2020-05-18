@@ -68,6 +68,9 @@ class Lawyer(models.Model):
             ("view_all_jclients", "Can view all jclients"),
             ("view_all_ndossiers", "Can view all ndossiers"),
             ("view_all_jdossiers", "Can view all jdossiers"),
+            ("view_all_services", "Can view all services"),
+            ("view_all_nappointments", "Can view all services"),
+            ("view_all_jappointments", "Can view all services"),
         )
 
     def get_absolute_url(self):
