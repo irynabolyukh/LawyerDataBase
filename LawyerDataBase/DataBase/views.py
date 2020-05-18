@@ -22,6 +22,28 @@ from django.db import connection
 
 @login_required()
 @requires_csrf_token
+def client_ajax(request):
+    if request.method == 'POST':
+        response = {}
+        response['dossier'] = []
+        print(request.POST)
+
+        if request.POST['dosJ'] == 'true':
+            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client'])
+            for dossier in dossiers:
+                response['dossier'].append({'code':dossier.code_dossier_j,
+                                            'issue':dossier.issue})
+        else:
+            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client'])
+            for dossier in dossiers:
+                response['dossier'].append({'code':dossier.code_dossier_n,
+                                            'issue':dossier.issue})
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
+
+@login_required()
+@requires_csrf_token
 def service_ajax(request):
     if request.method == 'POST':
         response = {}

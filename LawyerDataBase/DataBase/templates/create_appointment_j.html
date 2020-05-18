@@ -15,3 +15,8 @@
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
 {% endblock %}
+
+{% block script %}
+{% load static %}
+    <script src="{% static 'docs/js/app_ajax.js' %}"></script>
+{% endblock %}
