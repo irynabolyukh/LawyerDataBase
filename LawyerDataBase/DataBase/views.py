@@ -233,7 +233,7 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
 @login_required()
 def index(request):
-    return render(request, 'test.html', {})
+    return render(request, 'index.html', {})
 
 
 class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -469,18 +469,6 @@ class Client_juridicalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, De
     model = Client_juridical
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('jcustomers')
-
-
-def load_lawyers(request):
-    service_id = request.GET.get('service')
-    lawyers = Lawyer.objects.all()
-    # .raw(
-    #     '''SELECT Lawyer.lawyer_code_id
-    #        FROM "Lawyer" x
-    #        WHERE service_id IN (SELECT service
-    #                             FROM "Lawyer" y
-    #                             WHERE x.lawyer_code_id = y.lawyer_code_id)''')
-    return render(request, 'lawyer_dropdown_list_options.html', {'lawyers': lawyers})
 
 
 class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

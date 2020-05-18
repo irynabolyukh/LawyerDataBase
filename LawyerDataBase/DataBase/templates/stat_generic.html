@@ -1,9 +1,7 @@
 {% extends "base_generic.html" %}
 
-{% block title %}Law Firm{% endblock %}
-
-{% block navbar%}
-     <li class="nav-item">
+{% block navbar %}
+    <li class="nav-item">
             <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
         </li>
         <li class="nav-item">
@@ -30,8 +28,5 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
         </li>
-{%endblock%}
-
-{% block content %}
-    <h1>Welcome to Law Firm</h1>
 {% endblock %}
+
