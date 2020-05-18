@@ -95,7 +95,6 @@
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th>Code</th>
             <th>Date</th>
             <th>Time</th>
             <th>Comment</th>
@@ -105,7 +104,6 @@
         <tbody>
         {% for appointment in appointments.all %}
         <tr>
-            <td>{{ appointment.appoint_code_n }}</td>
             <td>{{appointment.app_date}}</td>
             <td>{{appointment.app_time}}</td>
             <td>{{appointment.comment}}</td>

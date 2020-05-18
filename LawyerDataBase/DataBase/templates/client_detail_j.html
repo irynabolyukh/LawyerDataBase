@@ -13,13 +13,14 @@
 <div class="card">
         <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>
     <div>Code of client: {{ client_juridical.num_client_j }}</div>
-    <div>Adr: {{ client_juridical.adr_city }} {{ client_juridical.adr_street }} {{ client_juridical.adr_build }}</div>
-    <div>client_position: {{ client_juridical.name_of_company }}{{ client_juridical.client_position }}</div>
+    <div>Adr: {{ client_juridical.adr_city }}, {{ client_juridical.adr_street }}, {{ client_juridical.adr_build }}</div>
+    <div>Company: {{ client_juridical.name_of_company }}</div>
+    <div>Position: {{ client_juridical.client_position }}</div>
     <div>IBAN: {{ client_juridical.iban }}</div>
-    <div>email: {{ client_juridical.mail_info }}</div>
-    <div>
+    <div>E-mail: {{ client_juridical.mail_info }}</div>
+    <div>Phone num:
         {% for phone in phones %}
-            <div>Phone num: {{phone.phone_num}}</div>
+            <div>+38{{phone.phone_num}}</div>;
         {% endfor %}
     </div>
 </div>
