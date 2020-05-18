@@ -1,20 +1,27 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 {% block title %}Service details{% endblock %}
 
 {% block navbar %}
+{% if request.user|has_group:"Secretaries"%}
  <a class="navbar-brand" href="{% url 'services' %}">Back to Services</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+{% endif %}
 {% endblock %}
 
 {% block content %}
+<div class="card">
     <div>Service code : {{ service.service_code }}</div>
     <div>Name service : {{ service.name_service }}</div>
     <div>Nominal value : {{ service.nominal_value }}</div>
     <div>Bonus value : {{ service.bonus_value }}</div>
+</div>
+{% if request.user|has_group:"Secretaries"%}
     <a class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Update</a>
     <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Delete</a>
+
     {% if lawyers %}
     <div class="container">
     <h5>Адвокати</h5>
@@ -36,8 +43,7 @@
         {% endfor %}
         </tbody>
     </table>
-
     </div>
-
     {% endif %}
+{% endif %}
 {% endblock %}
