@@ -64,7 +64,7 @@ class Lawyer(models.Model):
         permissions = (
             ("view_statistics", "Can view statistics"),
             ("view_all_lawyers", "Can view all lawyers"),
-            ("view_a    ll_nclients", "Can view all nclients"),
+            ("view_all_nclients", "Can view all nclients"),
             ("view_all_jclients", "Can view all jclients"),
             ("view_all_ndossiers", "Can view all ndossiers"),
             ("view_all_jdossiers", "Can view all jdossiers"),
