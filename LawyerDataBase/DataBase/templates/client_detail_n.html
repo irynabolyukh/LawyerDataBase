@@ -7,6 +7,7 @@
     </button>
 {% endblock %}
 {% block content %}
+<div class="card">
     <div> {{ client_natural.first_name }} {{ client_natural.surname }} {{ client_natural.mid_name }}</div>
     <div>Code of client: {{ client_natural.num_client_n }}</div>
     <div>Adr: {{ client_natural.adr_city }} {{ client_natural.adr_street }} {{ client_natural.adr_build }}</div>
@@ -18,6 +19,7 @@
             <div>Phone num: {{phone.phone_num}}</div>
         {% endfor %}
     </div>
+</div>
         <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Update</a>
         <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Delete</a>
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Create Appointment</a>

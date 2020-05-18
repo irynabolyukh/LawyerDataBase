@@ -52,7 +52,7 @@
             <td>{{ client.birth_date }}</td>
             <td>
                 <li> Номер:
-                 <!--{{ client.passport_date }}-->
+                 <!--{{ client.passport_num }}-->
                     МК345423
                 </li>
                 <li> Дата:
@@ -62,6 +62,7 @@
                  {{ client.passport_authority }}
                 </li>
             </td>
+            <td>{{ client.mail_info }}</td>
             <td>
                 <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=client.pk  %}">Update</a>
                 <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=client.pk  %}">Delete</a>
