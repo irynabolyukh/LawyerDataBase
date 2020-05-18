@@ -18,28 +18,15 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db import connection
 
 
-class AjaxableResponseMixin(object):
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
+@login_required()
+@requires_csrf_token
+def service_ajax(request):
+    if request.method == 'POST':
+        response = {}
+        print(request.POST)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
 
 class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
