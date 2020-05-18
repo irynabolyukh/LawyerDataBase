@@ -24,6 +24,7 @@
         <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Delete</a>
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Create Appointment</a>
         <a class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Create Dossier</a>
+
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
