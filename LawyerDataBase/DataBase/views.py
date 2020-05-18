@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.core.serializers import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,6 +9,7 @@ from django.views import generic
 from .forms import *
 from .models import *
 from django.http import JsonResponse
+
 from datetime import date
 import json
 from .sql_querries import *
@@ -23,7 +25,8 @@ from django.db import connection
 def service_ajax(request):
     if request.method == 'POST':
         response = {}
-        print(request.POST)
+        lawyers = lawyers_appointment(request.POST.getlist('services[]'))
+        response['lawyers'] = lawyers
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)

@@ -305,3 +305,28 @@ def date_lawyer_counter(date1, date2):
                     'surname': record[2],
                     'count': record[3]})
     return res
+
+
+def lawyers_appointment(services):
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT la.lawyer_code, la.first_name, la.surname, la.mid_name, la.specialization '
+            'FROM "Lawyer" la '
+            'WHERE NOT EXISTS '
+            '   ( SELECT * FROM "Lawyer_service" ls '
+            '       WHERE services_id = ANY (%s)  '
+            '       and la.lawyer_code not in '
+            '               (select lawyer_id '
+            '               from "Lawyer_service" '
+            '               WHERE services_id = ls.services_id))',
+            [services])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+        res.append({'lawyer_code': record[0],
+                    'first_name': record[1],
+                    'surname': record[2],
+                    'mid_name': record[3],
+                    'spec': record[4]})
+    return res

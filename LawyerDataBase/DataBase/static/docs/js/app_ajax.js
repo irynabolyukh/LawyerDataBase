@@ -7,7 +7,6 @@ function main() {
 
 function service_ajax_request(event) {
     services = $('#id_service').val();
-
     $.ajax({
             type: "POST",
             async: true,
@@ -15,7 +14,6 @@ function service_ajax_request(event) {
             data: {
                 csrfmiddlewaretoken: getCookie('csrftoken'),
                 services: services
-
             },
             success: updateServices,
             error: function (jqXHR, textStatus, errorThrown) {
@@ -25,7 +23,15 @@ function service_ajax_request(event) {
 }
 
 function updateServices(data){
-    console.log(data)
+
+    console.log(data);
+    var lawyer_block = $('#id_lawyer_code');
+    lawyer_block.empty();
+    for (var item in data['lawyers']){
+        lawyer_block.append(`<option value="${data['lawyers'][item].lawyer_code}">
+                            ${data['lawyers'][item].lawyer_code} : ${data['lawyers'][item].spec}</option>`)
+    }
+
 
 }
 
