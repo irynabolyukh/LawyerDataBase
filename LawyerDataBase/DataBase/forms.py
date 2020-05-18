@@ -1,10 +1,10 @@
 from django.forms import ModelForm, inlineformset_factory
 from django import forms
 from .models import *
+from django.forms import Textarea
 
 
 class LawyerForm(ModelForm):
-
     class Meta:
         model = Lawyer
         widgets = {
@@ -51,29 +51,13 @@ class Appointment_NForm(ModelForm):
     class Meta:
         model = Appointment_N
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code', 'code_dossier_n']
+        widgets = {
+            'comment': Textarea()
+        }
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-        #self.fields['lawyer_code'].queryset = Lawyer.objects.none()
-
-        # if 'service' in self.data:
-        #     try:
-        #         service_id = int(self.data.get('service'))
-        #         self.fields['lawyer_code'].queryset = Lawyer.objects.all()
-                    # .raw(
-                    #         '''SELECT Lawyer.lawyer_code_id
-                    #            FROM "Lawyer" x
-                    #            WHERE service_id IN (SELECT service
-                    #                                 FROM "Lawyer" y
-                    #                                 WHERE x.lawyer_code_id = y.lawyer_code_id)''')
-        #     except (ValueError, TypeError):
-        #         pass  # invalid input from the client; ignore and fallback to empty Lawyer queryset
-        # elif self.instance.pk:
-        #     self.fields['lawyer_code'].queryset = self.instance.service.lawyer_set
-    # def __init__(self, user, *args, **kwargs):
-    #     super(Appointment_NForm, self).__init__(*args, **kwargs)
-    #     self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(user=user)
-    #     self.fields['num_client_n'].queryset = Client_natural.objects.filter(user=user)
+    def __init__(self, *args, **kwargs):
+        super(Appointment_NForm, self).__init__(*args, **kwargs)
+        self.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
 
 
 class Appointment_JForm(ModelForm):
@@ -86,6 +70,15 @@ class Appointment_JForm(ModelForm):
     class Meta:
         model = Appointment_J
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
+
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        print(user)
+        super(Appointment_JForm, self).__init__(*args, **kwargs)
+        if not user.is_superuser():
+            self.fields.pop('num_client_j')
+
 
 
 class Dossier_JForm(ModelForm):
