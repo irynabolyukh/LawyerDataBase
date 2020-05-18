@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
-from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView
+from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView
 from django.views import generic
 from .forms import *
 from .models import *
@@ -232,54 +232,6 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
 
 @login_required()
-@permission_required('DataBase.view_all_lawyers')
-def lawyers(request):
-    return render(request, 'lawyers.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_nclients')
-def ncustomers(request):
-    return render(request, 'ncustomers.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_jclients')
-def jcustomers(request):
-    return render(request, 'jcustomers.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_ndossiers')
-def ndossiers(request):
-    return render(request, 'ndossiers.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_jdossiers')
-def jdossiers(request):
-    return render(request, 'jdossiers.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_nappointments')
-def nappointments(request):
-    return render(request, 'nappointments.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_jappointments')
-def jappointments(request):
-    return render(request, 'jappointments.html', {})
-
-
-@login_required()
-@permission_required('DataBase.view_all_services')
-def services(request):
-    return render(request, 'services.html', {})
-
-
-@login_required()
 def index(request):
     return render(request, 'index.html', {})
 
@@ -386,7 +338,7 @@ class ServicesDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     permission_required = 'DataBase.delete_services'
     model = Services
     template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('lawyers')
+    success_url = reverse_lazy('services')
 
 
 class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -697,3 +649,57 @@ class Dossier_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
 
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_lawyers'
+    model = Lawyer
+    paginate_by = 25
+    queryset = Lawyer.objects.order_by('surname')
+
+
+class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_services'
+    model = Services
+
+
+class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_jclients'
+    model = Client_juridical
+    paginate_by = 25
+    queryset = Client_juridical.objects.order_by('surname')
+
+
+class Client_naturalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_nclients'
+    model = Client_natural
+    paginate_by = 25
+    queryset = Client_natural.objects.order_by('surname')
+
+
+class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_jdossiers'
+    model = Dossier_J
+    paginate_by = 25
+    queryset = Dossier_J.objects.order_by('date_signed')
+
+
+class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_ndossiers'
+    model = Dossier_N
+    paginate_by = 25
+    queryset = Dossier_N.objects.order_by('date_signed')
+
+
+class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_nappointments'
+    model = Appointment_N
+    paginate_by = 25
+    queryset = Appointment_N.objects.order_by('app_date').order_by('app_time')
+
+
+class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_jappointments'
+    model = Appointment_J
+    paginate_by = 25
+    queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')

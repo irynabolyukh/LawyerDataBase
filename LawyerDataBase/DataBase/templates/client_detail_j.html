@@ -1,8 +1,14 @@
 {% extends "base_generic.html" %}
 {% block title %}Client's profile{% endblock %}
-
+{% block navbar %}
+    <a class="navbar-brand" href="{% url 'jcustomers' %}">Back to JCustomers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
 {% block content %}
-    <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>
+<div class="card">
+        <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>
     <div>Code of client: {{ client_juridical.num_client_j }}</div>
     <div>Adr: {{ client_juridical.adr_city }} {{ client_juridical.adr_street }} {{ client_juridical.adr_build }}</div>
     <div>client_position: {{ client_juridical.name_of_company }}{{ client_juridical.client_position }}</div>
@@ -13,6 +19,8 @@
             <div>Phone num: {{phone.phone_num}}</div>
         {% endfor %}
     </div>
+</div>
+
     <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
     <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Delete</a>
     <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Create Appointment</a>
@@ -65,7 +73,7 @@
     {% endif %}
     {% if dossiers %}
         <div class="container">
-    <h5>Досье</h5>
+    <h5>Досьє</h5>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -75,6 +83,7 @@
             <th>Дата підписання</th>
             <th>Дата спливу</th>
             <th>Статус</th>
+            <th>Дата закриття</th>
             <th>Оплачено</th>
         </tr>
         </thead>
@@ -95,6 +104,8 @@
             {% endif %}
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
             <td>{{ dossier.date_closed }}</td>
+            {% else %}
+            <td>-------</td>
             {% endif %}
             {% if dossier.paid is True %}
             <td>Оплачено</td>
