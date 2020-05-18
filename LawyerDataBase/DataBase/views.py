@@ -1,3 +1,5 @@
+from pyexpat.errors import messages
+
 from django.core.serializers import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -15,7 +17,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required, permission_required
 # from braces import views
 
-from django.db import connection
+from django.db import connection, IntegrityError
 
 
 class AjaxableResponseMixin(object):
