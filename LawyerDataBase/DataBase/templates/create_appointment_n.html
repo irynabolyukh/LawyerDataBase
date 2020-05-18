@@ -12,7 +12,7 @@
 
 {% block content %}
     <h1>New Natural Appointment</h1>
-    <form method="POST" class="post-form" id="Appointment_NForm" data-lawyers-url="{% url 'ajax_load_lawyers' %}" novalidate>
+    <form method="POST" class="post-form">
         {% csrf_token %}
          <table>
              {{ form.as_table }}
