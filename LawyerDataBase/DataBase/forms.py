@@ -3,8 +3,8 @@ from django import forms
 from .models import *
 from django.forms import Textarea
 
-class LawyerForm(ModelForm):
 
+class LawyerForm(ModelForm):
     class Meta:
         model = Lawyer
         widgets = {
@@ -51,12 +51,12 @@ class Appointment_NForm(ModelForm):
     class Meta:
         model = Appointment_N
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code', 'code_dossier_n']
-        widgets={
-            'comment':Textarea()
+        widgets = {
+            'comment': Textarea()
         }
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Appointment_NForm, self).__init__(*args, **kwargs)
         self.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
 
 
@@ -71,10 +71,13 @@ class Appointment_JForm(ModelForm):
         model = Appointment_J
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
 
-    # def __init__(self, user, *args, **kwargs):
-    #     super(Appointment_JForm, self).__init__(*args, **kwargs)
-    #     self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(user=user)
-    #     self.fields['num_client_j'].queryset = Client_juridical.objects.filter(user=user)
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        print(user)
+        super(Appointment_JForm, self).__init__(*args, **kwargs)
+        if not user.is_superuser():
+            self.fields.pop('num_client_j')
+
 
 
 class Dossier_JForm(ModelForm):
