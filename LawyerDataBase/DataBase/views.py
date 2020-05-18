@@ -150,6 +150,8 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
     template_name = "lawyer_detail.html"
 
     def test_func(self):
+        if self.request.user.is_superuser:
+            return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
         if group.name == "Lawyers":
             la_code = self.kwargs['pk']
@@ -229,6 +231,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     template_name = "client_detail_n.html"
 
     def test_func(self):
+        if self.request.user.is_superuser:
+            return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
         if group.name == "ClientsN":
             cl_code = self.kwargs['pk']
@@ -253,6 +257,8 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     template_name = "client_detail_j.html"
 
     def test_func(self):
+        if self.request.user.is_superuser:
+            return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
         if group.name == "ClientsJ":
             cl_code = self.kwargs['pk']
@@ -277,13 +283,13 @@ def index(request):
         return HttpResponseRedirect(reverse('stats'))
     elif group.name == "Lawyers":
         l_code = Lawyer.objects.get(mail_info=request.user.email).pk
-        return HttpResponseRedirect('/database/lawyer/'+l_code)
+        return HttpResponseRedirect('/database/lawyer/' + l_code)
     elif group.name == "ClientsJ":
         cl_code = Client_juridical.objects.get(mail_info=request.user.email).pk
-        return HttpResponseRedirect('/database/client_J/'+cl_code)
+        return HttpResponseRedirect('/database/client_J/' + cl_code)
     elif group.name == "ClientsN":
         cl_code = Client_natural.objects.get(mail_info=request.user.email).pk
-        return HttpResponseRedirect('/database/client_N/'+cl_code)
+        return HttpResponseRedirect('/database/client_N/' + cl_code)
     return render(request, 'index.html', {})
 
 
