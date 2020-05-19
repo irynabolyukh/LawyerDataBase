@@ -20,7 +20,7 @@
     <div>E-mail: {{ client_juridical.mail_info }}</div>
     <div>Phone num:
         {% for phone in phones %}
-            <div>+38{{phone.phone_num}}</div>;
+            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
         {% endfor %}
     </div>
 </div>
