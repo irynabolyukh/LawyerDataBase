@@ -74,10 +74,10 @@ class Appointment_JForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
-        print(user)
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        if not user.is_superuser():
-            self.fields.pop('num_client_j')
+        self.fields['code_dossier_j'].queryset = Dossier_N.objects.none()
+        # if not user.is_superuser():
+        #     self.fields.pop('num_client_j')
 
 
 
