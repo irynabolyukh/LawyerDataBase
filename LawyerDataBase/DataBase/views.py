@@ -539,6 +539,11 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         data = super().get_context_data(**kwargs)
         return data
 
+    def get_form(self, form_class=None):
+        form = super(Appointment_NCreateView, self).get_form(form_class)
+        form.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
+        return form
+
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
@@ -560,8 +565,6 @@ class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
-
-
 
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
@@ -591,9 +594,6 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         form.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
         return form
 
-    def get_form_kwargs(self):
-        kwargs = {'user': self.request.user}
-        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
