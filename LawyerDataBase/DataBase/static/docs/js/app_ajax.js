@@ -20,7 +20,7 @@ function main() {
 
 function dossier_ajax_request(event) {
     var client = $('#id_num_client_n');
-    if (client !== undefined)
+    if (client[0] !== undefined)
         $.ajax({
                 type: "POST",
                 async: true,
@@ -36,8 +36,8 @@ function dossier_ajax_request(event) {
                 }
             });
     else {
-        console.log("jun")
         client = $('#id_num_client_j');
+
         $.ajax({
             type: "POST",
             async: true,
