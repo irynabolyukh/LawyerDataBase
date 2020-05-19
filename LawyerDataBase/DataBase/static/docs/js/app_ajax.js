@@ -7,7 +7,14 @@ function main() {
         changeYear: true,
     });
     $('#id_service')[0].addEventListener('change', service_ajax_request);
-    $('#id_num_client_n')[0].addEventListener('change',dossier_ajax_request);
+    try {
+        $('#id_num_client_n')[0].addEventListener('change',dossier_ajax_request);
+
+    }
+    catch (e) {
+        $('#id_num_client_j')[0].addEventListener('change',dossier_ajax_request);
+    }
+    
 }
 
 
@@ -29,6 +36,7 @@ function dossier_ajax_request(event) {
                 }
             });
     else {
+        console.log("jun")
         client = $('#id_num_client_j');
         $.ajax({
             type: "POST",
@@ -47,13 +55,19 @@ function dossier_ajax_request(event) {
     }
 }
 function updateN(data){
-    console.log(data);
     var dossier = $('#id_code_dossier_n');
     dossier.empty();
     dossier.append(`<option value="" selected="">---------</option>`);
     for (var item in data['dossier']){
-        dossier.append(`<option value="${data['dossier'][item].code}">
-                            ${data['dossier'][item].code}</option>`)
+        dossier.append(`<option value="${data['dossier'][item].code}">${data['dossier'][item].code}</option>`)
+    }
+}
+function updateJ(data){
+    var dossier = $('#id_code_dossier_j');
+    dossier.empty();
+    dossier.append(`<option value="" selected="">---------</option>`);
+    for (var item in data['dossier']){
+        dossier.append(`<option value="${data['dossier'][item].code}">${data['dossier'][item].code}</option>`)
     }
 }
 

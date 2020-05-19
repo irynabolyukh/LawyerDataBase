@@ -347,6 +347,15 @@ def lawyers_appointment(services):
             '               from "Lawyer_service" '
             '               WHERE services_id = ls.services_id))',
             [services])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+        res.append({'lawyer_code': record[0],
+                    'first_name': record[1],
+                    'surname': record[2],
+                    'mid_name': record[3],
+                    'spec': record[4]})
+    return res
 
 def appoint_N_nom_value(param): #count appointment nominal value if Dossier = closed
     with connection.cursor() as cursor:
