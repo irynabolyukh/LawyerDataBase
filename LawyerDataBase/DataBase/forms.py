@@ -46,7 +46,7 @@ class Appointment_NForm(ModelForm):
     service = forms.ModelMultipleChoiceField(queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Client ID', queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
-    code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.all())
+    code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.none())
 
     class Meta:
         model = Appointment_N
@@ -58,6 +58,7 @@ class Appointment_NForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(Appointment_NForm, self).__init__(*args, **kwargs)
       #  self.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
+
 
 
 class Appointment_JForm(ModelForm):
