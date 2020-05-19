@@ -81,7 +81,8 @@ function updateInfo(data) {
         for (var service in data['service_count']){
              given_services
                  .append(
-                     `<p><a href="/database/service/${data['service_count'][service].service_code}">${data['service_count'][service].service_code}</a> <b>${data['service_count'][service].name_service}</b> : 
+                     `<p><a href="/database/service/${data['service_count'][service].service_code}">
+                            ${data['service_count'][service].service_code}</a> <b>${data['service_count'][service].name_service}</b> : 
                          ${data['service_count'][service].count}</p>`)
     }
     else{

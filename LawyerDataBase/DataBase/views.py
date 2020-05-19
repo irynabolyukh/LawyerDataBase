@@ -1,3 +1,4 @@
+from django.core import serializers
 from django.core.serializers import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -8,11 +9,52 @@ from django.views import generic
 from .forms import *
 from .models import *
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+
 from datetime import date
 import json
 from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
+
+# from braces import views
+
+from django.db import connection
+
+
+@login_required()
+@requires_csrf_token
+def client_ajax(request):
+    if request.method == 'POST':
+        response = {}
+        response['dossier'] = []
+        print(request.POST)
+
+        if request.POST['dosJ'] == 'true':
+            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client'])
+            for dossier in dossiers:
+                response['dossier'].append({'code': dossier.code_dossier_j,
+                                            'issue': dossier.issue})
+        else:
+            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client'])
+            for dossier in dossiers:
+                response['dossier'].append({'code': dossier.code_dossier_n,
+                                            'issue': dossier.issue})
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
+
+
+@login_required()
+@requires_csrf_token
+def service_ajax(request):
+    if request.method == 'POST':
+        response = {}
+        lawyers = lawyers_appointment(request.POST.getlist('services[]'))
+        response['lawyers'] = lawyers
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
 
 class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
@@ -543,6 +585,16 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
+
+    def get_form(self, form_class=None):
+        form = super(Appointment_JCreateView, self).get_form(form_class)
+        user = self.request.user.email
+        form.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
+        return form
+
+    def get_form_kwargs(self):
+        kwargs = {'user': self.request.user}
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
