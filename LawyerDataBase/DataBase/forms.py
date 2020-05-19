@@ -57,7 +57,7 @@ class Appointment_NForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        self.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
+      #  self.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
 
 
 class Appointment_JForm(ModelForm):
@@ -75,7 +75,7 @@ class Appointment_JForm(ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        self.fields['code_dossier_j'].queryset = Dossier_N.objects.none()
+     #   self.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
         # if not user.is_superuser():
         #     self.fields.pop('num_client_j')
 
