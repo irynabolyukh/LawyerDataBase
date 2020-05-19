@@ -594,6 +594,9 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         form.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
         return form
 
+    def get_form_kwargs(self):
+        kwargs = {'user': self.request.user}
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
