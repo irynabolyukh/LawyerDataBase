@@ -246,7 +246,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk'])
+        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
+                            order_by('-app_date', '-app_time')
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
 
@@ -539,9 +540,17 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         data = super().get_context_data(**kwargs)
         return data
 
+    def post(self, request, *args, **kwargs):
+
+        form = self.get_form()
+        form.fields['code_dossier_n'].queryset=Dossier_N.objects.all()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
     def get_form(self, form_class=None):
         form = super(Appointment_NCreateView, self).get_form(form_class)
-        form.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
         return form
 
     def form_valid(self, form):
@@ -593,10 +602,6 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         form = super(Appointment_JCreateView, self).get_form(form_class)
         form.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
         return form
-
-    def get_form_kwargs(self):
-        kwargs = {'user': self.request.user}
-        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
