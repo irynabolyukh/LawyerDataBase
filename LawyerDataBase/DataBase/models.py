@@ -173,7 +173,7 @@ class Dossier(models.Model):
     date_signed = models.DateField()
     date_expired = models.DateField()
     date_closed = models.DateField(blank=True, null=True)
-    fee = models.DecimalField(max_digits=7, decimal_places=2)
+    fee = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     paid = models.BooleanField(default=False)
     court_name = models.CharField(max_length=50, blank=True, null=True)
     court_adr = models.CharField(max_length=50, blank=True, null=True)
