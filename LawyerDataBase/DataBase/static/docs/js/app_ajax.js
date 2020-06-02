@@ -1,7 +1,15 @@
 $(document).ready(main());
 
+
+
 function main() {
-    $()
+    $('#id_app_time').timepicker({
+        timeFormat: 'H:i',
+        minTime: '10:00',
+        maxTime: '19:00',
+        interval: 15,
+    }).on('change',checkTime);
+
 
     $('#id_app_date').attr('autocomplete',"off").datepicker({
         dateFormat: "yy-mm-dd",
@@ -19,6 +27,26 @@ function main() {
     
 }
 
+
+function checkTime(event){
+    var time_element = $('#id_app_time');
+    try{
+        var selected_time = time_element.timepicker('getTime');
+        // check if time is between 10 and 19
+        if (selected_time.getHours() > 19 || selected_time.getHours() < 10){
+            time_element.val("");
+            time_element.addClass("wrong_input")
+        }
+        // time is right
+        else {
+            time_element.removeClass("wrong_input")
+        }
+    }
+    catch (e) {
+        time_element.val("");
+        time_element.addClass("wrong_input")
+    }
+}
 
 function dossier_ajax_request(event) {
     var client = $('#id_num_client_n');
