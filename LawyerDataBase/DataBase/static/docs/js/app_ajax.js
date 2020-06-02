@@ -32,14 +32,19 @@ function checkTime(event){
     var time_element = $('#id_app_time');
     try{
         var selected_time = time_element.timepicker('getTime');
+        // check if time is between 10 and 19
         if (selected_time.getHours() > 19 || selected_time.getHours() < 10){
-        time_element.val("");
-        alert("Обрано недійсний час!")
+            time_element.val("");
+            time_element.addClass("wrong_input")
+        }
+        // time is right
+        else {
+            time_element.removeClass("wrong_input")
         }
     }
     catch (e) {
         time_element.val("");
-        alert("Обрано недійсний час!")
+        time_element.addClass("wrong_input")
     }
 }
 
