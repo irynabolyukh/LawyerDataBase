@@ -1,7 +1,7 @@
 from django.forms import ModelForm, inlineformset_factory
 from django import forms
 from .models import *
-from django.forms import Textarea
+from django.forms import TextInput, Textarea, TimeInput
 
 
 class LawyerForm(ModelForm):
@@ -74,7 +74,9 @@ class Appointment_JForm(ModelForm):
     class Meta:
         model = Appointment_J
         fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
-
+        widgets = {
+            'app_time': TimeInput(format='%H:%M'),
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
