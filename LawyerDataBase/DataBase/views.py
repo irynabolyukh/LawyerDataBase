@@ -234,19 +234,20 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        group = self.request.user.groups.filter(user=self.request.user)[0]
-        if group.name == "ClientsN":
+        if self.request.user.groups.filter(name="ClientsN").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
         else:
             return True
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk'])
+        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
+                            order_by('-app_date', '-app_time')
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
 
@@ -260,8 +261,7 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        group = self.request.user.groups.filter(user=self.request.user)[0]
-        if group.name == "ClientsJ":
+        if self.request.user.groups.filter(name="ClientsJ").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -541,12 +541,16 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form(self, form_class=None):
         form = super(Appointment_NCreateView, self).get_form(form_class)
-        form.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
         return form
 
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_NCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
@@ -591,16 +595,16 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form(self, form_class=None):
         form = super(Appointment_JCreateView, self).get_form(form_class)
-        form.fields['code_dossier_j'].queryset = Dossier_J.objects.none()
         return form
-
-    def get_form_kwargs(self):
-        kwargs = {'user': self.request.user}
-        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_JCreateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})

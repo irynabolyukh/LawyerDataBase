@@ -46,7 +46,7 @@ class Appointment_NForm(ModelForm):
     service = forms.ModelMultipleChoiceField(queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Client ID', queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
-    code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.none())
+    code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.all())
 
     class Meta:
         model = Appointment_N
@@ -56,8 +56,13 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-
+        if user.groups.filter(name="ClientsN").exists():
+            user_id = Client_natural.objects.filter(mail_info=user.email)[0]
+            self.fields['num_client_n'].initial=user_id.pk
+            self.fields['num_client_n'].disabled = True
+            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id)
 
 class Appointment_JForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)
@@ -74,8 +79,11 @@ class Appointment_JForm(ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        # if not user.is_superuser():
-        #     self.fields.pop('num_client_j')
+        if user.groups.filter(name="ClientsJ").exists():
+            user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
+            self.fields['num_client_j'].initial=user_id.pk
+            self.fields['num_client_j'].disabled = True
+            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(num_client_j=user_id)
 
 
 

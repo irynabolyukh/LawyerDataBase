@@ -1,6 +1,8 @@
 $(document).ready(main());
 
 function main() {
+    $()
+
     $('#id_app_date').attr('autocomplete',"off").datepicker({
         dateFormat: "yy-mm-dd",
         changeMonth: true,
