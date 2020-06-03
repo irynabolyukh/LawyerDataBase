@@ -1,67 +1,69 @@
 {% extends "base_generic.html" %}
 {% load user_tags %}
-{% block title %}Dossier details{% endblock %}
+{% block title %}Досьє{% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Secretaries"%}
- <a class="navbar-brand" href="{% url 'jdossiers' %}">Back to JDossiers</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+ <a class="navbar-brand" href="{% url 'jdossiers' %}">🢀Усі юридичні досьє</a>
 {% endif %}
 {% if request.user|has_group:"ClientsJ"%}
- <a class="navbar-brand" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">Back to Profile</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+ <a class="navbar-brand" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">🢀Повернутись до профілю</a>
 {% endif %}
 {% endblock %}
 
 {% block content %}
-    <h2>About Dossier</h2>
+    <h2>Деталі досьє</h2>
     <table class="table" style="width: max-content">
         <tbody>
         <tr>
-            <th>Code</th>
+            <th>Код</th>
             <td>{{ dossier.code_dossier_j }}</td>
         </tr>
         <tr>
-            <th>Issue</th>
+            <th>Суть справи</th>
             <td>{{ dossier.issue }}</td>
         </tr>
         <tr>
-            <th>Status</th>
+            <th>Статус</th>
             <td>{{ dossier.status }}</td>
         </tr>
         <tr>
-            <th>Date signed</th>
+            <th>Дата підписання</th>
             <td>{{dossier.date_signed|date}}</td>
         </tr>
          <tr>
-            <th>Date expired</th>
+            <th>Дата спливу</th>
             <td>{{dossier.date_expired|date}}</td>
         </tr>
         {% if dossier.date_closed %}
         <tr>
-            <th>Date closed</th>
+            <th>Дата закриття</th>
             <td>{{dossier.date_closed|date}}</td>
         </tr>
         {% endif %}
          <tr>
-            <th>Fee</th>
-            <td>${{dossier.fee}}</td>
+            <th>Сума</th>
+            <td>₴{{dossier.fee}}</td>
         </tr>
          <tr>
-            <th>Paid</th>
-            <td>{{dossier.paid}}</td>
+            <th>Оплачено</th>
+             {% if dossier.paid is True %}
+            <td>Оплачено</td>
+            {% else %}
+            <td>Не оплачено</td>
+            {% endif %}
         </tr>
         {% if dossier.court_adr %}
-         <tr>
-            <th>Court</th>
-            <td>textextextextext</td>
+          <tr>
+            <th>Суд</th>
+             <td>{{dossier.court_name}}, {{dossier.court_adr}}</td>
+        </tr>
+        <tr>
+            <th>Дата засідання</th>
+             <td>{{dossier.court_date}}</td>
         </tr>
         {% endif %}
         <tr>
-            <th>Client</th>
+            <th>Клієнт</th>
             <td>
                 <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
                     {{ dossier.num_client_j.getfullname }}
@@ -70,7 +72,7 @@
         </tr>
         {% if dossier.lawyer_code %}
         <tr>
-            <th>Lawyer</th>
+            <th>Адвокат</th>
             {% if request.user|has_group:"Secretaries"%}
             <td>
                 <a href="{% url 'lawyer-detailed-view'  dossier.lawyer_code.lawyer_code %}">
@@ -87,18 +89,24 @@
         {% endif %}
         </tbody>
     </table>
+   {% if request.user|has_group:"Secretaries"%}
+                <div>
+                    <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
+                    <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
+                </div>
+    {% endif %}
 </div>
     {% if appointments %}
 
 <div class="container">
-    <h2>Appointments</h2>
+    <h2>Записи</h2>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Comment</th>
-            <th>Lawyer</th>
+            <th>Дата</th>
+            <th>Час</th>
+            <th>Комент</th>
+            <th>Адвокат</th>
         </tr>
         </thead>
         <tbody>

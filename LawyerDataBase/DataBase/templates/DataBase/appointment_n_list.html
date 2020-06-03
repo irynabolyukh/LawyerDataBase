@@ -1,9 +1,9 @@
 {% extends "stat_generic.html" %}
-{% block title %}NAppointments{% endblock %}
+{% block title %}Фізичні записи{% endblock %}
 {% block content %}
 <div class="container">
-     <h2>NAppointments</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'appointment_n-create' %}">New Appointment</a>
+     <h2>Фізичні записи</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -34,8 +34,8 @@
             <td><a href="{{ appointment.lawyer_code.get_absolute_url }}">{{ appointment.lawyer_code.getfullname }}</a></td>
             <td><a href="{{ appointment.num_client_n.get_absolute_url }}">{{ appointment.num_client_n.getfullname }}</a></td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

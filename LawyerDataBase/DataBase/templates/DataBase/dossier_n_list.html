@@ -1,9 +1,9 @@
 {% extends "stat_generic.html" %}
-{% block title %}NDossiers{% endblock %}
+{% block title %}Фізичні клієнти{% endblock %}
 {% block content %}
 <div class="container">
-     <h2>NDossiers</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'dossier_n-create' %}">New Dossier</a>
+     <h2>Фізичні досьє</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'dossier_n-create' %}">Нове досьє</a>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -12,7 +12,7 @@
             <th>Дата підписання</th>
             <th>Дата спливу угоди</th>
             <th>Дата закриття</th>
-            <th>Сума</th>
+            <th>Гонорар</th>
             <th>Сплачено</th>
             <th>Клієнт</th>
             <th></th>
@@ -22,7 +22,13 @@
         {% for dossier in object_list %}
         <tr>
             <td><a href="{{ dossier.get_absolute_url }}">{{ dossier.pk }}</a></td>
-            <td>{{ dossier.status }} </td>
+            {% if dossier.status == 'closed' %}
+            <td>Закрита</td>
+            {% elif dossier.status == 'closed-won' %}
+            <td>Закрита-виграна</td>
+            {% else %}
+            <td>Відкрита</td>
+            {% endif %}
             <td>{{ dossier.date_signed }}</td>
             <td>{{ dossier.date_expired }}</td>
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
@@ -38,8 +44,8 @@
             {% endif %}
             <td><a href="{{ dossier.num_client_n.get_absolute_url }}">{{ dossier.num_client_n.getfullname }}</a></td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

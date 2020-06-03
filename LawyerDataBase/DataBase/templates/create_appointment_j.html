@@ -1,10 +1,10 @@
 {% extends "base_generic.html" %}
 {% load user_tags %}
-{% block title %}Create appointment{% endblock %}
+{% block title %}Створення нового запису{% endblock %}
 {% block stylesheet %}<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.css">{% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Secretaries"%}
-    <a class="navbar-brand" href="{% url 'jappointments' %}">Back to JAppointments</a>
+    <a class="navbar-brand" href="{% url 'jappointments' %}">🢀Усі юридичні записи</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,25 +12,19 @@
 {% endblock %}
 
 {% block content %}
-    <h1>New Juridical Appointment</h1>
-
-
+    <h1>Запис юридичного клієнта</h1>
     <form method="POST" class="post-form">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <button type="submit" class="save btn btn-success">Save</button>
+        <button type="submit" class="btn btn-outline-success">Зберегти</button>
     </form>
 
 {% endblock %}
 
 {% block script %}
 {% load static %}
-<<<<<<< HEAD
- <script src="{% static 'docs/js/app_ajax.js' %}"></script>
-=======
     <script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.min.js"></script>
     <script src="{% static 'docs/js/app_ajax.js' %}"></script>
->>>>>>> 5d6fa4b27520b67bff9fd68495990e27b5b0f75c
 {% endblock %}

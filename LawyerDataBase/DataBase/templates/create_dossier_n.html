@@ -1,18 +1,18 @@
 {% extends "base_generic.html" %}
-{% block title %}Create Dossier{% endblock %}
+{% block title %}Нове досьє{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="{% url 'ndossiers' %}">Back to NDossiers</a>
+    <a class="navbar-brand" href="{% url 'ndossiers' %}">🢀Усі фізичні досьє</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
 {% endblock %}
 
 {% block content %}
-    <h1>New Dossier of natural Client</h1>
+    <h1>Нове досьє Фізичного клієнта</h1>
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
+        <button type="submit" class="btn btn-outline-success">Зберегти</button>
     </form>
 {% endblock %}

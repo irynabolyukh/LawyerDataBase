@@ -1,12 +1,14 @@
 {% extends "base_generic.html" %}
-{% block title %}Edit appointment{% endblock %}
-
+{% block title %}Запис{% endblock %}
+{% block navbar %}
+    <a class="navbar-brand" href="{% url 'nappointments' %}">🢀Фізичні записи</a>
+    <a class="navbar-brand" href="{% url 'jappointments' %}">🢀Юридичні записи</a>
+{% endblock %}
 {% block content %}
-    <h1>Edit Appointment</h1>
+    <h1>Редагувати запис</h1>
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Update</button>
+        <button type="submit" class="btn btn-outline-success">Зберегти зміни</button>
     </form>
-
 {% endblock %}
