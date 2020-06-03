@@ -50,7 +50,7 @@ class Appointment_NForm(ModelForm):
 
     class Meta:
         model = Appointment_N
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code', 'code_dossier_n']
+        fields = ['num_client_n','code_dossier_n','service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
             'comment': Textarea()
         }
@@ -73,9 +73,10 @@ class Appointment_JForm(ModelForm):
 
     class Meta:
         model = Appointment_J
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
+        fields = ['num_client_j','code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
             'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly':'readonly'})
         }
 
     def __init__(self, *args, **kwargs):

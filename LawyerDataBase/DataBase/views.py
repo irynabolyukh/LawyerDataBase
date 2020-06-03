@@ -45,11 +45,25 @@ def client_ajax(request):
 
 @login_required()
 @requires_csrf_token
+def lawyer_work_days(request):
+    if request.method == 'POST':
+        response = {}
+        response['days'] = []
+        workdays = Work_days.objects.filter(lawyer=request.POST['lawyer'])
+        for day in workdays:
+            response['days'].append(day.pk)
+        print(response['days'])
+        # response['dates']
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
+
+@login_required()
+@requires_csrf_token
 def service_ajax(request):
     if request.method == 'POST':
         response = {}
-        lawyers = lawyers_appointment(request.POST.getlist('services[]'))
-        response['lawyers'] = lawyers
+        response['lawyers'] = lawyers_appointment(request.POST.getlist('services[]'))
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
