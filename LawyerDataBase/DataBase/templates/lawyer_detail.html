@@ -103,7 +103,7 @@
                     {% for service in appointment.service.all %}
                     <a href="{% url 'service-detailed-view' service.service_code %}">
                         {{service.name_service }}
-                    </a>
+                    </a>;
                     {% endfor %}
                     </td>
                     <td>{{appointment.app_date}}</td>
@@ -119,7 +119,7 @@
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
                         {{ service.name_service }}
-                    </a>
+                    </a>;
                     {% endfor %}
                     </td>
                     <td>{{appointment.app_date}}</td>
@@ -157,7 +157,7 @@
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
                         {{ service.name_service }}
-                    </a>
+                    </a>;
                     {% endfor %}
                     </td>
                     <td>{{appointment.app_date}}</td>
@@ -173,7 +173,7 @@
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
                         {{ service.name_service }}
-                    </a>
+                    </a>;
                     {% endfor %}
                     </td>
                     <td>{{appointment.app_date}}</td>

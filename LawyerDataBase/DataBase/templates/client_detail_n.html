@@ -27,8 +27,11 @@
         <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Оновити</a>
         <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a>
         <a class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
+        <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
 {% endif %}
+{% if request.user|has_group:"ClientsN"%}
     <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися</a>
+{% endif %}
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -68,12 +71,22 @@
                 {% endfor %}
             </td>
              {% endif %}
+             {% if request.user|has_group:"Lawyers"%}
+            <td>
+                {% for service in appointment.service.all %}
+                {{ service.name_service }};
+                {% endfor %}
+            </td>
+             {% endif %}
              {% if request.user|has_group:"Secretaries"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
             {% endif %}
              {% if request.user|has_group:"ClientsN"%}
+            <td>{{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
             <td>

@@ -2,18 +2,7 @@
 {% block content %}
 {# Assumes you setup the password_reset view in your URLconf #}
 <!--<p><a href="{% url 'password_reset' %}">Lost password?</a></p>-->
-    {% if form.errors %}
-  <p>Ваш пароль не збігається з ім'ям користувача. Будь ласка, введіть ваші дані знову.</p>
-{% endif %}
-
-{% if next %}
-  {% if user.is_authenticated %}
-    <p>Ваш акаунт не має доступу до перегляду цієї сторінки. Щоб переглянути, будь ласка, увійдіть з відповідного акаунту.</p>
-  {% else %}
-    <p>Будь ласка, увійдіть у свій акаунт, щоб переглянути цю сторінку.</p>
-  {% endif %}
-{% endif %}
-<div class="limiter" style="background-image: url('LawyerDataBase/DataBase/static/Login/images/justice.jpg')">
+<div class="limiter">
     <div class="container-login100">
         <div class="wrap-login100 p-t-30 p-b-50">
 				<span class="login100-form-title p-b-41">
@@ -32,6 +21,16 @@
                 <div class="container-login100-form-btn m-t-32">
                     <input class="login100-form-btn" name="btn-submit" id="btn-submit" type="submit" value="Увійти" />
                     <input type="hidden" name="next" value="{{ next }}" />
+                    {% if form.errors %}
+                          <p>Ваш пароль не збігається з ім'ям користувача. Будь ласка, введіть ваші дані знову.</p>
+                    {% endif %}
+                    {% if next %}
+                          {% if user.is_authenticated %}
+                            <p>Ваш акаунт не має доступу до перегляду цієї сторінки. Щоб переглянути, будь ласка, увійдіть з відповідного акаунту.</p>
+                          {% else %}
+                            <p>Будь ласка, увійдіть у свій акаунт, щоб переглянути цю сторінку.</p>
+                          {% endif %}
+                    {% endif %}
                 </div>
               </form>
         </div>

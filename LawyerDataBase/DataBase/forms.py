@@ -1,10 +1,17 @@
 from django.forms import ModelForm, inlineformset_factory
 from django import forms
 from .models import *
-from django.forms import TextInput, Textarea, TimeInput
+from django.forms import Textarea, TimeInput
 
 
 class LawyerForm(ModelForm):
+    lawyer_code = forms.CharField(label='Код свідоцтва')
+    first_name = forms.CharField(label='Імя')
+    surname = forms.CharField(label='Прізвище')
+    mid_name = forms.CharField(label='По батькові')
+    specialization = forms.CharField(label='Спеціалізація')
+    mail_info = forms.EmailField(label='E-mail')
+
     class Meta:
         model = Lawyer
         widgets = {
@@ -25,12 +32,11 @@ LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, fields=['phone_num'])
 
 
 class ServicesForm(ModelForm):
-    class Meta:
-        model = Services
-        fields = '__all__'
+    service_code = forms.CharField(label='Код послуги')
+    name_service = forms.CharField(label='Послуга')
+    nominal_value = forms.DecimalField(label='Номінальна вартість')
+    bonus_value = forms.DecimalField(label='Бонусна вартість')
 
-
-class ServicesForm(ModelForm):
     class Meta:
         model = Services
         fields = '__all__'
@@ -40,12 +46,15 @@ NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=3, fields=
 
 JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=3, fields=['phone_num'])
 
+
 class Appointment_NForm(ModelForm):
-    comment = forms.CharField(required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(queryset=Services.objects.all())
-    num_client_n = forms.ModelChoiceField(label='Client ID', queryset=Client_natural.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
-    code_dossier_n = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_N.objects.all())
+    app_date = forms.DateField(label='Дата')
+    app_time = forms.TimeField(label='Час')
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all())
 
     class Meta:
         model = Appointment_N
@@ -64,11 +73,13 @@ class Appointment_NForm(ModelForm):
             self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id)
 
 class Appointment_JForm(ModelForm):
-    comment = forms.CharField(required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(queryset=Services.objects.all())
-    num_client_j = forms.ModelChoiceField(label='Client ID', queryset=Client_juridical.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Lawyer code', queryset=Lawyer.objects.all())
-    code_dossier_j = forms.ModelChoiceField(label='Dossier code', queryset=Dossier_J.objects.all())
+    app_date = forms.DateField(label='Дата')
+    app_time = forms.TimeField(label='Час')
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all())
 
     class Meta:
         model = Appointment_J
