@@ -543,7 +543,7 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form(self, form_class=None):
         form = super(Appointment_NCreateView, self).get_form(form_class)
-        form.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
+        #form.fields['code_dossier_n'].queryset = Dossier_N.objects.none()
         return form
 
     def form_valid(self, form):
