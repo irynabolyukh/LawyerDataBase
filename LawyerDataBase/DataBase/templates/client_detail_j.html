@@ -28,9 +28,12 @@
     <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Оновити</a>
     <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
     <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
 {% endif %}
+{% if request.user|has_group:"ClientsJ"%}
     <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися</a>
-    {% if appointments %}
+{% endif %}
+{% if appointments %}
     <div class="container">
     <h5>Записи</h5>
     <table class="table table-striped table-hover">
@@ -63,7 +66,23 @@
                 {% endfor %}
             </td>
              {% endif %}
+             {% if request.user|has_group:"Lawyers"%}
+            <td>
+                {% for service in appointment.service.all %}
+                <a href="{% url 'service-detailed-view' service.service_code %}">
+                {{ service.name_service }}
+                </a>;
+                {% endfor %}
+            </td>
+             {% endif %}
             {% if request.user|has_group:"ClientsJ"%}
+            <td>
+                {% for service in appointment.service.all %}
+                {{ service.name_service }};
+                {% endfor %}
+            </td>
+             {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
@@ -77,6 +96,9 @@
             {% endif %}
              {% if request.user|has_group:"ClientsJ"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
+            <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
             <td>
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">

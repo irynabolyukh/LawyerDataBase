@@ -85,6 +85,11 @@
                     {{ dossier.lawyer_code.getfullname }}
             </td>
             {% endif %}
+              {% if request.user|has_group:"Lawyers"%}
+            <td>
+                    {{ dossier.lawyer_code.getfullname }}
+            </td>
+            {% endif %}
         </tr>
         {% endif %}
         </tbody>
@@ -121,6 +126,9 @@
                 </a></td>
             {% endif %}
             {% if request.user|has_group:"ClientsJ"%}
+            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
         </tr>
