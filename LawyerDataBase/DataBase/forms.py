@@ -40,7 +40,6 @@ NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=3, fields=
 
 JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=3, fields=['phone_num'])
 
-
 class Appointment_NForm(ModelForm):
     comment = forms.CharField(required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(queryset=Services.objects.all())
@@ -86,7 +85,6 @@ class Appointment_JForm(ModelForm):
             self.fields['num_client_j'].initial=user_id.pk
             self.fields['num_client_j'].disabled = True
             self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(num_client_j=user_id)
-
 
 
 class Dossier_JForm(ModelForm):

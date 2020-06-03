@@ -1,10 +1,10 @@
 {% extends "stat_generic.html" %}
-{% block title %}Lawyers{% endblock %}
+{% block title %}Адвокати{% endblock %}
 
 {% block content %}
 <div class="container">
-     <h2>Lawyers</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'lawyer-create' %}">Register Lawyer</a>
+     <h2>Адвокати</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'lawyer-create' %}">Зареєструвати адвоката</a>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -23,8 +23,8 @@
             <td>{{ lawyer.specialization }}</td>
             <td>{{ lawyer.mail_info }}</td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

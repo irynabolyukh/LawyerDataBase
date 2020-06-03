@@ -1,20 +1,17 @@
 {% extends "base_generic.html" %}
 {% load user_tags %}
-{% block title %}Lawyer details{% endblock %}
+{% block title %}Профіль адвоката{% endblock %}
 
 {% block navbar %}
 {% if request.user|has_group:"Secretaries"%}
-    <a class="navbar-brand" href="{% url 'lawyers' %}">Back to Lawyers</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
 {% endif %}
 {% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-sm-4">
-            <h2>About Lawyer</h2>
+            <h2>Профіль адвоката</h2>
             <h4 id="specialization">{{ lawyer.specialization }}</h4>
             <h6 id="la_code">{{ lawyer.lawyer_code }}</h6>
             <h6 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h6>
@@ -35,20 +32,27 @@
                {% for phone in phones %}
             <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
                 {% endfor %}
+            <hr>
         {% if dossier_j or dossier_n %}
+             {% if request.user|has_group:"Secretaries"%}
+                <div>
+                    <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
+                    <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
+                </div>
+            {% endif %}
             <hr>
 
-            <h3>Dossiers</h3>
+            <h3>Досьє</h3>
 
             <ul class="nav nav-pills flex-column">
             {% for dossier in dossier_n %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ dossier.issue }}</a>
+                    <a class="nav-link" href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.issue }}</a>
                 </li>
             {% endfor %}
             {% for dossier in dossier_j %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">{{ dossier.issue }}</a>
+                    <a class="nav-link" href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.issue }}</a>
                 </li>
             {% endfor %}
             </ul>
@@ -56,27 +60,21 @@
         </div>
         <div class="col-sm-8">
             <h2>Всього закрито справ</h2>
-{#            <h5>Title description, Dec 7, 2017</h5>#}
+
             {% for obj in closed_dossiers_n %}
                   <p>Натуральних: {{obj.counted_dossiers}}</p>
             {% endfor %}
             {% for obj1 in closed_dossiers_j %}
                 <p>Юридичних: {{obj1.counted_dossiers}}</p>
             {% endfor %}
-
-
             <p></p>
             <br>
-
             <h2 >Загальний дохід</h2>
             <h5>Загалом: <b id="income_total">0</b></h5>
             <h5 id="income_nom">Номінальний: {{ nominal_value }}</h5>
             <h5 id="income_bonus">Бонусний: {{ bonus_value }}</h5>
         </div>
-        {% if request.user|has_group:"Secretaries"%}
-         <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Update</a>
-        <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Delete</a>
-        {% endif %}
+
     </div>
             <hr>
 
@@ -84,17 +82,17 @@
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row">
         <div class="container">
-            <h2>Appointments</h2>
-            <h4>Upcoming</h4>
+            <h2>Записи</h2>
+            <h4>Майбутні</h4>
             <table class="table table-striped">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Client</th>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Comment</th>
-                    <th>Dossier Issue</th>
+                    <th>Клієнт</th>
+                    <th>Послуга</th>
+                    <th>Дата</th>
+                    <th>Час</th>
+                    <th>Коментарій</th>
+                    <th>Суть справи</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -139,16 +137,16 @@
     {% if appointments_j or appointments_n %}
     <div class="row">
         <div class="container">
-            <h4>Passed</h4>
+            <h4>Минулі</h4>
             <table class="table table-striped">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Client</th>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Comment</th>
-                    <th>Dossier Issue</th>
+                    <th>Клієнт</th>
+                    <th>Послуга</th>
+                    <th>Дата</th>
+                    <th>Час</th>
+                    <th>Коментарій</th>
+                    <th>Суть справи</th>
                 </tr>
                 </thead>
                 <tbody>

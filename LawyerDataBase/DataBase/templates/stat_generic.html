@@ -2,31 +2,40 @@
 
 {% block navbar %}
     <div class="nav-item">
-            <a class="nav-link" href="{% url 'lawyers' %}">Lawyers</a>
+            <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
         <div class="nav-item">
-            <a class="nav-link" href="{% url 'services' %}">Services</a>
+            <a class="nav-link" href="{% url 'services' %}">Послуги</a>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                Клієнти
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Досьє
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Записи
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+            </div>
         </div>
         <div class="nav-item">
-            <a class="nav-link" href="{% url 'jcustomers' %}">JCustomers</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'ncustomers' %}">NCustomers</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'jdossiers' %}">JDossiers</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'ndossiers' %}">NDossiers</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'jappointments' %}">JAppointments</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'nappointments' %}">NAppointments</a>
-        </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'stats' %}">Statistics</a>
+            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endblock %}
 

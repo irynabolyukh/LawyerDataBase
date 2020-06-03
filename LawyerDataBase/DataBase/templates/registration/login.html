@@ -1,40 +1,41 @@
-{% extends "base_generic.html" %}
-
+{% extends "index.html" %}
 {% block content %}
-
-{% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
+{# Assumes you setup the password_reset view in your URLconf #}
+<!--<p><a href="{% url 'password_reset' %}">Lost password?</a></p>-->
+    {% if form.errors %}
+  <p>Ваш пароль не збігається з ім'ям користувача. Будь ласка, введіть ваші дані знову.</p>
 {% endif %}
 
 {% if next %}
   {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
+    <p>Ваш акаунт не має доступу до перегляду цієї сторінки. Щоб переглянути, будь ласка, увійдіть з відповідного акаунту.</p>
   {% else %}
-    <p>Please login to see this page.</p>
+    <p>Будь ласка, увійдіть у свій акаунт, щоб переглянути цю сторінку.</p>
   {% endif %}
 {% endif %}
-
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-
-<tr>
-  <td>{{ form.username.label_tag }}</td>
-  <td>{{ form.username }}</td>
-</tr>
-
-<tr>
-  <td>{{ form.password.label_tag }}</td>
-  <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+<div class="limiter" style="background-image: url('LawyerDataBase/DataBase/static/Login/images/justice.jpg')">
+    <div class="container-login100">
+        <div class="wrap-login100 p-t-30 p-b-50">
+				<span class="login100-form-title p-b-41">
+					Авторизація
+				</span>
+            <form method="post" action="{% url 'login' %}" class="login100-form validate-form p-b-33 p-t-5">
+                    {% csrf_token %}
+                 <div class="wrap-input100">
+                     <div class="input100">{{ form.username }}</div>
+                    <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                </div>
+                 <div class="wrap-input100">
+                     <div class="input100">{{ form.password }}</div>
+                    <span class="focus-input100" data-placeholder="&#xe80f;"></span>
+                </div>
+                <div class="container-login100-form-btn m-t-32">
+                    <input class="login100-form-btn" name="btn-submit" id="btn-submit" type="submit" value="Увійти" />
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+              </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
