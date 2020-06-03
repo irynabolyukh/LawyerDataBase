@@ -33,6 +33,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "jquery": "^3.3.1",
-    "popper.js": "^1.16.0"
+    "popper.js": "^1.16.0",
+    "timepicker": "^1.13.10"
   }
 }
