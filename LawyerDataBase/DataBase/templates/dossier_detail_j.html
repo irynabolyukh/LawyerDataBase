@@ -28,16 +28,16 @@
         </tr>
         <tr>
             <th>Дата підписання</th>
-            <td>{{dossier.date_signed|date}}</td>
+            <td>{{dossier.date_signed|date:"d.m.Y"}}</td>
         </tr>
          <tr>
             <th>Дата спливу</th>
-            <td>{{dossier.date_expired|date}}</td>
+            <td>{{dossier.date_expired|date:"d.m.Y"}}</td>
         </tr>
         {% if dossier.date_closed %}
         <tr>
             <th>Дата закриття</th>
-            <td>{{dossier.date_closed|date}}</td>
+            <td>{{dossier.date_closed|date:"d.m.Y"}}</td>
         </tr>
         {% endif %}
          <tr>
@@ -59,7 +59,7 @@
         </tr>
         <tr>
             <th>Дата засідання</th>
-             <td>{{dossier.court_date}}</td>
+             <td>{{dossier.court_date|date:"d.m.Y"}}</td>
         </tr>
         {% endif %}
         <tr>
@@ -117,8 +117,8 @@
         <tbody>
         {% for appointment in appointments.all %}
         <tr>
-            <td>{{appointment.app_date}}</td>
-            <td>{{appointment.app_time}}</td>
+            <td>{{appointment.app_date|date:"d.m.Y"}}</td>
+            <td>{{appointment.app_time|time:"H:i"}}</td>
             <td>{{appointment.comment}}</td>
             {% if request.user|has_group:"Secretaries"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">

@@ -157,7 +157,7 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background-image: url('LawyerDataBase/DataBase/static/Login/images/justice.jpg');
+  background-image: url('../images/justice.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;

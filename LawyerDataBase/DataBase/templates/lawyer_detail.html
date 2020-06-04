@@ -106,8 +106,8 @@
                     </a>;
                     {% endfor %}
                     </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.app_date|date:"d.m.Y"}}</td>
+                    <td>{{appointment.app_time|time:"H:i"}}</td>
                     <td>{{appointment.comment}}</td>
                     <td>{{appointment.code_dossier_j.issue }}</td>
                 </tr>
@@ -122,8 +122,8 @@
                     </a>;
                     {% endfor %}
                     </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.app_date|date:"d.m.Y"}}</td>
+                    <td>{{appointment.app_time|time:"H:i"}}</td>
                     <td>{{appointment.comment}}</td>
                     <td>{{appointment.code_dossier_n.issue }}</td>
                 </tr>
@@ -160,8 +160,8 @@
                     </a>;
                     {% endfor %}
                     </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.app_date|date:"d.m.Y"}}</td>
+                    <td>{{appointment.app_time|time:"H:i"}}</td>
                     <td>{{appointment.comment}}</td>
                     <td>{{appointment.code_dossier_j.issue }}</td>
                 </tr>
@@ -176,8 +176,8 @@
                     </a>;
                     {% endfor %}
                     </td>
-                    <td>{{appointment.app_date}}</td>
-                    <td>{{appointment.app_time}}</td>
+                    <td>{{appointment.app_date|date:"d.m.Y"}}</td>
+                    <td>{{appointment.app_time|time:"H:i"}}</td>
                     <td>{{appointment.comment}}</td>
                     <td>{{appointment.code_dossier_n.issue }}</td>
                 </tr>

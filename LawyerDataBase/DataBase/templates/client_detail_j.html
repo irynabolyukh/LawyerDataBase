@@ -54,8 +54,8 @@
         <tbody>
         {% for appointment in appointments.all %}
         <tr>
-            <td>{{ appointment.app_date }}</td>
-            <td>{{ appointment.app_time }}</td>
+            <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
+            <td>{{ appointment.app_time|time:"H:i" }}</td>
             <td>{{ appointment.comment }}</td>
             {% if request.user|has_group:"Secretaries"%}
             <td>
@@ -143,8 +143,8 @@
             <td><a href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.code_dossier_j }}</a></td>
             <td>{{ dossier.issue }}</td>
             <td>{{ dossier.fee }} UAH</td>
-            <td>{{ dossier.date_signed }}</td>
-            <td>{{ dossier.date_expired }}</td>
+            <td>{{ dossier.date_signed|date:"d.m.Y" }}</td>
+            <td>{{ dossier.date_expired|date:"d.m.Y" }}</td>
             {% if dossier.status == 'open' %}
             <td>Відкрита</td>
             {% elif dossier.status == 'closed' %}
@@ -153,7 +153,7 @@
             <td>Закрита(виграна)</td>
             {% endif %}
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
-            <td>{{ dossier.date_closed }}</td>
+            <td>{{ dossier.date_closed|date:"d.m.Y" }}</td>
             {% else %}
             <td>-------</td>
             {% endif %}

@@ -14,8 +14,8 @@
     <div> {{ client_natural.first_name }} {{ client_natural.surname }} {{ client_natural.mid_name }}</div>
     <div>Ідентифікаційний код: {{ client_natural.num_client_n }}</div>
     <div>Адреса: {{ client_natural.adr_city }}, {{ client_natural.adr_street }}, {{ client_natural.adr_build }}</div>
-    <div>Дата народження: {{ client_natural.birth_date|date }}</div>
-    <div>Паспортні дані: {{ client_natural.passport_date }}  {{ client_natural.passport_authority }}</div>
+    <div>Дата народження: {{ client_natural.birth_date|date:"d.m.Y" }}</div>
+    <div>Паспортні дані: {{ client_natural.passport_date|date:"d.m.Y" }}  {{ client_natural.passport_authority }}</div>
     <div>E-mail: {{ client_natural.mail_info }}</div>
     <div>Номер телефону:
         {% for phone in phones %}
@@ -52,8 +52,8 @@
         <tbody>
         {% for appointment in appointments.all %}
         <tr>
-            <td>{{ appointment.app_date }}</td>
-            <td>{{ appointment.app_time }}</td>
+            <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
+            <td>{{ appointment.app_time|time:"H:i" }}</td>
             <td>{{ appointment.comment }}</td>
             {% if request.user|has_group:"Secretaries"%}
             <td>
@@ -132,8 +132,8 @@
             <td><a href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.code_dossier_n }}</a></td>
             <td>{{ dossier.issue }}</td>
             <td>{{ dossier.fee }} UAH</td>
-            <td>{{ dossier.date_signed }}</td>
-            <td>{{ dossier.date_expired }}</td>
+            <td>{{ dossier.date_signed|date:"d.m.Y" }}</td>
+            <td>{{ dossier.date_expired|date:"d.m.Y" }}</td>
             {% if dossier.status == 'open' %}
             <td>Відкрита</td>
             {% elif dossier.status == 'closed' %}
@@ -142,7 +142,7 @@
             <td>Закрита(виграна)</td>
             {% endif %}
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
-            <td>{{ dossier.date_closed }}</td>
+            <td>{{ dossier.date_closed|date:"d.m.Y" }}</td>
             {% else %}
             <td>-------</td>
             {% endif %}
