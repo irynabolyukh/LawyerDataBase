@@ -50,10 +50,10 @@ def lawyer_work_days(request):
 def dayblockedtime(request):
     if request.method == 'POST':
         response = {}
-        date_lawyer = date(int(request.POST['date1[year]']),
-                      int(request.POST['date1[month]']),
-                      int(request.POST['date1[day]']))
-        response['dates'] = blocked_time_lawyer(request.POST['lawyer'], date_lawyer)
+        date_lawyer = date(int(request.POST['date[year]']),
+                      int(request.POST['date[month]']),
+                      int(request.POST['date[day]']))
+        response['time'] = blocked_time_lawyer(request.POST['lawyer'], date_lawyer)
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)

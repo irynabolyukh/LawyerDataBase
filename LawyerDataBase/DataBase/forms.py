@@ -49,8 +49,8 @@ JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, field
 
 
 class Appointment_NForm(ModelForm):
-    app_date = forms.DateField(label='Дата')
-    app_time = forms.TimeField(label='Час')
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
@@ -61,7 +61,10 @@ class Appointment_NForm(ModelForm):
         model = Appointment_N
         fields = ['num_client_n','code_dossier_n','service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
-            'app_time': TimeInput(format='%H:%M')
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
         }
 
     def __init__(self, *args, **kwargs):
@@ -74,8 +77,8 @@ class Appointment_NForm(ModelForm):
             self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id)
 
 class Appointment_JForm(ModelForm):
-    app_date = forms.DateField(label='Дата')
-    app_time = forms.TimeField(label='Час')
+    app_date = forms.DateField(label='Дата',widget=TextInput(attrs={'readonly':'readonly'}))
+    app_time = forms.TimeField(label='Час',widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())

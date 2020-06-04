@@ -2,3 +2,11 @@
     border: 1px solid rgb(238, 0, 9);
     box-shadow: 0 0 5px rgba(238, 0, 9, 1);
 }
+
+.ui-datepicker-year{
+    width: 54%;
+}
+
+.ui-datepicker-header{
+    width:100%;
+}
