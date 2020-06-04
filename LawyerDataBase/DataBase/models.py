@@ -5,13 +5,13 @@ from django.urls import reverse
 
 class Work_days(models.Model):
     DAYS = [
-        ('Mon', 'Monday'),
-        ('Tue', 'Tuesday'),
-        ('Wed', 'Wednesday'),
-        ('Thu', 'Thursday'),
-        ('Fri', 'Friday'),
-        ('Sat', 'Saturday'),
-        ('Sun', 'Sunday'),
+        ('Mon', 'Понеділок'),
+        ('Tue', 'Вівторок'),
+        ('Wed', 'Середа'),
+        ('Thu', 'Четвер'),
+        ('Fri', 'П`ятниця'),
+        ('Sat', 'Субота'),
+        ('Sun', 'Неділя'),
     ]
     day = models.CharField(max_length=3, choices=DAYS)
 
@@ -130,7 +130,7 @@ class NPhone(models.Model):
 
 
 class Client_juridical(Client):
-    num_client_j = models.CharField(max_length=8, help_text='EDRPOU code', primary_key=True)
+    num_client_j = models.CharField(max_length=8, primary_key=True)
     client_position = models.CharField(max_length=25)
     name_of_company = models.CharField(max_length=25)
     iban = models.CharField(max_length=29)
@@ -161,9 +161,9 @@ class JPhone(models.Model):
 
 class Dossier(models.Model):
     DOS_STATUS = [
-        ('open', 'open'),
-        ('closed', 'closed'),
-        ('closed-won', 'closed-won'),
+        ('open', 'відкрита'),
+        ('closed', 'закрита'),
+        ('closed-won', 'закрита-виграна'),
     ]
     issue = models.TextField()
     status = models.CharField(max_length=10, choices=DOS_STATUS, default='open')
