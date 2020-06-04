@@ -1,6 +1,6 @@
 $(document).ready(main());
 
-
+var lawyerWorkDays = []
 
 function main() {
     $('#id_app_time').timepicker({
@@ -15,8 +15,13 @@ function main() {
         dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
+        constrainInput: true,
+        minDate: new Date(),
+        beforeShowDay: blockdays
     });
     $('#id_service')[0].addEventListener('change', service_ajax_request);
+    $('#id_lawyer_code')[0].addEventListener('change', lawyer_workdays_request);
+    $('#id_app_date')[0].addEventListener('change', time_blocked_request);
     try {
         $('#id_num_client_n')[0].addEventListener('change',dossier_ajax_request);
 
@@ -27,6 +32,62 @@ function main() {
     
 }
 
+
+function lawyer_workdays_request(event){
+    lawyer = $('#id_lawyer_code').val()
+
+    $.ajax({
+                type: "POST",
+                async: true,
+                url: '/database/lawyerWorkDays/',
+                data: {
+                    csrfmiddlewaretoken: getCookie('csrftoken'),
+                    lawyer: lawyer,
+                },
+                success: setWorkDays,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+}
+
+function time_blocked_request(event){
+
+    date2 = $('#id_app_date').datepicker( "getDate" );
+    lawyer = $('#id_lawyer_code').val()
+    $.ajax({
+                type: "POST",
+                async: true,
+                    url: '/database/dayBlockedTime/',
+                data: {
+                    csrfmiddlewaretoken: getCookie('csrftoken'),
+                    date: {
+                        day: date2.getDate(),
+                        month: String(parseInt(date2.getMonth()) + 1),
+                        year: date2.getFullYear(),
+                    },
+                    lawyer: lawyer,
+                },
+                success: setblockedTime,
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+}
+
+function setblockedTime(data){
+    console.log(data)
+}
+
+function setWorkDays(data){
+    lawyerWorkDays = data['days'];
+
+}
+
+function blockdays(date){
+    var datebool = lawyerWorkDays.indexOf(date.getUTCDay() + 1) !== -1
+    return [datebool]
+}
 
 function checkTime(event){
     var time_element = $('#id_app_time');
