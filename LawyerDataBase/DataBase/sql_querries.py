@@ -299,12 +299,6 @@ def date_won_dossiers(date1, date2):
         row = cursor.fetchone()[0]
     return row
 
-
-def date_value(data1, data2):
-    m = 1
-    return 0
-
-
 def date_lawyer_counter(date1, date2):
     with connection.cursor() as cursor:
         cursor.execute(
@@ -472,5 +466,30 @@ def filter_dossier_j_by_status(param): #filter Dossier J by status
                     'fee': record[5],
                     'paid': record[6],
                     'num_client_j_id': record[7]})
+    return res
+
+def date_value(data1, data2):
+    m = 1
+    return 0
+
+#  get dates, which are chosen
+def blocked_time_lawyer(lawyer,date):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT to_char(RES.app_time, %s) '
+            'FROM ( '
+            '   (SELECT app_time '
+        '        FROM "Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA ON AJ.lawyer_code_id = LA.lawyer_code '
+            '    WHERE AJ.app_date = %s::date AND LA.lawyer_code = %s ) '
+            'UNION ALL '
+            '   (SELECT app_time '
+            '    FROM "Appointment_N" AS AN INNER JOIN "Lawyer" AS LA ON AN.lawyer_code_id = LA.lawyer_code '
+            '    WHERE AN.app_date = %s::date AND LA.lawyer_code = %s )) AS RES;',
+            ['HH24:MI',f'{date.year}-{date.month}-{date.day}',lawyer,
+            f'{date.year}-{date.month}-{date.day}',lawyer])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+        res.append(record[0])
     return res
 

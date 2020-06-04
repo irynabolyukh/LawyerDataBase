@@ -1,7 +1,8 @@
 from django.forms import ModelForm, inlineformset_factory
 from django import forms
 from .models import *
-from django.forms import TimeInput
+from django.forms import Textarea, TimeInput, TextInput
+
 
 
 class LawyerForm(ModelForm):
@@ -48,8 +49,8 @@ JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, field
 
 
 class Appointment_NForm(ModelForm):
-    app_date = forms.DateField(label='Дата')
-    app_time = forms.TimeField(label='Час')
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
@@ -58,9 +59,12 @@ class Appointment_NForm(ModelForm):
 
     class Meta:
         model = Appointment_N
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_n', 'lawyer_code', 'code_dossier_n']
+        fields = ['num_client_n','code_dossier_n','service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
-            'app_time': TimeInput(format='%H:%M')
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
         }
 
     def __init__(self, *args, **kwargs):
@@ -73,8 +77,8 @@ class Appointment_NForm(ModelForm):
             self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id)
 
 class Appointment_JForm(ModelForm):
-    app_date = forms.DateField(label='Дата')
-    app_time = forms.TimeField(label='Час')
+    app_date = forms.DateField(label='Дата',widget=TextInput(attrs={'readonly':'readonly'}))
+    app_time = forms.TimeField(label='Час',widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())
@@ -83,10 +87,8 @@ class Appointment_JForm(ModelForm):
 
     class Meta:
         model = Appointment_J
-        fields = ['app_date', 'app_time', 'comment', 'service', 'num_client_j', 'lawyer_code', 'code_dossier_j']
-        widgets = {
-            'app_time': TimeInput(format='%H:%M')
-        }
+        fields = ['num_client_j','code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
