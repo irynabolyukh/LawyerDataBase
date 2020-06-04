@@ -1,25 +1,14 @@
-from django.core import serializers
-from django.core.serializers import json
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse, reverse_lazy
-from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView
 from django.views import generic
 from .forms import *
-from .models import *
 from django.http import JsonResponse
-from django.contrib.auth.models import User
-
-from datetime import date
-import json
 from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.decorators import login_required, permission_required
-
-# from braces import views
-
-from django.db import connection
+from django.contrib.auth.decorators import login_required
 
 
 @login_required()
@@ -327,8 +316,7 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_lawyer'
     model = Lawyer
     template_name = 'update_lawyer.html'
-    fields = ['lawyer_code', 'first_name', 'surname', 'mid_name', 'specialization',
-              'mail_info', 'service', 'work_days']
+    form_class = LawyerForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -405,9 +393,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
     permission_required = 'DataBase.add_client_natural'
     model = Client_natural
     template_name = 'create_client_natural.html'
-    fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
-              'mail_info', 'adr_city', 'adr_street', 'adr_build',
-              'birth_date', 'passport_date', 'passport_authority']
+    form_class = Client_NForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -434,9 +420,7 @@ class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
     permission_required = 'DataBase.change_client_natural'
     model = Client_natural
     template_name = 'update_client_natural.html'
-    fields = ['num_client_n', 'first_name', 'surname', 'mid_name',
-              'mail_info', 'adr_city', 'adr_street', 'adr_build',
-              'birth_date', 'passport_date', 'passport_authority']
+    form_class = Client_NForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -470,9 +454,7 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
     permission_required = 'DataBase.add_client_juridical'
     model = Client_juridical
     template_name = 'create_client_juridical.html'
-    fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
-              'mail_info', 'client_position', 'name_of_company', 'iban',
-              'adr_city', 'adr_street', 'adr_build']
+    form_class = Client_JForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -499,9 +481,7 @@ class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
     permission_required = 'DataBase.change_client_juridical'
     model = Client_juridical
     template_name = 'update_client_juridical.html'
-    fields = ['num_client_j', 'first_name', 'surname', 'mid_name',
-              'mail_info', 'client_position', 'name_of_company', 'iban',
-              'adr_city', 'adr_street', 'adr_build']
+    form_class = Client_JForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -561,7 +541,7 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    fields = ['app_date', 'app_time', 'comment']
+    form_class = Appointment_NFormUpdate
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -615,7 +595,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    fields = ['app_date', 'app_time', 'comment']
+    form_class = Appointment_JFormUpdate
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -660,7 +640,7 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_dossier_n'
     model = Dossier_N
-    fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+    form_class = Dossier_NFormUpdate
     template_name = 'update_dossier_n.html'
 
     def get_context_data(self, **kwargs):
@@ -705,7 +685,7 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_dossier_j'
     model = Dossier_J
-    fields = ['date_closed', 'status', 'paid', 'fee', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+    form_class = Dossier_JFormUpdate
     template_name = 'update_dossier_j.html'
 
     def get_context_data(self, **kwargs):

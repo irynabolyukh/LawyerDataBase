@@ -24,7 +24,7 @@
     </div>
 </div>
 {% if request.user|has_group:"Secretaries"%}
-        <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Оновити</a>
+        <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
         <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a>
         <a class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
@@ -96,7 +96,7 @@
             </td>
             {% if request.user|has_group:"Secretaries"%}
             <td>
-                <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk %}">Оновити</a>
+                <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
             {% endif %}
