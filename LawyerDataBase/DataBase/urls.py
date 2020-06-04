@@ -48,4 +48,5 @@ urlpatterns = [
     path('sendServices/', views.service_ajax, name='get-lawyer'),
     path('sendClient/', views.client_ajax, name='get-dossier'),
     path('lawyerWorkDays/', views.lawyer_work_days, name='get-workdays'),
+    path('dayBlockedTime/', views.dayblockedtime, name='get-blockedtime'),
 ]

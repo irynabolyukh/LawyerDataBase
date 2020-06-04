@@ -52,8 +52,19 @@ def lawyer_work_days(request):
         workdays = Work_days.objects.filter(lawyer=request.POST['lawyer'])
         for day in workdays:
             response['days'].append(day.pk)
-        print(response['days'])
-        # response['dates']
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
+
+@login_required()
+@requires_csrf_token
+def dayblockedtime(request):
+    if request.method == 'POST':
+        response = {}
+        date_lawyer = date(int(request.POST['date1[year]']),
+                      int(request.POST['date1[month]']),
+                      int(request.POST['date1[day]']))
+        response['dates'] = blocked_time_lawyer(request.POST['lawyer'], date_lawyer)
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
