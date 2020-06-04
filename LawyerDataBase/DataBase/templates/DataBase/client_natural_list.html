@@ -21,14 +21,14 @@
         <tr>
             <td><a href="{{ client.get_absolute_url }}">{{ client.pk }}</a></td>
             <td>{{ client.first_name }} {{ client.surname }} {{ client.mid_name }}</td>
-            <td>{{ client.birth_date }}</td>
+            <td>{{ client.birth_date|date:"d.m.Y" }}</td>
             <td>
                 <li> Номер:
                  <!--{{ client.passport_num }}-->
                     МК345423
                 </li>
                 <li> Дата:
-                 {{ client.passport_date }}
+                 {{ client.passport_date|date:"d.m.Y" }}
                 </li>
                 <li> Орган:
                  {{ client.passport_authority }}

@@ -16,7 +16,7 @@ class LawyerForm(ModelForm):
         model = Lawyer
         widgets = {
             'service': forms.CheckboxSelectMultiple,
-            'work_days': forms.CheckboxSelectMultiple
+            'work_days': forms.CheckboxSelectMultiple,
         }
         fields = ['lawyer_code', 'first_name', 'surname',
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']

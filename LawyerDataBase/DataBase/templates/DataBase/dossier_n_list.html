@@ -29,10 +29,10 @@
             {% else %}
             <td>Відкрита</td>
             {% endif %}
-            <td>{{ dossier.date_signed }}</td>
-            <td>{{ dossier.date_expired }}</td>
+            <td>{{ dossier.date_signed|date:"d.m.Y" }}</td>
+            <td>{{ dossier.date_expired|date:"d.m.Y" }}</td>
             {% if dossier.status == 'closed' or dossier.status == 'closed-won'  %}
-            <td>{{ dossier.date_closed }}</td>
+            <td>{{ dossier.date_closed|date:"d.m.Y" }}</td>
             {% else %}
             <td>-------</td>
             {% endif %}
