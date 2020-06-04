@@ -5,12 +5,13 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title%}Адвокатське бюро{%endblock%}</title>
 
-    {% block stylesheet %}{% endblock %}
+
     <link rel="stylesheet" href="{% static 'docs/css/main.css' %}">
     <link rel="icon" type="image/png" href=" {% static 'Login/images/scale.png' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-
-    </head>
+    <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+    {% block stylesheet %}{% endblock %}
+</head>
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     {% block navbar%}

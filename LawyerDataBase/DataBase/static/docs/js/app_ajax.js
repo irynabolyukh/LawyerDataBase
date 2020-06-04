@@ -1,6 +1,7 @@
 $(document).ready(main());
 
 var lawyerWorkDays = []
+var blockedTime = []
 
 function main() {
     $('#id_app_time').timepicker({
@@ -8,6 +9,8 @@ function main() {
         minTime: '10:00',
         maxTime: '19:00',
         interval: 15,
+        disableTextInput: true,
+        disableTimeRanges: blockedTime,
     }).on('change',checkTime);
 
 
@@ -16,12 +19,13 @@ function main() {
         changeMonth: true,
         changeYear: true,
         constrainInput: true,
-        minDate: new Date(),
+        minDate: "+2d",
+        maxDate: "+3m",
         beforeShowDay: blockdays
     });
     $('#id_service')[0].addEventListener('change', service_ajax_request);
     $('#id_lawyer_code')[0].addEventListener('change', lawyer_workdays_request);
-    $('#id_app_date')[0].addEventListener('change', time_blocked_request);
+    $('#id_app_date').on('change', time_blocked_request);
     try {
         $('#id_num_client_n')[0].addEventListener('change',dossier_ajax_request);
 
@@ -76,7 +80,25 @@ function time_blocked_request(event){
 }
 
 function setblockedTime(data){
-    console.log(data)
+    var timestamp = ''
+    var plusHour = ''
+    for (item of data['time']){
+        var array = []
+        timestamp = item.split(':');
+        plusHour = '' + (parseInt(timestamp[0]) + 1);
+        plusHour += ':' + ((parseInt(timestamp[1]) + 10)%60)
+        array.push(item);
+        array.push(plusHour);
+        blockedTime.push(array)
+    }
+    $('#id_app_time').timepicker({
+        timeFormat: 'H:i',
+        minTime: '10:00',
+        maxTime: '19:00',
+        interval: 15,
+        disableTextInput: true,
+        disableTimeRanges: blockedTime,
+    }).on('change',checkTime);
 }
 
 function setWorkDays(data){

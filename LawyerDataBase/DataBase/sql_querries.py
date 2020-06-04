@@ -476,7 +476,7 @@ def date_value(data1, data2):
 def blocked_time_lawyer(lawyer,date):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT RES.app_time '
+            'SELECT to_char(RES.app_time, %s) '
             'FROM ( '
             '   (SELECT app_time '
         '        FROM "Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA ON AJ.lawyer_code_id = LA.lawyer_code '
@@ -485,7 +485,7 @@ def blocked_time_lawyer(lawyer,date):
             '   (SELECT app_time '
             '    FROM "Appointment_N" AS AN INNER JOIN "Lawyer" AS LA ON AN.lawyer_code_id = LA.lawyer_code '
             '    WHERE AN.app_date = %s::date AND LA.lawyer_code = %s )) AS RES;',
-            [f'{date.year}-{date.month}-{date.day}',lawyer,
+            ['HH24:MI',f'{date.year}-{date.month}-{date.day}',lawyer,
             f'{date.year}-{date.month}-{date.day}',lawyer])
         row = cursor.fetchall()
     res = []
