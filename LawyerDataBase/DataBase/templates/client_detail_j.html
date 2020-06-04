@@ -1,45 +1,48 @@
 {% extends "base_generic.html" %}
 {% load user_tags %}
-{% block title %}Client's profile{% endblock %}
+{% block title %}Профіль клієнта{% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Secretaries"%}
-    <a class="navbar-brand" href="{% url 'jcustomers' %}">Back to JCustomers</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
+{% endif %}
+{% if request.user|has_group:"ClientsJ"%}
+<h2 style="color: white">Мій профіль</h2>
 {% endif %}
 {% endblock %}
 {% block content %}
 <div class="card">
         <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>
-    <div>Code of client: {{ client_juridical.num_client_j }}</div>
-    <div>Adr: {{ client_juridical.adr_city }}, {{ client_juridical.adr_street }}, {{ client_juridical.adr_build }}</div>
-    <div>Company: {{ client_juridical.name_of_company }}</div>
-    <div>Position: {{ client_juridical.client_position }}</div>
+    <div>Код ЄДРПОУ: {{ client_juridical.num_client_j }}</div>
+    <div>Адреса: {{ client_juridical.adr_city }}, {{ client_juridical.adr_street }}, {{ client_juridical.adr_build }}</div>
+    <div>Компанія: {{ client_juridical.name_of_company }}</div>
+    <div>Посада: {{ client_juridical.client_position }}</div>
     <div>IBAN: {{ client_juridical.iban }}</div>
     <div>E-mail: {{ client_juridical.mail_info }}</div>
-    <div>Phone num:
+    <div>Номер телефону:
         {% for phone in phones %}
-            <div>+38{{phone.phone_num}}</div>;
+            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
         {% endfor %}
     </div>
 </div>
 {% if request.user|has_group:"Secretaries"%}
-    <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Update</a>
-    <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Delete</a>
-    <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Create Dossier</a>
+    <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Оновити</a>
+    <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
+    <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
 {% endif %}
-    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Create Appointment</a>
-    {% if appointments %}
+{% if request.user|has_group:"ClientsJ"%}
+    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися</a>
+{% endif %}
+{% if appointments %}
     <div class="container">
     <h5>Записи</h5>
-    <table class="table table-striped">
+    <table class="table table-striped table-hover">
         <thead class="thead-dark">
         <tr>
             <th>Дата</th>
             <th>Час</th>
             <th>Коментар</th>
-            <th>Сервіс</th>
+            <th>Послуга</th>
             <th>Адвокат</th>
             <th>Досьє</th>
             {% if request.user|has_group:"Secretaries"%}
@@ -59,11 +62,27 @@
                 {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
                 {{ service.name_service }}
-                </a> ;
+                </a>;
+                {% endfor %}
+            </td>
+             {% endif %}
+             {% if request.user|has_group:"Lawyers"%}
+            <td>
+                {% for service in appointment.service.all %}
+                <a href="{% url 'service-detailed-view' service.service_code %}">
+                {{ service.name_service }}
+                </a>;
                 {% endfor %}
             </td>
              {% endif %}
             {% if request.user|has_group:"ClientsJ"%}
+            <td>
+                {% for service in appointment.service.all %}
+                {{ service.name_service }};
+                {% endfor %}
+            </td>
+             {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
@@ -78,6 +97,9 @@
              {% if request.user|has_group:"ClientsJ"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
+            {% if request.user|has_group:"Lawyers"%}
+            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
             <td>
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
                     {{ appointment.code_dossier_j.code_dossier_j }}
@@ -85,8 +107,8 @@
             </td>
              {% if request.user|has_group:"Secretaries"%}
             <td>
-                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Оновити</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
             {% endif %}
         </tr>
@@ -99,7 +121,7 @@
     {% if dossiers %}
         <div class="container">
     <h5>Досьє</h5>
-    <table class="table table-striped">
+    <table class="table table-striped table-hover">
         <thead class="thead-dark">
         <tr>
             <th>Код</th>
@@ -142,8 +164,8 @@
             {% endif %}
             {% if request.user|has_group:"Secretaries"%}
             <td>
-                <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
             {% endif %}
         </tr>

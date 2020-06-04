@@ -1,19 +1,19 @@
 {% extends "base_generic.html" %}
-{% block title %}Edit Dossier{% endblock %}
+{% block title %}Досьє{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="{% url 'jdossiers' %}">Back to JDossiers</a>
+    <a class="navbar-brand" href="{% url 'jdossiers' %}">🢀Усі юридичні досьє</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
 {% endblock %}
 
 {% block content %}
-    <h1>Edit Dossier</h1>
+    <h1>Редагувати досьє</h1>
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Update</button>
+        <button type="submit" class="btn btn-outline-success">Зберегти зміни</button>
     </form>
 
 {% endblock %}

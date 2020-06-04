@@ -1,7 +1,4 @@
 
-
-
-
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
 
@@ -132,7 +129,7 @@ iframe {
 /*//////////////////////////////////////////////////////////////////
 [ Utility ]*/
 .txt1 {
-  font-family: Poppins-Regular;
+  font-family: Poppins-Regular, sans-serif;
   font-size: 13px;
   color: #e5e5e5;
   line-height: 1.5;
@@ -145,6 +142,7 @@ iframe {
 .limiter {
   width: 100%;
   margin: 0 auto;
+  background-image: url('LawyerDataBase/DataBase/static/Login/images/justice.jpg');
 }
 
 .container-login100 {
@@ -159,7 +157,7 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-
+  background-image: url('LawyerDataBase/DataBase/static/Login/images/justice.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -183,7 +181,6 @@ iframe {
   width: 390px;
   border-radius: 10px;
   overflow: hidden;
-
   background: transparent;
 }
 
@@ -216,13 +213,12 @@ iframe {
 }
 
 .login100-form-title {
-  font-family: Ubuntu-Bold;
+  font-family: Ubuntu-Bold, sans-serif;
   font-size: 28px;
   color: #fff;
   line-height: 1.2;
   text-align: center;
   text-transform: uppercase;
-
   display: block;
 }
 
@@ -238,7 +234,7 @@ iframe {
 }
 
 .input100 {
-  font-family: Ubuntu-Regular;
+  font-family: Ubuntu-Regular, sans-serif;
   font-size: 20px;
   color: #555555;
   line-height: 1.2;
@@ -287,7 +283,7 @@ iframe {
 }
 
 .focus-input100::after {
-  font-family: Linearicons-Free;
+  font-family: Linearicons-Free, serif;
   font-size: 18px;
   color: #999999;
 
@@ -346,7 +342,7 @@ iframe {
 }
 
 .login100-form-btn {
-  font-family: Ubuntu-Bold;
+  font-family: Ubuntu-Bold, sans-serif;
   font-size: 18px;
   color: #fff;
   line-height: 1.2;

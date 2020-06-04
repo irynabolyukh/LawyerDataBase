@@ -304,6 +304,8 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
 
 @login_required()
 def index(request):
+    if request.user.is_superuser:
+        return render(request, 'stat_panel.html', {})
     group = request.user.groups.filter(user=request.user)[0]
     if group.name == "Secretaries":
         return HttpResponseRedirect(reverse('stats'))

@@ -1,10 +1,10 @@
 {% extends "stat_generic.html" %}
-{% block title %}Services{% endblock %}
+{% block title %}Послуги{% endblock %}
 
 {% block content %}
 <div class="container">
-     <h2>Services</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'service-create' %}">New Service</a>
+     <h2>Послуги</h2>
+     <a class="btn btn-outline-success btn-block" href="{% url 'service-create' %}">Додати нову послугу</a>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -23,8 +23,8 @@
             <td>{{ service.nominal_value }}</td>
             <td>{{ service.bonus_value }}</td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'service-update' pk=service.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=service.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'service-update' pk=service.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=service.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

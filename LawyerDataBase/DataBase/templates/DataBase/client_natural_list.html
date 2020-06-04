@@ -1,11 +1,11 @@
 {% extends "stat_generic.html" %}
-{% block title %}NCustomers{% endblock %}
+{% block title %}Фізичні клієнти{% endblock %}
 
 {% block content %}
 <div class="container">
-     <h2>NCustomers</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'client_natural-create' %}">New Client</a>
-    <table class="table table-striped">
+     <h2>Фізичні клієнти</h2>
+    <table style="width:100%" class="table table-striped table-hover">
+        <a class="btn btn-outline-success btn-block" href="{% url 'client_natural-create' %}">Зареєструвати клієнта</a>
         <thead class="thead-dark">
         <tr>
             <th>Код</th>
@@ -36,8 +36,8 @@
             </td>
             <td>{{ client.mail_info }}</td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=client.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=client.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=client.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=client.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

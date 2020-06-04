@@ -1,10 +1,10 @@
 {% extends "stat_generic.html" %}
-{% block title %}JCustomers{% endblock %}
+{% block title %}Юридичні клієнти{% endblock %}
 {% block content %}
 <div class="container">
-     <h2>JCustomers</h2>
-     <a class="btn btn-outline-success btn-block" href="{% url 'client_juridical-create' %}">New Client</a>
-    <table class="table table-striped">
+     <h2>Юридичні клієнти</h2>
+    <table style="width:100%" class="table table-striped table-hover">
+        <a class="btn btn-outline-success btn-block" href="{% url 'client_juridical-create' %}">Зареєструвати клієнта</a>
         <thead class="thead-dark">
         <tr>
             <th>ЄДРПОУ</th>
@@ -26,8 +26,8 @@
             <td>{{ client.client_position }}</td>
             <td>{{ client.mail_info }}</td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=client.pk  %}">Update</a>
-                <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=client.pk  %}">Delete</a>
+                <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=client.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=client.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}
