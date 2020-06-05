@@ -3,9 +3,23 @@
 
 
 {% block content %}
-    <div class="container">
+<style>
+    @media print {
+        .no-print {
+            visibility: hidden;
+        }
+        body {
+            /*,,text-align: center;!important;*/
+            font: 16pt Georgia, "Times New Roman, Times, serif";
+            line-height: 2.0;
+        }
+
+    }
+</style>
+
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-6 no-print">
                 <h1>Усі адвокати</h1>
                 {% if lawyers %}
 
@@ -19,7 +33,7 @@
                 {% endfor %}
             {% endif %}
             </div>
-            <div class="col-sm-4">
+            <div class="col-6">
                     <h1>Статистика</h1>
 
                 <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>
@@ -33,6 +47,8 @@
                             </div>
 
                     </div>
+                <div class="row">
+                    <div class="col-3">
                 <div><b>Виграно справ</b>: <div id="won_dossiers">{{ won_dossiers }}</div></div>
 
                 <div><b>Закрито справ Юридичних</b>: <div id="closed_dossiers_j">{{ closed_dossiers_j }}</div></div>
@@ -47,7 +63,8 @@
 
                 <div><b>Загальна сума :</b> <div id="total_value">{{ value }}</div></div>
             <hr>
-            <div class="container_given_services">
+                        </div>
+            <div class="container_given_services col-3">
             <div><b>Надані послуги</b></div>
                 <div id="given_services" class="container_stat">
                     {% for service in service_count %}
@@ -58,7 +75,7 @@
                 </div>
             </div>
             <hr>
-            <div class="container_lawyer_service">
+            <div class="container_lawyer_service col-3">
             <div><b>Статистика Адвокатів</b></div>
                 <div id="lawyer_service" class="container_stat">
                     {% for lawyer in lawyer_counter %}
@@ -68,14 +85,15 @@
                     {% endfor %}
                 </div>
             </div>
-            <hr>
-            <div class="container_past_appointments">
-            <p><div><b>Минулі записи</b></div>
+<!--            <hr>-->
+            <div class="container_past_appointments col-3">
+            <div><b>Минулі записи</b></div>
                 <div id="past_appointments" class="container_stat">
                     {% for item in appointments|dictsortreversed:"app_date" %}
                         <div>{{ item.dossier }} : {{ item.app_date }}</div>
                     {% endfor %}
                 </div>
+            </div>
             </div>
             </div>
         </div>
