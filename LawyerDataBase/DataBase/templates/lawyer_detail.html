@@ -6,6 +6,9 @@
 {% if request.user|has_group:"Secretaries"%}
     <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
 {% endif %}
+<div class="nav-item ml-auto justify-content-end">
+            <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
+        </div>
 {% endblock %}
 
 {% block content %}
