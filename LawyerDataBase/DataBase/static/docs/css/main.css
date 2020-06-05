@@ -4,3 +4,7 @@ div {
 .container_stat {
   display: block; }
 
+.wrong_input{
+    border: 1px solid rgb(238, 0, 9);
+    box-shadow: 0 0 5px rgba(238, 0, 9, 1);
+}

@@ -37,10 +37,12 @@ class ServicesForm(ModelForm):
     name_service = forms.CharField(label='Послуга')
     nominal_value = forms.DecimalField(label='Номінальна вартість')
     bonus_value = forms.DecimalField(label='Бонусна вартість')
+    lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False, queryset=Lawyer.objects.all())
 
     class Meta:
         model = Services
         fields = '__all__'
+
 
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])

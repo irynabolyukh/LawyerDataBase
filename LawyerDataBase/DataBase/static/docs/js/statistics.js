@@ -23,10 +23,13 @@ function addDatePicker() {
 }
 
 function getStats(date) {
+    date1_elem = $('#date1').removeClass('wrong_input')
+    date2_elem = $('#date2').removeClass('wrong_input')
 
-    date1 = $('#date1').datepicker( "getDate" );
 
-    date2 = $('#date2').datepicker( "getDate" );
+    date1 = date1_elem.datepicker( "getDate" );
+
+    date2 = date2_elem.datepicker( "getDate" );
 
     if (date1 !== null && date2 !== null) {
 
@@ -57,7 +60,9 @@ function getStats(date) {
         })
     }
     else{
-        alert("Дата З має бути раніше, за дату ПО")
+        date1_elem.val('').addClass('wrong_input')
+        date2_elem.val('').addClass('wrong_input')
+        // alert("Дата З має бути раніше, за дату ПО")
     }
     }
 }
