@@ -310,6 +310,10 @@ def index(request):
     return render(request, 'index.html', {})
 
 
+def visitCard(request):
+    return render(request, 'visitCard.html', {})
+
+
 class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_lawyer'
     model = Lawyer
