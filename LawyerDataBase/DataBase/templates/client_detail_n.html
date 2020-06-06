@@ -6,14 +6,14 @@
     <a class="navbar-brand" href="{% url 'ncustomers' %}">🢀Усі фізичні клієнти</a>
 {% endif %}
 {% if request.user|has_group:"ClientsN"%}
-<div class="container row align-items-center justify-content-center">
+<div class="container-fluid row align-items-center justify-content-center">
 <h2 style="color: white">Мій профіль</h2>
 </div>
 {% endif %}
 {% endblock %}
 {% block content %}
 <div></div>
-<div class="container row align-items-center justify-content-center">
+<div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
         <h5> {{ client_natural.first_name }} {{ client_natural.surname }} {{ client_natural.mid_name }}</h5>
         <h6>Ідентифікаційний код: {{ client_natural.num_client_n }}</h6>
@@ -28,17 +28,17 @@
         </h6>
         <div class="container row align-items-center justify-content-center">
         {% if request.user|has_group:"Secretaries"%}
-                <div class="container row align-items-center justify-content-center">
-                    <br><a class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
-                    <a class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a>
+                <div  class="container row align-items-center justify-content-center">
+                    <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
+                    <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a>
                     <br><br>
-                <a class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
-                <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a></div>
+                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
+                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a></div>
         {% endif %}
         </div>
     </div>
 </div>
-<div class="container row align-items-center justify-content-center">
+<div class="container-fluid row align-items-center justify-content-center">
 {% if request.user|has_group:"ClientsN"%}
 <div class="container row align-items-center justify-content-center">
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися на послугу</a>
