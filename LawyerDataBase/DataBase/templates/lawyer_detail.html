@@ -3,10 +3,10 @@
 {% block title %}Профіль адвоката{% endblock %}
 
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
 {% endif %}
-{% if request.user|has_group:"Lawyers"%}
+{% if request.user|has_group:"Адвокат"%}
     <h2 style="color: white">Мій кабінет</h2>
 {% endif %}
 {% endblock %}
@@ -36,7 +36,7 @@
             <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
                 {% endfor %}
         {% if dossier_j or dossier_n %}
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
                 <div>
                     <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
