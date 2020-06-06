@@ -12,7 +12,6 @@ class CustomUserCreationForm(forms.Form):
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Підтвердіть пароль', widget=forms.PasswordInput)
     group = forms.ModelChoiceField(label='Група', queryset=Group.objects.all(), required=True)
-    # group = models.ManyToManyField(Group, db_table="auth_user_groups", db_column="user_id")
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()

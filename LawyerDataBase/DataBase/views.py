@@ -15,11 +15,6 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            # obj = form.save(commit=False)
-            # obj.save()
-            # user = User.objects.get(form.auto_id)
-            # group = Group.objects.get(form.group)
-            # user.groups.add(group)
             form.save()
             return redirect('stats')
 
@@ -27,6 +22,7 @@ def register(request):
         form = CustomUserCreationForm()
 
     return render(request, 'Database/register.html', {'form': form})
+
 
 @login_required()
 @requires_csrf_token
@@ -62,6 +58,7 @@ def lawyer_work_days(request):
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
+
 @login_required()
 @requires_csrf_token
 def dayblockedtime(request):
@@ -74,6 +71,7 @@ def dayblockedtime(request):
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
+
 
 @login_required()
 @requires_csrf_token
