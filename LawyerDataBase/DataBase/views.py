@@ -683,6 +683,7 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
@@ -728,6 +729,7 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 

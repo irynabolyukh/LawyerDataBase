@@ -42,9 +42,9 @@ class CustomUserCreationForm(forms.Form):
         user = User.objects.create_user(
             self.cleaned_data['username'],
             self.cleaned_data['email'],
-            self.cleaned_data['password1'],
-            # self.cleaned_data['group']
+            self.cleaned_data['password1']
         )
+        user.groups.add(self.cleaned_data['group'])
         return user
 
 
