@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
     <div class="row">
         <div class="col-sm-4">
             <h2>Профіль адвоката</h2>
@@ -32,7 +33,6 @@
                {% for phone in phones %}
             <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
                 {% endfor %}
-            <hr>
         {% if dossier_j or dossier_n %}
              {% if request.user|has_group:"Secretaries"%}
                 <div>
@@ -40,7 +40,6 @@
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
                 </div>
             {% endif %}
-            <hr>
 
             <h3>Досьє</h3>
 
@@ -76,8 +75,6 @@
         </div>
 
     </div>
-            <hr>
-
 
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row">
@@ -187,6 +184,8 @@
 
         </div>
     </div>
+
+</div>
     {% endif %}
 {% endblock %}
 
