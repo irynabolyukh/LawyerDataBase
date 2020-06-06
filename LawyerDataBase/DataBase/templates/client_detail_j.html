@@ -6,14 +6,14 @@
     <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
 {% endif %}
 {% if request.user|has_group:"ClientsJ"%}
-<div class="container row align-items-center justify-content-center">
+<div class="container-fluid row align-items-center justify-content-center">
 <h2 style="color: white">Мій профіль</h2>
 </div>
 {% endif %}
 {% endblock %}
 {% block content %}
 <div></div>
-<div class="container row align-items-center justify-content-center">
+<div style="margin-top: 3%" class="container-fluid row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
         <h5> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</h5>
         <h6>Код ЄДРПОУ:{{ client_juridical.num_client_j }}</h6>
@@ -30,15 +30,15 @@
         <div class="container row align-items-center justify-content-center">
         {% if request.user|has_group:"Secretaries"%}
             <div class="container row align-items-center justify-content-center">
-            <br><a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати</a>
-            <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
-            <br><br><a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
-                <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a></div>
+            <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати</a>
+            <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
+            <br><br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a></div>
          {% endif %}
         </div>
     </div>
 </div>
-<div class="container row align-items-center justify-content-center">
+<div class="container-fluid margin-fix row align-items-center justify-content-center">
 {% if request.user|has_group:"ClientsJ"%}
 <div class="container row align-items-center justify-content-center">
         <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися на послугу</a>
