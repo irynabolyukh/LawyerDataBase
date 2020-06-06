@@ -8,9 +8,6 @@
 {% if request.user|has_group:"ClientsJ"%}
 <h2 style="color: white">Мій профіль</h2>
 {% endif %}
-<div class="nav-item ml-auto justify-content-end">
-            <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
-        </div>
 {% endblock %}
 {% block content %}
 <div class="card">

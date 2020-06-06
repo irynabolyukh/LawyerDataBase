@@ -8,9 +8,6 @@
 {% if request.user|has_group:"ClientsJ"%}
  <a class="navbar-brand" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">🢀Повернутись до профілю</a>
 {% endif %}
-<div class="nav-item ml-auto justify-content-end">
-            <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
-        </div>
 {% endblock %}
 
 {% block content %}
