@@ -30,7 +30,9 @@
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
 {% endif %}
 {% if request.user|has_group:"ClientsN"%}
-    <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися</a>
+<div class="container">
+        <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися</a>
+</div>
 {% endif %}
     {% if appointments %}
     <div class="container">
