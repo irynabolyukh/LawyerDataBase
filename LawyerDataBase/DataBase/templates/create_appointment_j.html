@@ -16,7 +16,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Запис юридичного клієнта</h1>
+    <h1 class="row align-items-center justify-content-center">Запис юридичного клієнта</h1>
+<div class="row align-items-center justify-content-center">
+<div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
         {% csrf_token %}
         <table>
@@ -24,7 +26,8 @@
         </table>
         <button type="submit" class="btn btn-outline-success">Зберегти</button>
     </form>
-
+</div>
+</div>
 {% endblock %}
 
 {% block script %}

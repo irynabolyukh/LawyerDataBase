@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView
@@ -10,6 +10,23 @@ from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            # obj = form.save(commit=False)
+            # obj.save()
+            # user = User.objects.get(form.auto_id)
+            # group = Group.objects.get(form.group)
+            # user.groups.add(group)
+            form.save()
+            return redirect('stats')
+
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'Database/register.html', {'form': form})
 
 @login_required()
 @requires_csrf_token
@@ -338,7 +355,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
 class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -442,7 +460,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
 class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -503,7 +522,8 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
 class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
