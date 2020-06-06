@@ -11,6 +11,9 @@
 {% endblock %}
 
 {% block content %}
+<div></div>
+<div class="container row align-items-center justify-content-center">
+    <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 70%;">
     <h2>Деталі досьє</h2>
     <table class="table" style="width: max-content">
         <tbody>
@@ -100,6 +103,7 @@
                     <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
                 </div>
     {% endif %}
+</div>
 </div>
     {% if appointments %}
 
