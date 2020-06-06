@@ -8,9 +8,6 @@
 {% if request.user|has_group:"ClientsJ"%}
 <h2 style="color: white">Мій профіль</h2>
 {% endif %}
-<div class="nav-item ml-auto justify-content-end">
-            <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
-        </div>
 {% endblock %}
 {% block content %}
 <div class="card">
@@ -34,7 +31,9 @@
     <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
 {% endif %}
 {% if request.user|has_group:"ClientsJ"%}
-    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися</a>
+<div class="container">
+        <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися</a>
+</div>
 {% endif %}
 {% if appointments %}
     <div class="container">

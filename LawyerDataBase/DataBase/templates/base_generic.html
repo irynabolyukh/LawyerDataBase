@@ -15,10 +15,10 @@
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     {% block navbar%}
+    {%endblock%}
     <div class="nav-item ml-auto justify-content-end">
             <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
-        </div>
-    {%endblock%}
+    </div>
 </nav>
 <div class="container-fluid">
     {% block content %}
