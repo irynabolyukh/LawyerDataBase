@@ -13,7 +13,7 @@
 
 {% block content %}
 <div></div>
-<div class="container row align-items-center justify-content-center">
+<div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
         <h5>Код послуги : {{ service.service_code }}</h5>
         <h6>Послуга : {{ service.name_service }}</h6>
@@ -21,8 +21,8 @@
         <h6>Бонусна вартість : {{ service.bonus_value }}</h6>
         {% if request.user|has_group:"Secretaries"%}
         <div class="container row align-items-center justify-content-center">
-            <a class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
-            <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Видалити</a>
+            <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
+            <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Видалити</a>
         </div>
         {% endif %}
 </div>
