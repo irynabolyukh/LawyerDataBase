@@ -2,10 +2,10 @@
 {% load user_tags %}
 {% block title %}Профіль клієнта{% endblock %}
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'ncustomers' %}">🢀Усі фізичні клієнти</a>
 {% endif %}
-{% if request.user|has_group:"ClientsN"%}
+{% if request.user|has_group:"Фізичний клієнт"%}
 <div class="container-fluid row align-items-center justify-content-center">
 <h2 style="color: white">Мій профіль</h2>
 </div>
@@ -27,7 +27,7 @@
             {% endfor %}
         </h6>
         <div class="container row align-items-center justify-content-center">
-        {% if request.user|has_group:"Secretaries"%}
+        {% if request.user|has_group:"Секретар"%}
                 <div  class="container row align-items-center justify-content-center">
                     <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
                     <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a>
@@ -39,7 +39,7 @@
     </div>
 </div>
 <div class="container-fluid row align-items-center justify-content-center">
-{% if request.user|has_group:"ClientsN"%}
+{% if request.user|has_group:"Фізичний клієнт"%}
 <div class="container row align-items-center justify-content-center">
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися на послугу</a>
 </div>
@@ -57,7 +57,7 @@
             <th>Послуга</th>
             <th>Адвокат</th>
             <th>Досьє</th>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <th></th>
             {% endif %}
         </tr>
@@ -68,7 +68,7 @@
             <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
             <td>{{ appointment.app_time|time:"H:i" }}</td>
             <td>{{ appointment.comment }}</td>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td>
                 {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
@@ -77,29 +77,29 @@
                 {% endfor %}
             </td>
              {% endif %}
-            {% if request.user|has_group:"ClientsN"%}
+            {% if request.user|has_group:"Фізичний клієнт"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
                 {% endfor %}
             </td>
              {% endif %}
-             {% if request.user|has_group:"Lawyers"%}
+             {% if request.user|has_group:"Адвокат"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
                 {% endfor %}
             </td>
              {% endif %}
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
             {% endif %}
-             {% if request.user|has_group:"ClientsN"%}
+             {% if request.user|has_group:"Фізичний клієнт"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
-            {% if request.user|has_group:"Lawyers"%}
+            {% if request.user|has_group:"Адвокат"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
             <td>
@@ -107,7 +107,7 @@
                     {{ appointment.code_dossier_n.code_dossier_n }}
                 </a>
             </td>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td>
                 <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Видалити</a>
@@ -134,7 +134,7 @@
             <th>Статус</th>
             <th>Дата закриття</th>
             <th>Оплачено</th>
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <th></th>
             {% endif %}
         </tr>
@@ -164,7 +164,7 @@
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <td>
                 <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Видалити</a>

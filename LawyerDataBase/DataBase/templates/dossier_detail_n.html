@@ -2,10 +2,10 @@
 {% load user_tags %}
 {% block title %}Досьє{% endblock %}
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
  <a class="navbar-brand" href="{% url 'ndossiers' %}">🢀Усі фізичні досьє</a>
 {% endif %}
-{% if request.user|has_group:"ClientsN"%}
+{% if request.user|has_group:"Фізичний клієнт"%}
  <a class="navbar-brand" href="{% url 'client-detailed-view-n'  dossier.num_client_n.num_client_n %}">🢀Повернутись до профілю</a>
 {% endif %}
 {% endblock %}
@@ -76,19 +76,19 @@
         {% if dossier.lawyer_code %}
         <tr>
             <th>Адвокат</th>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td>
                 <a href="{% url 'lawyer-detailed-view'  dossier.lawyer_code.lawyer_code %}">
                     {{ dossier.lawyer_code.getfullname }}
                 </a>
             </td>
             {% endif %}
-             {% if request.user|has_group:"ClientsN"%}
+             {% if request.user|has_group:"Фізичний клієнт"%}
             <td>
                     {{ dossier.lawyer_code.getfullname }}
             </td>
             {% endif %}
-              {% if request.user|has_group:"Lawyers"%}
+              {% if request.user|has_group:"Адвокат"%}
             <td>
                     {{ dossier.lawyer_code.getfullname }}
             </td>
@@ -97,7 +97,7 @@
         {% endif %}
         </tbody>
     </table>
-     {% if request.user|has_group:"Secretaries"%}
+     {% if request.user|has_group:"Секретар"%}
                 <div>
                     <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=object.pk %}">Редагувати</a>
                     <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=object.pk %}">Видалити</a>
@@ -124,15 +124,15 @@
             <td>{{appointment.app_date|date:"d.m.Y"}}</td>
             <td>{{appointment.app_time|time:"H:i"}}</td>
             <td>{{appointment.comment}}</td>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
             {% endif %}
-            {% if request.user|has_group:"ClientsN"%}
+            {% if request.user|has_group:"Фізичний клієнт"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
-            {% if request.user|has_group:"Lawyers"%}
+            {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
         </tr>

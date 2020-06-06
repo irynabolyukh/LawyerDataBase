@@ -183,7 +183,7 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
         if self.request.user.is_superuser:
             return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
-        if group.name == "Lawyers":
+        if group.name == "Адвокат":
             la_code = self.kwargs['pk']
             l_code = Lawyer.objects.get(mail_info=self.request.user.email).pk
             return l_code == la_code
@@ -263,7 +263,7 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="ClientsN").exists():
+        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -290,7 +290,7 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="ClientsJ").exists():
+        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -311,15 +311,15 @@ def index(request):
     if request.user.is_superuser:
         return render(request, 'stat_panel.html', {})
     group = request.user.groups.filter(user=request.user)[0]
-    if group.name == "Secretaries":
+    if group.name == "Секретар":
         return HttpResponseRedirect(reverse('stats'))
-    elif group.name == "Lawyers":
+    elif group.name == "Адвокат":
         l_code = Lawyer.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/lawyer/' + l_code)
-    elif group.name == "ClientsJ":
+    elif group.name == "Юридичний клієнт":
         cl_code = Client_juridical.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/client_J/' + cl_code)
-    elif group.name == "ClientsN":
+    elif group.name == "Фізичний клієнт":
         cl_code = Client_natural.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/client_N/' + cl_code)
     return render(request, 'index.html', {})

@@ -3,7 +3,7 @@
 {% block title %}Послуга{% endblock %}
 
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
  <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
@@ -27,7 +27,7 @@
         {% endif %}
 </div>
 </div>
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     {% if lawyers %}
     <div class="container">
     <h5>Адвокати</h5>

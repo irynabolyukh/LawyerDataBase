@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'docs/css/app_css.css'%}">
 {% endblock %}
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'jappointments' %}">🢀Усі юридичні записи</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
