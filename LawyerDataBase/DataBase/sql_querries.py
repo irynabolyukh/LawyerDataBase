@@ -349,17 +349,17 @@ def date_won_dossiers(date1, date2):
 def date_lawyer_counter(date1, date2):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT lawyer_code, first_name , surname, COUNT(*) '
-            'FROM (( SELECT lawyer_code, first_name, surname '
+            'SELECT lawyer_code, first_name , surname, COUNT(*), mid_name, specialization '
+            'FROM (( SELECT lawyer_code, first_name, surname, mid_name, specialization '
             '       FROM "Appointment_N" AS AN INNER JOIN "Lawyer" AS LA '
             '           ON AN.lawyer_code_id = LA.lawyer_code '
             '       WHERE app_date > %s::date and app_date < %s::date ) '
             '       UNION ALL '
-            '       ( SELECT lawyer_code, first_name, surname '
+            '       ( SELECT lawyer_code, first_name, surname, mid_name, specialization '
             '       FROM "Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA '
             '           ON AJ.lawyer_code_id = LA.lawyer_code '
             '       WHERE app_date > %s::date and app_date < %s::date ) ) AS res '
-            'GROUP BY res.lawyer_code, res.first_name, res.surname;',
+            'GROUP BY res.lawyer_code, res.first_name, res.surname, res.mid_name, res.specialization;',
             [f'{date1.year}-{date1.month}-{date1.day}',
              f'{date2.year}-{date2.month}-{date2.day}',
              f'{date1.year}-{date1.month}-{date1.day}',
@@ -370,7 +370,9 @@ def date_lawyer_counter(date1, date2):
         res.append({'lawyer_code': record[0],
                     'first_name': record[1],
                     'surname': record[2],
-                    'count': record[3]})
+                    'count': record[3],
+                    'mid_name':record[4],
+                    'spec':record[5]})
     return res
 
 

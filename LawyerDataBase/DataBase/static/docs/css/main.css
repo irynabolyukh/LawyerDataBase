@@ -1,61 +1,6 @@
-/*div {*/
-/*  display: inline-block; }*/
+div {
+  display: inline-block; }
 
 .container_stat {
   display: block; }
 
-ul{
-    list-style: none;
-}
-
-.wrong_input{
-    border: 1px solid rgb(238, 0, 9);
-    box-shadow: 0 0 5px rgba(238, 0, 9, 1);
-}
-
-.inline_div{
-    display: inline-block;
-
-}
-.vertical_align{
-    vertical-align : middle !important;
-    text-align:center !important;
-}
-
-.border_top{
-    border-top: 2px solid #454d55;
-}
-
-.table_border{
-    border: 3px solid #454d55;
-}
-
-.align_right{
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
-}
-.secondary_text{
-    font-size: 22px;
-}
-
-.text_styles{
-    font-size: 28px;
-
-}
-
-.tabulated{
-    margin-left: 50px;
-}
-
-.margin-fix {
-  margin-top: 3%;
-}
-
-
-.nav-link{
-    color: white;
-}
-.dropdown-item{
-    color:black;
-}
