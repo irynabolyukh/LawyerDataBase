@@ -3,8 +3,14 @@
 {% block title %}Послуга{% endblock %}
 
 {% block navbar %}
-
-     <div class="nav-item">
+{% if request.user|has_group:"Адвокат"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+{% endif %}
+{% if request.user|has_group:"Секретар"%}
+         <div class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">🢀Усі послуги</a>
+        </div>
+        <div class="nav-item">
             <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
         <div class="nav-item">
@@ -38,13 +44,16 @@
             </div>
         </div>
         <div class="nav-item">
+            <a  class="nav-link" href="{% url 'register' %}"> Додати користувача</a>
+        </div>
+        <div class="nav-item">
             <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
         </div>
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
-    <
 
 <div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
@@ -84,5 +93,9 @@
     </table>
     </div>
     {% endif %}
-
+<script>
+        function goBack() {
+            window.history.back();
+        }
+</script>
 {% endblock %}

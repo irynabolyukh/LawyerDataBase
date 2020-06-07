@@ -1,23 +1,64 @@
 {% extends "base_generic.html" %}
 {% load user_tags %}
 {% block title %}Профіль адвоката{% endblock %}
-
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
-    <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
+ <div class="nav-item">
+    <a class="nav-link" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Послуги</a>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                Клієнти
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Досьє
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Записи
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a  class="nav-link" href="{% url 'register' %}"> Додати користувача</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
+        </div>
 {% endif %}
 {% if request.user|has_group:"Адвокат"%}
-    <h2 style="color: white">Мій кабінет</h2>
+<div class="container-fluid row align-items-center justify-content-center">
+    <h2 style="color: white" >Мій кабінет</h2>
+</div>
 {% endif %}
 {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <h2>Профіль адвоката</h2>
-            <h4 id="specialization">{{ lawyer.specialization }}</h4>
-            <h6 id="la_code">{{ lawyer.lawyer_code }}</h6>
-            <h6 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h6>
+            <h4 id="la_code">{{ lawyer.lawyer_code }}</h4>
+            <h5 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h5>
+            <h6 id="specialization"> {{ lawyer.specialization }}</h6>
             <h6 id="mail">{{ lawyer.mail_info}} </h6>
             <h5>Надає послуги:</h5>
             {% for service in lawyer.service.all %}
@@ -77,12 +118,12 @@
         </div>
 
     </div>
-
+    <div></div>
+<h2 class="text-center">Записи</h2>
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row">
         <div class="container">
             <br>
-            <h2 class="text-center">Записи</h2>
             <h4>Майбутні</h4>
             <table class="table table-striped">
                 <thead class="thead-dark">

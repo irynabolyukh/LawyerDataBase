@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, inlineformset_factory
+from django.forms import ModelForm, inlineformset_factory, SelectDateWidget, SplitDateTimeWidget
 from django import forms
 from .models import *
 from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
@@ -166,9 +166,9 @@ class Dossier_JForm(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_signed = forms.DateField(label='Дата підписання')
-    date_expired = forms.DateField(label='Дата спливу')
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_signed = forms.DateField(label='Дата підписання', widget=SelectDateWidget())
+    date_expired = forms.DateField(label='Дата спливу', widget=SelectDateWidget())
+    date_closed = forms.DateField(label='Дата закриття', widget=SelectDateWidget(), required=False)
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
@@ -186,9 +186,9 @@ class Dossier_NForm(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_signed = forms.DateField(label='Дата підписання')
-    date_expired = forms.DateField(label='Дата спливу')
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_signed = forms.DateField(label='Дата підписання', widget=SelectDateWidget())
+    date_expired = forms.DateField(label='Дата спливу', widget=SelectDateWidget())
+    date_closed = forms.DateField(label='Дата закриття', widget=SelectDateWidget(), required=False)
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
@@ -265,7 +265,7 @@ class Appointment_JFormUpdate(ModelForm):
 class Dossier_JFormUpdate(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
@@ -280,7 +280,7 @@ class Dossier_JFormUpdate(ModelForm):
 class Dossier_NFormUpdate(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)

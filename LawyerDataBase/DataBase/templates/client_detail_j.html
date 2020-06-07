@@ -3,7 +3,48 @@
 {% block title %}Профіль клієнта{% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
-    <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
+ <div class="nav-item">
+    <a class="nav-link" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Послуги</a>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                Клієнти
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Досьє
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Записи
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a  class="nav-link" href="{% url 'register' %}"> Додати користувача</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
+        </div>
 {% endif %}
 {% if request.user|has_group:"Юридичний клієнт"%}
 <div class="container-fluid row align-items-center justify-content-center">
@@ -30,8 +71,7 @@
         <div class="container row align-items-center justify-content-center">
         {% if request.user|has_group:"Секретар"%}
             <div class="container row align-items-center justify-content-center">
-            <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати</a>
-            <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
+            <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
             <br><br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
                 <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a></div>
          {% endif %}
@@ -180,4 +220,8 @@
     </table>
         </div>
     {% endif %}
+        {% if request.user|has_group:"Секретар"%}
+            <div class="container row align-items-center justify-content-center">
+            <a style="margin: 1%;" class="btn  btn-block btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити клієнта</a>
+         {% endif %}
 {% endblock %}
