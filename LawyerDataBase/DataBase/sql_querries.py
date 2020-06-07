@@ -120,45 +120,49 @@ def lawyer_extra_value(param):
 def service_counter():
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT service_code, name_service, COUNT(*) '
-            'FROM ( SELECT service_code, name_service'
+            'SELECT service_code, name_service, COUNT(*), nominal_value, bonus_value '
+            'FROM ( SELECT service_code, name_service, nominal_value, bonus_value'
             '       FROM(("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
             '               ON AN.appoint_code_n = ANS.appointment_n_id) '
             '               INNER JOIN "Services" AS SE ON ANS.services_id = SE.service_code) '
             '   UNION ALL '
-            '       (SELECT service_code, name_service '
+            '       (SELECT service_code, name_service, nominal_value, bonus_value '
             'FROM ("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
             '       ON AJ.appoint_code_j = AJS.appointment_j_id) '
             '       INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code)) AS res '
-            'GROUP BY res.service_code, res.name_service;')
+            'GROUP BY res.service_code, res.name_service, res.nominal_value, res.bonus_value;')
         row = cursor.fetchall()
     res = []
     for record in row:
         res.append({'service_code': record[0],
                     'name_service': record[1],
-                    'count': record[2]})
+                    'count': record[2],
+                   'nominal_value':record[3],
+                    'bonus_value':record[4]})
     return res
 
 
 def lawyer_counter():
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT lawyer_code, first_name , surname, COUNT(*) '
-            'FROM (( SELECT lawyer_code, first_name, surname '
+            'SELECT lawyer_code, first_name, surname, mid_name, COUNT(*), specialization '
+            'FROM (( SELECT lawyer_code, first_name, surname, mid_name, specialization '
             '       FROM "Appointment_N" AS AN INNER JOIN "Lawyer" AS LA '
             '           ON AN.lawyer_code_id = LA.lawyer_code ) '
             '       UNION ALL '
-            '       ( SELECT lawyer_code, first_name, surname '
+            '       ( SELECT lawyer_code, first_name, surname, mid_name, specialization '
             '       FROM "Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA '
             '           ON AJ.lawyer_code_id = LA.lawyer_code ) ) AS res '
-            'GROUP BY res.lawyer_code, res.first_name, res.surname;')
+            'GROUP BY res.lawyer_code, res.first_name, res.surname, res.mid_name, res.specialization ;')
         row = cursor.fetchall()
     res = []
     for record in row:
         res.append({'lawyer_code': record[0],
                     'first_name': record[1],
                     'surname': record[2],
-                    'count': record[3]})
+                    'mid_name': record[3],
+                    'count': record[4],
+                    'spec': record[5]})
     return res
 
 
@@ -372,9 +376,9 @@ def appoint_N_extra_value(param): #count appointment bonus value if Dossier = cl
             'SELECT AN.appoint_code_n, SUM(S.bonus_value) AS extra '
             'FROM (("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
             'ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS S '
-            'ON ANS.services_id = S.service_code) INNER JOIN "Dossier_N" AS DN'
-            'ON AN.code_dossier_n_id = DN.code_dossier_n'
-            'WHERE AN.appoint_code_n = %s AND status=%s)'
+            'ON ANS.services_id = S.service_code) INNER JOIN "Dossier_N" AS DN '
+            'ON AN.code_dossier_n_id = DN.code_dossier_n '
+            'WHERE AN.appoint_code_n = %s AND status=%s '
             'GROUP BY AN.appoint_code_n;', [param, 'closed-won']
         )
         row = cursor.fetchone()
@@ -387,10 +391,10 @@ def appoint_J_nom_value(param): #count appointment nominal value if Dossier = cl
             'SELECT AJ.appoint_code_j, SUM(S.nominal_value) AS nom '
             'FROM (("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
             'ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS S '
-            'ON AJS.services_id = S.service_code) INNER JOIN "Dossier_J" AS DJ'
-            'ON AJ.code_dossier_j_id = DJ.code_dossier_j'
+            'ON AJS.services_id = S.service_code) INNER JOIN "Dossier_J" AS DJ '
+            'ON AJ.code_dossier_j_id = DJ.code_dossier_j '
             'WHERE AJ.appoint_code_j = %s AND status=%s '
-            'GROUP BY AJ.appoint_code_j;', [param, 'closed']
+            'GROUP BY AJ.appoint_code_j; ', [param, 'closed']
         )
         row = cursor.fetchone()
     return row

@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+{% block title %}Нова послуга{% endblock %}
+
+{% block navbar %}
+    <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+{% endblock %}
+
+{% block content %}
+    <h1>Нова послуга</h1>
+    <form method="POST" class="post-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-outline-success">Зберегти</button>
+    </form>
+{% endblock %}

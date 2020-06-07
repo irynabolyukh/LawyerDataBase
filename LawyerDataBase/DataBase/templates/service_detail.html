@@ -3,15 +3,52 @@
 {% block title %}Послуга{% endblock %}
 
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
- <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-{% endif %}
+{#{% if request.user|has_group:"Secretaries"%}#}
+{# <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>#}
+{#    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">#}
+{#        <span class="navbar-toggler-icon"></span>#}
+{#    </button>#}
+{#{% endif %}#}
+     <div class="nav-item">
+            <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'services' %}">Послуги</a>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                Клієнти
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Досьє
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+                Записи
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+            </div>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
+        </div>
 {% endblock %}
 
 {% block content %}
+
 <div class="card">
     <div>Код послуги : {{ service.service_code }}</div>
     <div>Послуга : {{ service.name_service }}</div>
@@ -21,7 +58,8 @@
 {% if request.user|has_group:"Secretaries"%}
     <a class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
     <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Видалити</a>
-
+{% endif %}
+    <a class="btn btn-outline-success btn-block" href="{% url 'add-service-lawyer'  object.pk %} ">Додати адвоката</a>
     {% if lawyers %}
     <div class="container">
     <h5>Адвокати</h5>
@@ -45,5 +83,5 @@
     </table>
     </div>
     {% endif %}
-{% endif %}
+
 {% endblock %}

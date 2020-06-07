@@ -3,101 +3,133 @@
 
 
 {% block content %}
-<style>
-    @media print {
-        .no-print {
-            visibility: hidden;
-        }
-        body {
-            /*,,text-align: center;!important;*/
-            font: 16pt Georgia, "Times New Roman, Times, serif";
-            line-height: 2.0;
-        }
+    <div class="col-md-12 col-sm-8">
+            <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
 
-    }
-</style>
+{#        <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>#}
+{#            <div class="row">#}
+{##}
+{#                    <div class="container">#}
+{#                        <p><label for="date1">З</label>#}
+{#                        <input id="date1" name="date1" type="text" autocomplete="off">#}
+{#                        <p><label for="date2">По</label>#}
+{#                        <input id="date2" name="date2" type="text" autocomplete="off">#}
+{#                    </div>#}
+{##}
+{#            </div>#}
+    <div class="row">
+        <div class="col-md-6 text_styles">
+            <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers }}</div></div>
+            <div class="tabulated secondary_text"><b>Юридичних: </b><div id="open_dossier_j" class="inline_div">{{ open_dossiers_j}}</div></div>
+            <div class="tabulated secondary_text"><b>Фізичних: </b><div id="open_dossier_n" class="inline_div">{{ open_dossiers_n}}</div></div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-6 no-print">
-                <h1>Усі адвокати</h1>
-                {% if lawyers %}
-
-                {% for lawyer in lawyers %}
-                    <div>
-                        <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
-                            {{ lawyer.getfullname }}
-                        </a>
-                    </div>
-                    <br>
-                {% endfor %}
-            {% endif %}
-            </div>
-            <div class="col-6">
-                    <h1>Статистика</h1>
-
-                <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>
-                    <div class="row">
-
-                            <div class="container">
-                                <p><label for="date1">З</label>
-                                <input id="date1" name="date1" type="text" autocomplete="off">
-                                <p><label for="date2">По</label>
-                                <input id="date2" name="date2" type="text" autocomplete="off">
-                            </div>
-
-                    </div>
-                <div class="row">
-                    <div class="col-3">
-                <div><b>Виграно справ</b>: <div id="won_dossiers">{{ won_dossiers }}</div></div>
-
-                <div><b>Закрито справ Юридичних</b>: <div id="closed_dossiers_j">{{ closed_dossiers_j }}</div></div>
-
-
-                <div><b>Закрито справ Натуральних:</b> <div id="closed_dossiers_n">{{ closed_dossiers_n}}</div></div>
-
-
-                <div><b>Відкритих справ Юридичних:</b> <div id="open_dossier_j">{{ open_dossiers_j}}</div></div>
-
-                <div><b>Відкритих справ Натуральних:</b> <div id="open_dossier_n">{{ open_dossiers_n}}</div></div>
-
-                <div><b>Загальна сума :</b> <div id="total_value">{{ value }}</div></div>
-            <hr>
-                        </div>
-            <div class="container_given_services col-3">
-            <div><b>Надані послуги</b></div>
-                <div id="given_services" class="container_stat">
-                    {% for service in service_count %}
-                        <p>
-                        <a href="{% url 'service-detailed-view' service.service_code %}">{{ service.service_code }}</a> {{ service.count }}
-                        </p>
-                    {% endfor %}
+            <div><b>Закрито справ: </b><div id="closed_dossier" class="inline_div">{{ counter_dossiers }}</div></div>
+            <div class="tabulated secondary_text"><b>З них виграно: </b><div id="won_dossiers" class="inline_div">{{ won_dossiers }}</div></div>
+            <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
+        </div>
+        <div class="col-md-4 offset-md-2">
+            <div class="container align_right">
+                    <p><label for="date1">З </label>
+                    <input id="date1" name="date1" type="text" autocomplete="off">
+                    <p><label for="date2">По</label>
+                    <input id="date2" name="date2" type="text" autocomplete="off">
                 </div>
-            </div>
-            <hr>
-            <div class="container_lawyer_service col-3">
-            <div><b>Статистика Адвокатів</b></div>
-                <div id="lawyer_service" class="container_stat">
-                    {% for lawyer in lawyer_counter %}
-                        <p>
-                            <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">{{ lawyer.lawyer_code }}</a> - {{ lawyer.first_name }} {{ lawyer.surname }} : {{ lawyer.count }}
-                        </p>
-                    {% endfor %}
-                </div>
-            </div>
-<!--            <hr>-->
-            <div class="container_past_appointments col-3">
-            <div><b>Минулі записи</b></div>
-                <div id="past_appointments" class="container_stat">
-                    {% for item in appointments|dictsortreversed:"app_date" %}
-                        <div>{{ item.dossier }} : {{ item.app_date }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            </div>
-            </div>
         </div>
     </div>
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-5">Надані послуги</h2>
+
+            <table class="table table-hover table_border">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Номінальна вартість</th>
+                        <th>Бонусна вартість</th>
+                        <th>Кількість записів</th>
+                        <th>Загальна сума</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                {% for service in service_count %}
+                    <tr class="border_top">
+                        <th rowspan="2" class="vertical_align">
+                            <a href="{% url 'service-detailed-view' service.service_code %}">{{ service.name_service }}</a></th>
+                        <th>{{ service.nominal_value }}</th>
+                        <th>{{service.bonus_value}}</th>
+                        <th>{{service.count}}</th>
+                        <th>;;;</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th class="lnr-text-align-right">За весь час</th>
+                        <th>;;;</th>
+
+                        <th>;;;</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-5">Статистика Адвокатів</h2>
+
+            <table class="table table-hover table_border">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ПІБ</th>
+                        <th>Код адвоката</th>
+                        <th>Спеціалізація</th>
+                        <th>Кількість записів</th>
+                        <th>Загальна сума</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for lawyer in lawyer_counter %}
+                    <tr>
+                        <th><a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
+                            {{ lawyer.first_name }} {{ lawyer.mid_name }} {{ lawyer.surname }}</a></th>
+                        <th>{{ lawyer.lawyer_code }}</th>
+                        <th>{{ lawyer.spec }}</th>
+                        <th>{{ lawyer.count}}</th>
+                        <th>;;;</th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+{#    <div class="container_lawyer_service col-3">#}
+{#    <div><b>Статистика Адвокатів</b></div>#}
+{#        <div id="lawyer_service" class="container_stat">#}
+{#            {% for lawyer in lawyer_counter %}#}
+{#                <p>#}
+{#                    <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">{{ lawyer.lawyer_code }}</a> - {{ lawyer.first_name }} {{ lawyer.surname }} : {{ lawyer.count }}#}
+{#                </p>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#<!--            <hr>-->#}
+{#    <div class="container_past_appointments col-3">#}
+{#    <div><b>Минулі записи</b></div>#}
+{#        <div id="past_appointments" class="container_stat">#}
+{#            {% for item in appointments|dictsortreversed:"app_date" %}#}
+{#                <div>{{ item.dossier }} : {{ item.app_date }}</div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+
+    </div>
+
 
 
 {% endblock %}

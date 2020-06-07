@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import requires_csrf_token
-from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView
+from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView, FormView
 from django.views import generic
 from .forms import *
 from django.http import JsonResponse
@@ -117,6 +117,9 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['lawyer_counter'] = lawyer_counter()
         context['appointments'] = appointment_getter()
         context['won_dossiers'] = won_dossiers()
+
+        context['counter_dossiers'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
+
         return context
 
 
@@ -401,6 +404,8 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def form_valid(self, form):
         self.object = form.save()
+        for lawyer in form.cleaned_data['lawyers']:
+            lawyer.service.add(self.object)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -473,6 +478,29 @@ class Client_naturalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Dele
     model = Client_natural
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('ncustomers')
+
+
+class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = 'DataBase.add_lawyer'
+    form_class = LawyerServiceForm
+    template_name = 'service_add_lawyer.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        for lawyer in form.cleaned_data['lawyers']:
+            lawyer.service.add(form.cleaned_data['service_code'])
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(LawyerServiceCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
