@@ -2,20 +2,19 @@ from django.db import models
 from django.urls import reverse
 
 # Create your models here.
-from django.utils import dateformat
 
 
 class Work_days(models.Model):
     DAYS = [
-        ('Mon', 'Понеділок'),
-        ('Tue', 'Вівторок'),
-        ('Wed', 'Середа'),
-        ('Thu', 'Четвер'),
-        ('Fri', 'П`ятниця'),
-        ('Sat', 'Субота'),
-        ('Sun', 'Неділя'),
+        ('Понеділок', 'Понеділок'),
+        ('Вівторок', 'Вівторок'),
+        ('Середа', 'Середа'),
+        ('Четвер', 'Четвер'),
+        ('П`ятниця', 'П`ятниця'),
+        ('Субота', 'Субота'),
+        ('Неділя', 'Неділя'),
     ]
-    day = models.CharField(max_length=3, choices=DAYS)
+    day = models.CharField(max_length=9, choices=DAYS)
 
     def __str__(self):
         return f'{self.day}'

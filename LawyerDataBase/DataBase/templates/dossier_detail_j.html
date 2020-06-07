@@ -8,6 +8,9 @@
 {% if request.user|has_group:"Юридичний клієнт"%}
  <a class="navbar-brand" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">🢀Повернутись до профілю</a>
 {% endif %}
+{% if request.user|has_group:"Адвокат"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -67,11 +70,25 @@
         {% endif %}
         <tr>
             <th>Клієнт</th>
+             {% if request.user|has_group:"Секретар"%}
             <td>
                 <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
                     {{ dossier.num_client_j.getfullname }}
                 </a>
             </td>
+            {% endif %}
+            {% if request.user|has_group:"Юридичний клієнт"%}
+            <td>
+                <a href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j %}">
+                    {{ dossier.num_client_j.getfullname }}
+                </a>
+            </td>
+            {% endif %}
+            {% if request.user|has_group:"Адвокат"%}
+            <td>
+                    {{ dossier.num_client_j.getfullname }}
+            </td>
+            {% endif %}
         </tr>
         {% if dossier.lawyer_code %}
         <tr>
@@ -114,7 +131,7 @@
         <tr>
             <th>Дата</th>
             <th>Час</th>
-            <th>Комент</th>
+            <th>Коментар</th>
             <th>Адвокат</th>
         </tr>
         </thead>
@@ -141,4 +158,9 @@
     </table>
 </div>
 {% endif %}
+<script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock %}

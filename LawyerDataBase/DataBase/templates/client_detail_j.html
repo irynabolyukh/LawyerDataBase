@@ -95,13 +95,6 @@
                 {% endfor %}
             </td>
              {% endif %}
-            {% if request.user|has_group:"Адвокат"%}
-            <td>
-                {% for service in appointment.service.all %}
-                {{ service.name_service }};
-                {% endfor %}
-            </td>
-             {% endif %}
              {% if request.user|has_group:"Секретар"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
@@ -113,7 +106,7 @@
             {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
-            <td>
+               <td>
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
                     {{ appointment.code_dossier_j.code_dossier_j }}
                 </a>
