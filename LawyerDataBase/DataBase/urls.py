@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register, name='register'),
@@ -50,4 +49,6 @@ urlpatterns = [
     path('sendClient/', views.client_ajax, name='get-dossier'),
     path('lawyerWorkDays/', views.lawyer_work_days, name='get-workdays'),
     path('dayBlockedTime/', views.dayblockedtime, name='get-blockedtime'),
+    path('lawyerServiceCode/',views.lawyer_service_code, name='get-service-lawyers'),
+    path('service/<pk>/addLawyer', views.LawyerServiceCreateView.as_view(), name='add-service-lawyer'),
 ]

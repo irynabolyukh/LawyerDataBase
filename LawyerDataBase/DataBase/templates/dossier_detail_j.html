@@ -30,7 +30,13 @@
         </tr>
         <tr>
             <th>Статус</th>
-            <td>{{ dossier.status }}</td>
+            {% if dossier.status == 'closed-won' %}
+            <td>Виграна</td>
+                {% elif dossier.status == 'closed'%}
+                <td>Закрита</td>
+                {% else %}
+                <td>Відкрита</td>
+            {% endif %}
         </tr>
         <tr>
             <th>Дата підписання</th>
