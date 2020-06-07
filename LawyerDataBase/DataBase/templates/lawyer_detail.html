@@ -54,7 +54,7 @@
 {% endif %}
 {% endblock %}
 {% block content %}
-<div class="container">
+<div style="margin-top: 3%" class="container">
     <div class="row">
         <div class="col-sm-4">
             <h4 id="la_code">{{ lawyer.lawyer_code }}</h4>
@@ -84,7 +84,7 @@
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
                 </div>
             {% endif %}
-
+            <br>
             <h3>Досьє</h3>
 
             <ul class="nav nav-pills flex-column">
@@ -187,7 +187,7 @@
                     <th>Послуга</th>
                     <th>Дата</th>
                     <th>Час</th>
-                    <th>Коментарій</th>
+                    <th>Коментар</th>
                     <th>Суть справи</th>
                 </tr>
                 </thead>
