@@ -102,11 +102,13 @@
             {% if request.user|has_group:"Адвокат"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
+
             <td>
                 <a href="{% url 'dossier-detailed-n' appointment.code_dossier_n.code_dossier_n%}">
                     {{ appointment.code_dossier_n.code_dossier_n }}
                 </a>
             </td>
+
             {% if request.user|has_group:"Секретар"%}
             <td>
                 <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk %}">Редагувати</a>

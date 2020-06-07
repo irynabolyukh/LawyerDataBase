@@ -9,9 +9,9 @@
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'nappointments' %}">🢀Усі фізичні записи</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+{% endif %}
+{% if request.user|has_group:"Фізичний клієнт"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
 {% endif %}
 {% endblock %}
 
@@ -33,4 +33,9 @@
 {% load static %}
     <script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.min.js"></script>
      <script src="{% static 'docs/js/app_ajax.js' %}"></script>
+ <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock %}
