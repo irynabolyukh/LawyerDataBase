@@ -47,6 +47,21 @@ def client_ajax(request):
 
 @login_required()
 @requires_csrf_token
+def lawyer_service_code(request):
+    if request.method == 'POST':
+        response = {}
+        response['lawyers'] = []
+        print(request.POST)
+        lawyers = Lawyer.objects.all()
+        for lawyer in lawyers:
+            if lawyer.service.filter(service_code=request.POST['service']).exists():
+                response['lawyers'].append(lawyer.lawyer_code)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
+
+@login_required()
+@requires_csrf_token
 def lawyer_work_days(request):
     if request.method == 'POST':
         response = {}
@@ -511,8 +526,13 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return data
 
     def form_valid(self, form):
+        print(form.cleaned_data['lawyers'])
+        not_selected_lawyers = Lawyer.objects.all()
         for lawyer in form.cleaned_data['lawyers']:
             lawyer.service.add(form.cleaned_data['service_code'])
+            not_selected_lawyers = not_selected_lawyers.exclude(lawyer_code=lawyer.lawyer_code)
+        for not_selected_lawyer in not_selected_lawyers:
+            not_selected_lawyer.service.remove(form.cleaned_data['service_code'])
         return super().form_valid(form)
 
     def get_form_kwargs(self):

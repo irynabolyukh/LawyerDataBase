@@ -86,7 +86,7 @@ class LawyerServiceForm(forms.Form):
         pk = kwargs.pop('pk')
         super(LawyerServiceForm, self).__init__(*args, **kwargs)
         self.fields['service_code'].initial = pk
-        self.fields['lawyers'].queryset = Lawyer.objects.exclude(service=pk)
+        # self.fields['lawyers'].queryset = Lawyer.objects.exclude(service=pk)
 
 
 

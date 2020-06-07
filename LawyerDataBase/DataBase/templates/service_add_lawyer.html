@@ -1,5 +1,5 @@
 {% extends "base_generic.html" %}
-{% block title %}Нова послуга{% endblock %}
+{% block title %}Зміна адвокатів{% endblock %}
 
 {% block navbar %}
     <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>
@@ -9,10 +9,18 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Нова послуга</h1>
+    <h1 class="row align-items-center justify-content-center">Змінити адвокатів</h1>
+    <div class="row align-items-center justify-content-center">
+    <div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-outline-success">Зберегти</button>
+        <button type="submit" class="btn btn-outline-success btn-block">Зберегти</button>
     </form>
+        </div></div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="{% static 'docs/js/checkedMultiBox.js' %}"></script>
 {% endblock %}
