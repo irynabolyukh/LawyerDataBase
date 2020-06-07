@@ -70,42 +70,52 @@ function getStats(date) {
 function updateInfo(data) {
     console.log(data);
     $('#won_dossiers')[0].innerHTML = data['all_won_dossiers'];
-    $('#closed_dossiers_j')[0].innerHTML = data['closed_j'];
-    $('#closed_dossiers_n')[0].innerHTML = data['closed_n'];
+    $('#closed_dossier')[0].innerHTML = data['closed']
     $('#open_dossier_j')[0].innerHTML = data['open_j'];
     $('#open_dossier_n')[0].innerHTML = data['open_n'];
+    $('#open_dossier')[0].innerHTML = data['open'];
     $('#total_value')[0].innerHTML = data['value'];
-    $('.container_past_appointments').remove();
-    var given_services =  $('#given_services');
-    given_services.find('p').remove();
-    var lawyer_service = $('#lawyer_service');
-    lawyer_service.find('p').remove();
-
+    var servicesBody = $('#services_body')
+    $('#lawyers').find('tr').remove();
+    servicesBody.find('tr').remove();
+    // var servicesBody = $('#services_body')
 
     if (data['service_count'].length > 0)
-        for (var service in data['service_count']){
-             given_services
-                 .append(
-                     `<p><a href="/database/service/${data['service_count'][service].service_code}">
-                            ${data['service_count'][service].service_code}</a> <b>${data['service_count'][service].name_service}</b> : 
-                         ${data['service_count'][service].count}</p>`)
+        for (var service of data['service_count']){
+             servicesBody.append(
+                     `<tr class="border_top">
+                        <th rowspan="2" class="vertical_align">
+                            <a href="/database/service/${service.service_code}/">${service.name_service}</a></th>
+                        <th>${service.nominal_value}</th>
+                        <th>${service.bonus_value}</th>
+                        <th>${service.count}</th>
+                        <th>${service.sum} грн</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th class="lnr-text-align-right">За весь час</th>
+                        <th>${service.fulltimeCount}</th>
+                        <th>${service.fulltimeSum} грн</th>
+                    </tr>`)
     }
     else{
-        given_services.append("<p>За заданий проміжок не були надані послуги</p>")
+        var serviceTable = $('#services')
+        serviceTable.find('tr').remove()
+        $('#given_services').append("<h4 >За заданий проміжок не були надані послуги</h4>")
     }
-
-    if (data['lawyer_counter'].length > 0)
-        for (var lawyer in data['lawyer_counter']){
-             lawyer_service
-                 .append(
-                     `<p><a href="/database/lawyer/${data['lawyer_counter'][lawyer].lawyer_code}">
-                        ${data['lawyer_counter'][lawyer].lawyer_code}</a> - <b>
-                        ${data['lawyer_counter'][lawyer].first_name} 
-                         ${data['lawyer_counter'][lawyer].surname}</b> : ${data['lawyer_counter'][lawyer].count}</p>`)
-    }
-    else{
-        lawyer_service.append("<p>Адвокати не надавали послуги за заданий проміжок</p>")
-    }
+    //
+    // if (data['lawyer_counter'].length > 0)
+    //     for (var lawyer in data['lawyer_counter']){
+    //          lawyer_service
+    //              .append(
+    //                  `<p><a href="/database/lawyer/${data['lawyer_counter'][lawyer].lawyer_code}">
+    //                     ${data['lawyer_counter'][lawyer].lawyer_code}</a> - <b>
+    //                     ${data['lawyer_counter'][lawyer].first_name}
+    //                      ${data['lawyer_counter'][lawyer].surname}</b> : ${data['lawyer_counter'][lawyer].count}</p>`)
+    // }
+    // else{
+    //     lawyer_service.append("<p>Адвокати не надавали послуги за заданий проміжок</p>")
+    // }
 }
 
 function getCookie(name) {

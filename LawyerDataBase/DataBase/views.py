@@ -145,7 +145,6 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['value'] = str(nom_value() + extra_value())
         context['service_count'] = service_counter()
         context['lawyer_counter'] = lawyer_counter()
-        context['appointments'] = appointment_getter()
         context['won_dossiers'] = won_dossiers()
 
         context['counter_dossiers'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
@@ -163,17 +162,21 @@ def getStats(request):
         dEnd = date(int(request.POST['date2[year]']),
                     int(request.POST['date2[month]']),
                     int(request.POST['date2[day]']))
-        if dEnd < dStart:
-            print("error")
         response = {}
-        response['closed_j'] = date_closed_dossier_j(dStart, dEnd)
-        response['closed_n'] = date_closed_dossier_n(dStart, dEnd)
+        response['closed'] = 0
         response['open_n'] = date_open_dossier_n(dStart, dEnd)
         response['open_j'] = date_open_dossier_j(dStart, dEnd)
-        response['service_count'] = date_service_counter(dStart, dEnd)
+        response['open'] = int(response['open_n']) + int(response['open_j'])
         response['all_won_dossiers'] = date_won_dossiers(dStart, dEnd)
-        response['value'] = date_value(dStart, dEnd)
+        response['service_count'] = date_service_counter(dStart, dEnd)
         response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
+        response['value'] = 0
+        for service in response['service_count']:
+            response['value'] += service['sum']
+
+
+
+
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)

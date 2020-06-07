@@ -3,6 +3,7 @@
 
 
 {% block content %}
+    <div class="container">
     <div class="col-md-12 col-sm-8">
             <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
 
@@ -28,7 +29,11 @@
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
         <div class="col-md-4 offset-md-2">
+            <div id="reload" class="align-center">
+                <button onClick="window.location.reload();">За весь час</button>
+            </div>
             <div class="container align_right">
+
                     <p><label for="date1">З </label>
                     <input id="date1" name="date1" type="text" autocomplete="off">
                     <p><label for="date2">По</label>
@@ -40,9 +45,9 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-5">Надані послуги</h2>
+            <h2 class="mb-5" id="given_services">Надані послуги</h2>
 
-            <table class="table table-hover table_border">
+            <table class="table table-hover table_border" id="services">
                 <thead class="thead-dark">
                     <tr>
                         <th>Назва</th>
@@ -53,7 +58,7 @@
                     </tr>
 
                 </thead>
-                <tbody>
+                <tbody id="services_body">
                 {% for service in service_count %}
                     <tr class="border_top">
                         <th rowspan="2" class="vertical_align">
@@ -61,14 +66,13 @@
                         <th>{{ service.nominal_value }}</th>
                         <th>{{service.bonus_value}}</th>
                         <th>{{service.count}}</th>
-                        <th>;;;</th>
+                        <th>{{service.sum}} грн</th>
                     </tr>
                     <tr>
                         <th></th>
                         <th class="lnr-text-align-right">За весь час</th>
-                        <th>;;;</th>
-
-                        <th>;;;</th>
+                        <th>{{service.count}}</th>
+                        <th>{{service.sum}} грн</th>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -80,9 +84,9 @@
 
     <div class="row">
         <div class="col-12">
-            <h2 class="mb-5">Статистика Адвокатів</h2>
+            <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
 
-            <table class="table table-hover table_border">
+            <table class="table table-hover table_border" id="lawyers">
                 <thead class="thead-dark">
                     <tr>
                         <th>ПІБ</th>
@@ -92,7 +96,7 @@
                         <th>Загальна сума</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="lawyers_body">
                 {% for lawyer in lawyer_counter %}
                     <tr>
                         <th><a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
@@ -108,30 +112,10 @@
         </div>
     </div>
     <hr>
-{#    <div class="container_lawyer_service col-3">#}
-{#    <div><b>Статистика Адвокатів</b></div>#}
-{#        <div id="lawyer_service" class="container_stat">#}
-{#            {% for lawyer in lawyer_counter %}#}
-{#                <p>#}
-{#                    <a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">{{ lawyer.lawyer_code }}</a> - {{ lawyer.first_name }} {{ lawyer.surname }} : {{ lawyer.count }}#}
-{#                </p>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    </div>#}
-{#<!--            <hr>-->#}
-{#    <div class="container_past_appointments col-3">#}
-{#    <div><b>Минулі записи</b></div>#}
-{#        <div id="past_appointments" class="container_stat">#}
-{#            {% for item in appointments|dictsortreversed:"app_date" %}#}
-{#                <div>{{ item.dossier }} : {{ item.app_date }}</div>#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    </div>#}
-
     </div>
 
 
-
+</div>
 {% endblock %}
 {% block script %}
         {% load static %}

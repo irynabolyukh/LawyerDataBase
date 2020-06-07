@@ -2,43 +2,43 @@
 
 {% block navbar %}
     <div class="nav-item">
-            <a style="font-size: x-large" class="nav-link font-weight-bold" href="{% url 'lawyers' %}">Адвокати</a>
+            <a class="nav-link font-weight-bold" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
         <div class="nav-item">
-            <a style="font-size: x-large" class="nav-link font-weight-bold" href="{% url 'services' %}">Послуги</a>
+            <a class="nav-link font-weight-bold" href="{% url 'services' %}">Послуги</a>
         </div>
         <div class="nav-item dropdown">
-            <a style="font-size: x-large" class="nav-link font-weight-bold dropdown-toggle" href="#" data-toggle="dropdown">
+            <a class="nav-link font-weight-bold dropdown-toggle" href="#" data-toggle="dropdown">
                 Клієнти
             </a>
             <div class="dropdown-menu">
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
         <div class="nav-item dropdown">
-            <a style="font-size: x-large" class="nav-link font-weight-bold dropdown-toggle" href="#"  data-toggle="dropdown">
+            <a class="nav-link font-weight-bold dropdown-toggle" href="#"  data-toggle="dropdown">
                 Досьє
             </a>
             <div class="dropdown-menu">
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
             </div>
         </div>
         <div class="nav-item dropdown">
-            <a style="font-size: x-large" class="nav-link font-weight-bold dropdown-toggle" href="#"  data-toggle="dropdown">
+            <a class="nav-link font-weight-bold dropdown-toggle" href="#"  data-toggle="dropdown">
                 Записи
             </a>
             <div class="dropdown-menu">
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
-                <a style="font-size: large" class="nav-link font-weight-bold dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="nav-link font-weight-bold dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
         <div class="nav-item dropdown">
-            <a style="font-size: x-large" class="nav-link font-weight-bold" href="{% url 'register' %}"> Додати користувача</a>
+            <a  class="nav-link font-weight-bold" href="{% url 'register' %}"> Додати користувача</a>
         </div>
         <div class="nav-item">
-            <a style="font-size: x-large" class="nav-link font-weight-bold" href="{% url 'stats' %}">Статистика</a>
+            <a class="nav-link font-weight-bold" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endblock %}
 

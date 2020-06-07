@@ -25,7 +25,6 @@ def nom_value():
     res = int(row1 or 0) + int(row2 or 0)
     return res
 
-
 def extra_value():
     with connection.cursor() as cursor:
         cursor.execute(
@@ -120,25 +119,44 @@ def lawyer_extra_value(param):
 def service_counter():
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT service_code, name_service, COUNT(*), nominal_value, bonus_value '
-            'FROM ( SELECT service_code, name_service, nominal_value, bonus_value'
-            '       FROM(("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
-            '               ON AN.appoint_code_n = ANS.appointment_n_id) '
-            '               INNER JOIN "Services" AS SE ON ANS.services_id = SE.service_code) '
+            'SELECT service_code, name_service, nominal_value, bonus_value, status, COUNT(*) as counter '
+            'FROM ( SELECT service_code, name_service, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
+            '           ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS SE'
+            '           ON ANS.services_id = SE.service_code) INNER JOIN "Dossier_N" AS DN '
+            '           ON DN.code_dossier_n = AN.code_dossier_n_id) '
             '   UNION ALL '
-            '       (SELECT service_code, name_service, nominal_value, bonus_value '
-            'FROM ("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
-            '       ON AJ.appoint_code_j = AJS.appointment_j_id) '
-            '       INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code)) AS res '
-            'GROUP BY res.service_code, res.name_service, res.nominal_value, res.bonus_value;')
+            '       SELECT service_code, name_service, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
+            '           ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS SE '
+            '           ON AJS.services_id = SE.service_code) INNER JOIN "Dossier_J" AS DJ '
+            '           ON DJ.code_dossier_j = AJ.code_dossier_j_id)) AS RES '
+            'GROUP BY res.service_code, res.name_service, res.nominal_value, res.bonus_value, res.status')
         row = cursor.fetchall()
     res = []
     for record in row:
-        res.append({'service_code': record[0],
-                    'name_service': record[1],
-                    'count': record[2],
-                   'nominal_value':record[3],
-                    'bonus_value':record[4]})
+        # count sum, based on if dossier is closed
+        sum = 0
+        if record[4] == 'closed':
+            sum = int(record[5])*int(record[2])
+        elif record[4] =='closed-won':
+            sum = int(record[5])*int(record[3])
+
+        exists = False
+        # if service is already added to array
+        for service in res:
+            if service['service_code'] == record[0]:
+                exists = True
+                service['sum'] = int(service['sum']) + sum
+                service['count'] = int(service['count']) + int(record[5])
+        # else
+        if not exists:
+            res.append({'service_code': record[0],
+                        'name_service': record[1],
+                        'count': record[5],
+                        'nominal_value': record[2],
+                        'bonus_value': record[3],
+                        'sum':sum})
     return res
 
 
@@ -163,40 +181,6 @@ def lawyer_counter():
                     'mid_name': record[3],
                     'count': record[4],
                     'spec': record[5]})
-    return res
-
-
-def appointment_getter():
-    today = date.today()
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT code_dossier_n_id, num_client_n_id, app_date, app_time, comment '
-            'FROM "Appointment_N" '
-            'WHERE app_date <= %s::date '
-            'ORDER BY app_date ASC '
-            'LIMIT 3; ', [f'{today.year}-{today.month}-{today.day}'])
-        row = cursor.fetchall()
-    res = []
-    for record in row:
-        res.append({'dossier': record[0],
-                    'client_id': record[1],
-                    'app_date': record[2],
-                    'app_time': record[3],
-                    'comment': record[4]})
-    with connection.cursor() as cursor:
-        cursor.execute(
-            'SELECT code_dossier_j_id, num_client_j_id, app_date, app_time, comment '
-            'FROM "Appointment_J" '
-            'WHERE app_date <= %s::date '
-            'ORDER BY app_date ASC '
-            'LIMIT 3; ', [f'{today.year}-{today.month}-{today.day}'])
-        row = cursor.fetchall()
-    for record in row:
-        res.append({'dossier': record[0],
-                    'client_id': record[1],
-                    'app_date': record[2],
-                    'app_time': record[3],
-                    'comment': record[4]})
     return res
 
 
@@ -257,19 +241,21 @@ def date_open_dossier_j(date1, date2):
 def date_service_counter(date1, date2):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT service_code, name_service, COUNT(*) '
-            'FROM ( SELECT service_code, name_service'
-            '       FROM(("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
-            '               ON AN.appoint_code_n = ANS.appointment_n_id) '
-            '               INNER JOIN "Services" AS SE ON ANS.services_id = SE.service_code)'
+            'SELECT service_code, name_service, nominal_value, bonus_value, status, COUNT(*) as counter '
+            'FROM ( SELECT service_code, name_service, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
+            '           ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS SE '
+            '           ON ANS.services_id = SE.service_code) INNER JOIN "Dossier_N" AS DN '
+            '           ON DN.code_dossier_n = AN.code_dossier_n_id) '
             '       WHERE app_date > %s::date and app_date < %s::date '
             '   UNION ALL '
-            '       (SELECT service_code, name_service '
-            'FROM ("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
-            '       ON AJ.appoint_code_j = AJS.appointment_j_id) '
-            '       INNER JOIN "Services" AS SE ON AJS.services_id = SE.service_code'
-            '       WHERE app_date > %s::date and app_date < %s::date)) AS res '
-            'GROUP BY res.service_code, res.name_service;',
+            '       SELECT service_code, name_service, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
+            '           ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS SE '
+            '           ON AJS.services_id = SE.service_code) INNER JOIN "Dossier_J" AS DJ '
+            '           ON DJ.code_dossier_j = AJ.code_dossier_j_id) '
+            '       WHERE app_date > %s::date and app_date < %s::date) AS RES '
+            'GROUP BY res.service_code, res.name_service, res.nominal_value, res.bonus_value, res.status Order by res.service_code',
             [f'{date1.year}-{date1.month}-{date1.day}',
              f'{date2.year}-{date2.month}-{date2.day}',
              f'{date1.year}-{date1.month}-{date1.day}',
@@ -277,10 +263,67 @@ def date_service_counter(date1, date2):
         row = cursor.fetchall()
     res = []
     for record in row:
-        res.append({'service_code': record[0],
-                    'name_service': record[1],
-                    'count': record[2]})
+        # count sum, based on if dossier is closed
+        sum = 0
+        if record[4] == 'closed':
+            sum = int(record[5]) * int(record[2])
+        elif record[4] == 'closed-won':
+            sum = int(record[5]) * int(record[3])
+
+        exists = False
+        # if service is already added to array
+        for service in res:
+            if service['service_code'] == record[0]:
+                exists = True
+                service['sum'] = int(service['sum']) + sum
+                service['count'] = int(service['count']) + int(record[5])
+        # else
+        if not exists:
+            res.append({'service_code': record[0],
+                        'name_service': record[1],
+                        'count': record[5],
+                        'nominal_value': record[2],
+                        'bonus_value': record[3],
+                        'sum': sum,
+                        'fulltimeSum':0,
+                        'fulltimeCount':0})
+
+    date_fulltime_count(res)
     return res
+
+
+def date_fulltime_count(arrayRes):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT service_code, nominal_value, bonus_value, status, COUNT(*) as counter '
+            'FROM ( SELECT service_code, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_N" AS AN INNER JOIN "Appointment_N_service" AS ANS '
+            '           ON AN.appoint_code_n = ANS.appointment_n_id) INNER JOIN "Services" AS SE'
+            '           ON ANS.services_id = SE.service_code) INNER JOIN "Dossier_N" AS DN '
+            '           ON DN.code_dossier_n = AN.code_dossier_n_id) '
+            '   UNION ALL '
+            '       SELECT service_code, nominal_value, bonus_value, status '
+            '       FROM((("Appointment_J" AS AJ INNER JOIN "Appointment_J_service" AS AJS '
+            '           ON AJ.appoint_code_j = AJS.appointment_j_id) INNER JOIN "Services" AS SE '
+            '           ON AJS.services_id = SE.service_code) INNER JOIN "Dossier_J" AS DJ '
+            '           ON DJ.code_dossier_j = AJ.code_dossier_j_id)) AS RES '
+            'GROUP BY res.service_code, res.nominal_value, res.bonus_value, res.status')
+        row = cursor.fetchall()
+
+    for record in row:
+        # count sum, based on if dossier is closed
+        sum = 0
+        if record[3] == 'closed':
+            sum = int(record[4])*int(record[1])
+        elif record[3] =='closed-won':
+            sum = int(record[4])*int(record[2])
+
+        for service in arrayRes:
+            if service['service_code'] == record[0]:
+                service['fulltimeSum'] = int(service['fulltimeSum']) + sum
+                service['fulltimeCount'] = int(service['fulltimeCount']) + int(record[4])
+
+    return arrayRes
 
 
 def date_won_dossiers(date1, date2):
@@ -472,9 +515,6 @@ def filter_dossier_j_by_status(param): #filter Dossier J by status
                     'num_client_j_id': record[7]})
     return res
 
-def date_value(data1, data2):
-    m = 1
-    return 0
 
 #  get dates, which are chosen
 def blocked_time_lawyer(lawyer,date):
