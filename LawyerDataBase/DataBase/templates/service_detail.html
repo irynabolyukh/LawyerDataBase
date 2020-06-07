@@ -5,9 +5,9 @@
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
  <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+{% endif %}
+{% if request.user|has_group:"Адвокат"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
 {% endif %}
 {% endblock %}
 
@@ -52,4 +52,9 @@
     </div>
     {% endif %}
 {% endif %}
+<script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock %}
