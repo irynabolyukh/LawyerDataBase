@@ -3,7 +3,8 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, inlineformset_factory, SelectDateWidget, SplitDateTimeWidget
 from django import forms
 from .models import *
-from django.forms import TimeInput, TextInput
+from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
+
 
 
 class CustomUserCreationForm(forms.Form):
@@ -75,16 +76,32 @@ class LPhoneForm(ModelForm):
 LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'])
 
 
+class LawyerServiceForm(forms.Form):
+    service_code = forms.CharField(label='Код послуги',disabled=True)
+    lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
+                                             queryset=Lawyer.objects.all(),
+                                             widget=CheckboxSelectMultiple)
+
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('pk')
+        super(LawyerServiceForm, self).__init__(*args, **kwargs)
+        self.fields['service_code'].initial = pk
+        # self.fields['lawyers'].queryset = Lawyer.objects.exclude(service=pk)
+
+
+
 class ServicesForm(ModelForm):
     service_code = forms.CharField(label='Код послуги')
     name_service = forms.CharField(label='Послуга')
     nominal_value = forms.DecimalField(label='Номінальна вартість')
     bonus_value = forms.DecimalField(label='Бонусна вартість')
+    lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
+                                             queryset=Lawyer.objects.all(),
+                                             widget=CheckboxSelectMultiple)
 
     class Meta:
         model = Services
         fields = '__all__'
-
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])
 

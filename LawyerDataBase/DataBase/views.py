@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import requires_csrf_token
-from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView
+from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView, FormView
 from django.views import generic
 from .forms import *
 from django.http import JsonResponse
@@ -44,6 +44,21 @@ def client_ajax(request):
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
+
+@login_required()
+@requires_csrf_token
+def lawyer_service_code(request):
+    if request.method == 'POST':
+        response = {}
+        response['lawyers'] = []
+        print(request.POST)
+        lawyers = Lawyer.objects.all()
+        for lawyer in lawyers:
+            if lawyer.service.filter(service_code=request.POST['service']).exists():
+                response['lawyers'].append(lawyer.lawyer_code)
+        return JsonResponse(response)
+    else:
+        return JsonResponse({'message': 'Bad request'}, status=400)
 
 @login_required()
 @requires_csrf_token
@@ -130,8 +145,10 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['value'] = str(nom_value() + extra_value())
         context['service_count'] = service_counter()
         context['lawyer_counter'] = lawyer_counter()
-        context['appointments'] = appointment_getter()
         context['won_dossiers'] = won_dossiers()
+
+        context['counter_dossiers'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
+
         return context
 
 
@@ -145,17 +162,21 @@ def getStats(request):
         dEnd = date(int(request.POST['date2[year]']),
                     int(request.POST['date2[month]']),
                     int(request.POST['date2[day]']))
-        if dEnd < dStart:
-            print("error")
         response = {}
-        response['closed_j'] = date_closed_dossier_j(dStart, dEnd)
-        response['closed_n'] = date_closed_dossier_n(dStart, dEnd)
+        response['closed'] = 0
         response['open_n'] = date_open_dossier_n(dStart, dEnd)
         response['open_j'] = date_open_dossier_j(dStart, dEnd)
-        response['service_count'] = date_service_counter(dStart, dEnd)
+        response['open'] = int(response['open_n']) + int(response['open_j'])
         response['all_won_dossiers'] = date_won_dossiers(dStart, dEnd)
-        response['value'] = date_value(dStart, dEnd)
+        response['service_count'] = date_service_counter(dStart, dEnd)
         response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
+        response['value'] = 0
+        for service in response['service_count']:
+            response['value'] += service['sum']
+
+
+
+
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
@@ -421,6 +442,8 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def form_valid(self, form):
         self.object = form.save()
+        for lawyer in form.cleaned_data['lawyers']:
+            lawyer.service.add(self.object)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -494,6 +517,34 @@ class Client_naturalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, Dele
     model = Client_natural
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('ncustomers')
+
+
+class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = 'DataBase.add_lawyer'
+    form_class = LawyerServiceForm
+    template_name = 'service_add_lawyer.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        print(form.cleaned_data['lawyers'])
+        not_selected_lawyers = Lawyer.objects.all()
+        for lawyer in form.cleaned_data['lawyers']:
+            lawyer.service.add(form.cleaned_data['service_code'])
+            not_selected_lawyers = not_selected_lawyers.exclude(lawyer_code=lawyer.lawyer_code)
+        for not_selected_lawyer in not_selected_lawyers:
+            not_selected_lawyer.service.remove(form.cleaned_data['service_code'])
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(LawyerServiceCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
