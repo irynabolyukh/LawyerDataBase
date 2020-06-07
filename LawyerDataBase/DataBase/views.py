@@ -861,3 +861,4 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Appointment_J
     paginate_by = 25
     queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')
+
