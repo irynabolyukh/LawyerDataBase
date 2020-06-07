@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <title>Адвокатське бюро</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="theme-color" content="#000">
+    <link rel="icon" type="image/png" href=" {% static 'Login/images/scale.png' %}"/>
+    <link rel='stylesheet' id='main-css'  href="{% static 'docs/css/lib.css '%}" type='text/css' media='all' />
+    <link rel="stylesheet" type="text/css" href="{% static 'Login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'Login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
+</head>
+<body class="home page-template-default page page-id-2">
+<header>
+        <div class="top" style="background: #343a3f">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                                                <div class="phone">
+                            <i class="fa fa-phone" aria-hidden="true"> </i> <a href="tel:+380123456789">+38 012 345 67 89</a>
+                        </div>
+                                            </div>
+                <div class="col-4">
+                       <ul class="soc" style="border-right:0px; border-left: 0px">
+                           <li style="border-right:0px; border-left: 0px">
+                               <a href="{% url 'login' %}">Особистий кабінет</a>
+                           </li>
+                           {% if request.user.is_authenticated %}
+                           <li style="border-right:0px; border-left: 0px">
+                               <a href="{% url 'logout' %}">Вийти</a>
+                           </li>
+                           {% endif %}
+                       </ul>
+                    </div>
+
+        </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-9 col-lg-5 col-xl-5">
+                        <div id="logo"><h2>Адвокатське бюро</h2></div>
+                    </div>
+                    <div class="col-3 col-lg-7 col-xl-7">
+                        <button class="toggle-menu d-md-block d-lg-none d-xl-none">
+                            <span class="toggle-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+                            </span>
+                        </button>
+                        <div id="top_menu">
+                            <div class="close-btn d-md-block d-lg-none d-xl-none">
+                                <svg viewport="0 0 24 24" width="24" height="24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                                    <line x1="1" y1="23" x2="23" y2="1" stroke-width="2"></line>
+                                    <line x1="1" y1="1" x2="23" y2="23" stroke-width="2"></line>
+                                </svg>
+                            </div>
+                            <ul class="menu">
+                                <li id="menu-item-12" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-12"><a href="">Про нас</a></li>
+                                <li id="menu-item-18" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-18"><a href="">Послуги</a></li>
+                                <li id="menu-item-16" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-16"><a href="">Блог</a></li>
+                                <li id="menu-item-17" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-17"><a href="">Новини</a></li>
+                                <li id="menu-item-15" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-15"><a href="">Контакти</a></li>
+                            </ul>
+                            <div class="phone d-md-block d-lg-none d-xl-none">
+                                <i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:+380123456789">+38 012 345 67 89</a>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div id="top_slider">
+        <div class="owl-carousel">
+                        <div>
+                <div class="container">
+                    <div class="slide-content">
+                        <div class="title">Адвокатське бюро</div>
+                        <div class="description">Місце, яке спеціалізується на наданні юридичних послуг у галузі будівництва, операціях з нерухомістю та захисті бізнесу у кризових ситуаціях.</div>
+                        <a class="btn btn-gold" href="tel:+380123456789">Зворотній зв'язок</a>
+                    </div>
+                </div>
+                                <img src="../static/docs/img/slide1.jpg" alt="Адвокатське бюро">
+            </div>
+                        <div>
+                <div class="container">
+                    <div class="slide-content">
+                        <div class="title">Адвокатське бюро</div>
+                        <div class="description">Професійна експертиза та ефективні рішення для розв’язання надскладних завдань клієнтів.</div>
+                        <a class="btn btn-gold" href="tel:+380123456789">Зворотній зв'язок</a>
+                    </div>
+                </div>
+                                <img src="../static/docs/img/BACKGROUND4.png" alt="Адвокатське бюро">
+            </div>
+                        <div>
+                <div class="container">
+                    <div class="slide-content">
+                        <div class="title">Адвокатське бюро</div>
+                        <div class="description">Індивідуальний підхід і особиста залученість кожного з партнерів до проектів клієнта.</div>
+                        <a class="btn btn-gold" href="tel:+380123456789">Зворотній зв'язок</a>
+                    </div>
+                </div>
+                                <img src="../static/docs/img/BACKGROUND1.png" alt="Адвокатське бюро">
+            </div>
+                    </div>
+    </div>
+
+    <div class="section">
+        <div class="container">
+            <div class="services-carousel">
+                <div class="owl-carousel">
+                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-1.png');"></span>
+        <span class="title">Комплексне юридичне обслуговування</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-2.png');"></span>
+        <span class="title">Нерухомість на вторинному ринку</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-3.png');"></span>
+        <span class="title">Сімейне право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-4.png');"></span>
+        <span class="title">Спадкове право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-5.png');"></span>
+        <span class="title">Цивільне право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-6.png');"></span>
+        <span class="title">Земельні питання</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-7.png');"></span>
+        <span class="title">Господарське право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-8.png');"></span>
+        <span class="title">Адміністративне право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-9.png');"></span>
+        <span class="title">Виконавче провадження</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-10.png');"></span>
+        <span class="title">Кримінальне право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-11.png');"></span>
+        <span class="title">Будівельне право</span>
+    </a>
+</div>                                            <div>
+    <a href="">
+        <span class="icon" style="background-image: url('../static/docs/img/ico-service-12.png');"></span>
+        <span class="title">Pro bono</span>
+    </a>
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+<footer>
+    <div class="top">
+        <div class="container">
+            <div class="scroll-top-btn btn-action">
+                <span class="icon"><i class="fa fa-angle-up" aria-hidden="true"></i></span>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                    <div class="site-name">
+                        Адвокатське бюро
+<!--                        <span></span>-->
+                    </div>
+                    <ul class="menu contacts">
+                        <li>
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <a href="tel:+380123456789">+38 012 345 67 89</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <a href="mailto:someemail@gmail.com">someemail@gmail.com</a>
+                        </li>
+                        <li>
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            м. Київ, вул. Григорія Сковороди,  Київ, 04655
+                            <br /> буд. 2, офіс 2-315
+                        </li>
+                    </ul>
+                    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d186.06299482434486!2d30.51982119898265!3d50.464063885845974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce40609bc5e3%3A0xb49cb632a93ca77d!2sFaculty%20of%20Computer%20Sciences!5e0!3m2!1sen!2sua!4v1591381915361!5m2!1sen!2sua" class="btn btn-border popup-gmaps">Подивитися на карті</a>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                                        <div class="caption">Наші послуги</div>
+                    <ul class="menu">
+                        <li><a href="">Комплексне юридичне обслуговування</a></li>
+                        <li><a href="">Нерухомість на вторинному ринку</a></li>
+                        <li><a href="">Сімейне право</a></li>
+                        <li><a href="">Спадкове право</a></li>
+                        <li><a href="">Цивільне право</a></li>
+                        <li><a href="">Земельні питання</a></li>
+                        <li><a href="">Господарське право</a></li>
+                        <li><a href="">Адміністративне право</a></li>
+                        <li><a href="">Виконавче провадження</a></li>
+                        <li><a href="">Кримінальне право</a></li>
+                        <li><a href="">Будівельне право</a></li>
+                        <li><a href="">Pro bono</a></li>
+                    </ul>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+                    <div class="caption">Напишіть нам</div>
+                   <div role="form" class="wpcf7" id="wpcf7-f117-o1" lang="ru-RU" dir="ltr">
+<div class="screen-reader-response"></div>
+<form class="wpcf7-form">
+<div class="form">
+<div class="form-item"><span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="E-mail" /></span></div>
+<div class="form-item"><span class="wpcf7-form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false" placeholder="Повідомлення"></textarea></span></div>
+<div class="form-item">
+<div><div></div>
+</div>
+</div>
+<p><input type="submit" value="Відправити" class="btn btn-gold"/>
+</p>
+</div>
+<div></div></form></div>                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom text-center" style="background: #343a3f">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="copy">
+                        Адвокатське бюро © 2020
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script type='text/javascript' src="{% static 'docs/js/lib.js' %}"></script>
+</body>
+</html>

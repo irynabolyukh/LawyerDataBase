@@ -2,7 +2,9 @@
 {% block title %}Фізичні записи{% endblock %}
 {% block content %}
 <div class="container">
-     <h2>Фізичні записи</h2>
+    <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
+     <h2 class="font-weight-bold">Фізичні записи</h2>
+     </div>
      <a class="btn btn-outline-success btn-block" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
     <table class="table table-striped">
         <thead class="thead-dark">

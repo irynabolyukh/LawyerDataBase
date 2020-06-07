@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{% static 'docs/css/app_css.css'%}">
 {% endblock %}
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'nappointments' %}">🢀Усі фізичні записи</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
@@ -16,7 +16,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Запис фізичного клієнта</h1>
+    <h1 class="row align-items-center justify-content-center">Запис фізичного клієнта</h1>
+<div class="row align-items-center justify-content-center">
+<div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form" >
         {% csrf_token %}
          <table>
@@ -24,7 +26,7 @@
         </table>
         <button type="submit" class="btn btn-outline-success">Зберегти</button>
     </form>
-
+</div></div>
 {% endblock %}
 
 {% block script %}

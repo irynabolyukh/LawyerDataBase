@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+{% block title %}
+    Додати користувача - {{ block.super }}
+{% endblock %}
+ 
+{% block content %}
+ <div style="margin-top: 5%" class="container-fluid row align-items-center justify-content-center">
+     <div class="login shadow-lg p-4 mb-4 bg-white">
+        <h2 class="font-weight-bold">Додати користувача</h2>
+         <form method="post" >
+             {% csrf_token %}
+             <table>
+                {{ form.as_table }}
+             </table>
+              <div class="row align-items-center justify-content-center">
+              <button type="submit" class="btn btn-outline-success btn-sm btn-block">Зберегти</button>
+              </div>
+         </form>
+     </div>
+ </div>
+{% endblock %}

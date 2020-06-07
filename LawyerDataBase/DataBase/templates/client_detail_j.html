@@ -2,37 +2,50 @@
 {% load user_tags %}
 {% block title %}Профіль клієнта{% endblock %}
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
 {% endif %}
-{% if request.user|has_group:"ClientsJ"%}
+{% if request.user|has_group:"Юридичний клієнт"%}
+<div class="container-fluid row align-items-center justify-content-center">
 <h2 style="color: white">Мій профіль</h2>
+</div>
 {% endif %}
 {% endblock %}
 {% block content %}
-<div class="card">
-        <div> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</div>
-    <div>Код ЄДРПОУ: {{ client_juridical.num_client_j }}</div>
-    <div>Адреса: {{ client_juridical.adr_city }}, {{ client_juridical.adr_street }}, {{ client_juridical.adr_build }}</div>
-    <div>Компанія: {{ client_juridical.name_of_company }}</div>
-    <div>Посада: {{ client_juridical.client_position }}</div>
-    <div>IBAN: {{ client_juridical.iban }}</div>
-    <div>E-mail: {{ client_juridical.mail_info }}</div>
-    <div>Номер телефону:
-        {% for phone in phones %}
-            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
-        {% endfor %}
+<div></div>
+<div style="margin-top: 3%" class="container-fluid row align-items-center justify-content-center">
+    <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
+        <h5> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</h5>
+        <h6>Код ЄДРПОУ:{{ client_juridical.num_client_j }}</h6>
+        <h6>Адреса: {{ client_juridical.adr_city }}, {{ client_juridical.adr_street }}, {{ client_juridical.adr_build }}</h6>
+        <h6>Компанія: {{ client_juridical.name_of_company }}</h6>
+        <h6>Посада: {{ client_juridical.client_position }}</h6>
+        <h6>IBAN: {{ client_juridical.iban }}</h6>
+        <h6>E-mail: {{ client_juridical.mail_info }}</h6>
+        <h6>Номер телефону:
+            {% for phone in phones %}
+                <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+            {% endfor %}
+        </h6>
+        <div class="container row align-items-center justify-content-center">
+        {% if request.user|has_group:"Секретар"%}
+            <div class="container row align-items-center justify-content-center">
+            <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати</a>
+            <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
+            <br><br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a></div>
+         {% endif %}
+        </div>
     </div>
 </div>
-{% if request.user|has_group:"Secretaries"%}
-    <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати</a>
-    <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити</a>
-    <a class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
-    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
+<div class="container-fluid margin-fix row align-items-center justify-content-center">
+{% if request.user|has_group:"Юридичний клієнт"%}
+<div class="container row align-items-center justify-content-center">
+        <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися на послугу</a>
+</div>
+</div>
 {% endif %}
-{% if request.user|has_group:"ClientsJ"%}
-    <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися</a>
-{% endif %}
+
 {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -45,7 +58,7 @@
             <th>Послуга</th>
             <th>Адвокат</th>
             <th>Досьє</th>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <th></th>
             {% endif %}
         </tr>
@@ -66,7 +79,7 @@
                 {% endfor %}
             </td>
              {% endif %}
-             {% if request.user|has_group:"Lawyers"%}
+             {% if request.user|has_group:"Адвокат"%}
             <td>
                 {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
@@ -75,29 +88,29 @@
                 {% endfor %}
             </td>
              {% endif %}
-            {% if request.user|has_group:"ClientsJ"%}
+            {% if request.user|has_group:"Юридичний клієнт"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
                 {% endfor %}
             </td>
              {% endif %}
-            {% if request.user|has_group:"Lawyers"%}
+            {% if request.user|has_group:"Адвокат"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
                 {% endfor %}
             </td>
              {% endif %}
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
                     {{appointment.lawyer_code.getfullname}}
                 </a></td>
             {% endif %}
-             {% if request.user|has_group:"ClientsJ"%}
+             {% if request.user|has_group:"Юридичний клієнт"%}
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
-            {% if request.user|has_group:"Lawyers"%}
+            {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
             <td>
@@ -105,7 +118,7 @@
                     {{ appointment.code_dossier_j.code_dossier_j }}
                 </a>
             </td>
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <td>
                 <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
@@ -132,7 +145,7 @@
             <th>Статус</th>
             <th>Дата закриття</th>
             <th>Оплачено</th>
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
             <th></th>
             {% endif %}
         </tr>
@@ -162,7 +175,7 @@
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td>
                 <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>

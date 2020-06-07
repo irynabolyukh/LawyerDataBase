@@ -3,12 +3,7 @@
 {% block title %}Послуга{% endblock %}
 
 {% block navbar %}
-{#{% if request.user|has_group:"Secretaries"%}#}
-{# <a class="navbar-brand" href="{% url 'services' %}">🢀Усі послуги</a>#}
-{#    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">#}
-{#        <span class="navbar-toggler-icon"></span>#}
-{#    </button>#}
-{#{% endif %}#}
+
      <div class="nav-item">
             <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
@@ -49,17 +44,21 @@
 
 {% block content %}
 
-<div class="card">
-    <div>Код послуги : {{ service.service_code }}</div>
-    <div>Послуга : {{ service.name_service }}</div>
-    <div>Номінальна вартіть : {{ service.nominal_value }}</div>
-    <div>Бонусна вартість : {{ service.bonus_value }}</div>
+<div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
+    <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
+        <h5>Код послуги : {{ service.service_code }}</h5>
+        <h6>Послуга : {{ service.name_service }}</h6>
+        <h6>Номінальна вартіть : {{ service.nominal_value }}</h6>
+        <h6>Бонусна вартість : {{ service.bonus_value }}</h6>
+        {% if request.user|has_group:"Secretaries"%}
+        <div class="container row align-items-center justify-content-center">
+            <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
+            <a style="margin: 1%;" class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Видалити</a>
+        </div>
+        {% endif %}
 </div>
-{% if request.user|has_group:"Secretaries"%}
-    <a class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
-    <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=object.pk %}">Видалити</a>
-{% endif %}
-    <a class="btn btn-outline-success btn-block" href="{% url 'add-service-lawyer'  object.pk %} ">Додати адвоката</a>
+</div>
+{% if request.user|has_group:"Секретар"%}
     {% if lawyers %}
     <div class="container">
     <h5>Адвокати</h5>
@@ -83,5 +82,5 @@
     </table>
     </div>
     {% endif %}
-
+{% endif %}
 {% endblock %}

@@ -3,12 +3,15 @@
 {% block title %}Профіль адвоката{% endblock %}
 
 {% block navbar %}
-{% if request.user|has_group:"Secretaries"%}
+{% if request.user|has_group:"Секретар"%}
     <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
 {% endif %}
+{% if request.user|has_group:"Адвокат"%}
+    <h2 style="color: white">Мій кабінет</h2>
+{% endif %}
 {% endblock %}
-
 {% block content %}
+<div class="container">
     <div class="row">
         <div class="col-sm-4">
             <h2>Профіль адвоката</h2>
@@ -32,15 +35,13 @@
                {% for phone in phones %}
             <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
                 {% endfor %}
-            <hr>
         {% if dossier_j or dossier_n %}
-             {% if request.user|has_group:"Secretaries"%}
+             {% if request.user|has_group:"Секретар"%}
                 <div>
                     <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
                 </div>
             {% endif %}
-            <hr>
 
             <h3>Досьє</h3>
 
@@ -76,13 +77,12 @@
         </div>
 
     </div>
-            <hr>
-
 
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row">
         <div class="container">
-            <h2>Записи</h2>
+            <br>
+            <h2 class="text-center">Записи</h2>
             <h4>Майбутні</h4>
             <table class="table table-striped">
                 <thead class="thead-dark">
@@ -187,6 +187,8 @@
 
         </div>
     </div>
+
+</div>
     {% endif %}
 {% endblock %}
 

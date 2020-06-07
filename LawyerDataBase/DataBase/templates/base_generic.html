@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title%}Адвокатське бюро{%endblock%}</title>
-
-
     <link rel="icon" type="image/png" href=" {% static 'Login/images/scale.png' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" type="text/css">
     <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
@@ -17,8 +15,11 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     {% block navbar%}
     {%endblock%}
+    <div class="nav-item ml-auto justify-content-end">
+            <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
+    </div>
 </nav>
-<div class="container">
+<div class="container-fluid">
     {% block content %}
     {% endblock %}
 </div>

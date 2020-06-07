@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView, FormView
@@ -9,6 +9,19 @@ from django.http import JsonResponse
 from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('stats')
+
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'Database/register.html', {'form': form})
 
 
 @login_required()
@@ -45,6 +58,7 @@ def lawyer_work_days(request):
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
+
 @login_required()
 @requires_csrf_token
 def dayblockedtime(request):
@@ -57,6 +71,7 @@ def dayblockedtime(request):
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
+
 
 @login_required()
 @requires_csrf_token
@@ -171,7 +186,7 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
         if self.request.user.is_superuser:
             return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
-        if group.name == "Lawyers":
+        if group.name == "Адвокат":
             la_code = self.kwargs['pk']
             l_code = Lawyer.objects.get(mail_info=self.request.user.email).pk
             return l_code == la_code
@@ -251,7 +266,7 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="ClientsN").exists():
+        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -278,7 +293,7 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="ClientsJ").exists():
+        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
             cl_code = self.kwargs['pk']
             cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -299,18 +314,22 @@ def index(request):
     if request.user.is_superuser:
         return render(request, 'stat_panel.html', {})
     group = request.user.groups.filter(user=request.user)[0]
-    if group.name == "Secretaries":
+    if group.name == "Секретар":
         return HttpResponseRedirect(reverse('stats'))
-    elif group.name == "Lawyers":
+    elif group.name == "Адвокат":
         l_code = Lawyer.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/lawyer/' + l_code)
-    elif group.name == "ClientsJ":
+    elif group.name == "Юридичний клієнт":
         cl_code = Client_juridical.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/client_J/' + cl_code)
-    elif group.name == "ClientsN":
+    elif group.name == "Фізичний клієнт":
         cl_code = Client_natural.objects.get(mail_info=request.user.email).pk
         return HttpResponseRedirect('/database/client_N/' + cl_code)
     return render(request, 'index.html', {})
+
+
+def visitCard(request):
+    return render(request, 'visitCard.html', {})
 
 
 class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -337,7 +356,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
 class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -443,7 +463,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
 class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -527,7 +548,8 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
+        return reverse("register")
+        # return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
 class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -687,6 +709,7 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
@@ -732,6 +755,7 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
