@@ -1,7 +1,8 @@
 {% extends "base_generic.html" %}
-{% load user_tags %}
+
 {% block title %}Профіль адвоката{% endblock %}
 {% block navbar %}
+    {% load user_tags %}
 {% if request.user|has_group:"Секретар"%}
  <div class="nav-item">
     <a class="nav-link" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
@@ -17,8 +18,8 @@
                 Клієнти
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
-                <a class="dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
+                <a class="nav-link dropdown-item" href="{% url 'jcustomers' %}">Юридичні клієнти</a>
+                <a class="nav-link dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
         <div class="nav-item dropdown">
@@ -234,6 +235,6 @@
 {% endblock %}
 
 {% block script %}
-    {% load static %}
-<script src="{% static 'docs/js/main.js' %}"></script>
+{#    {% load static %}#}
+{#<script src="{% static 'docs/js/main.js' %}"></script>#}
 {% endblock %}
