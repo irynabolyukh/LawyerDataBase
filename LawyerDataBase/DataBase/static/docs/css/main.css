@@ -52,10 +52,6 @@ ul{
   margin-top: 3%;
 }
 
-
-.nav-link{
-    color: white;
-}
-.dropdown-item{
-    color:black;
+*{
+    font-family: Verdana, sans-serif;
 }
