@@ -1,14 +1,14 @@
 {% extends "base_generic.html" %}
 
 {% block navbar %}
-        <div class="nav-item">
-            <a class="nav-link " href="{% url 'lawyers' %}">Адвокати</a>
+        <div class="nav-item mr-3">
+            <a class="navbar-brand" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
-        <div class="nav-item">
-            <a class="nav-link " href="{% url 'services' %}">Послуги</a>
+        <div class="nav-item mr-3">
+            <a class="navbar-brand" href="{% url 'services' %}">Послуги</a>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <div class="nav-item dropdown mr-3">
+            <a class="navbar-brand dropdown-toggle" href="#" data-toggle="dropdown">
                 Клієнти
             </a>
             <div class="dropdown-menu">
@@ -16,8 +16,8 @@
                 <a class="nav-link dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+        <div class="nav-item dropdown mr-3">
+            <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Досьє
             </a>
             <div class="dropdown-menu">
@@ -25,9 +25,8 @@
                 <a class="nav-link dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
             </div>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
-
+        <div class="nav-item dropdown mr-3">
+            <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Записи
             </a>
             <div class="dropdown-menu">
@@ -35,12 +34,11 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item">
-            <a  class="nav-link" href="{% url 'register' %}"> Додати користувача</a>
+        <div class="nav-item mr-3">
+            <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>
         </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
-
+        <div class="nav-item mr-3">
+            <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endblock %}
 

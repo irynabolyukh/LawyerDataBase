@@ -4,17 +4,17 @@
 {% block navbar %}
     {% load user_tags %}
 {% if request.user|has_group:"Секретар"%}
- <div class="nav-item">
-    <a class="nav-link" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
+       <div class="nav-item mr-5">
+            <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
         </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'lawyers' %}">Адвокати</a>
+       <div class="nav-item ">
+            <a class="navbar-brand" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
-        <div class="nav-item">
-            <a class="nav-link" href="{% url 'services' %}">Послуги</a>
+        <div class="nav-item ">
+            <a class="navbar-brand" href="{% url 'services' %}">Послуги</a>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <div class="nav-item dropdown ">
+            <a class="navbar-brand dropdown-toggle" href="#" data-toggle="dropdown">
                 Клієнти
             </a>
             <div class="dropdown-menu">
@@ -22,29 +22,29 @@
                 <a class="nav-link dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+        <div class="nav-item dropdown ">
+            <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Досьє
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
-                <a class="dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
+                <a class="nav-link dropdown-item" href="{% url 'jdossiers' %}">Юридичні досьє</a>
+                <a class="nav-link dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
             </div>
         </div>
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#"  data-toggle="dropdown">
+        <div class="nav-item dropdown ">
+            <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Записи
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
-                <a class="dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
+                <a class="nav-link dropdown-item" href="{% url 'jappointments' %}">Юридичні записи</a>
+                <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item">
-            <a  class="nav-link" href="{% url 'register' %}"> Додати користувача</a>
+        <div class="nav-item ">
+            <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>
         </div>
         <div class="nav-item">
-            <a class="nav-link" href="{% url 'stats' %}">Статистика</a>
+            <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endif %}
 {% if request.user|has_group:"Адвокат"%}
@@ -55,13 +55,26 @@
 {% endblock %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            <h4 id="la_code">{{ lawyer.lawyer_code }}</h4>
-            <h5 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h5>
+    <div class="card shadow-lg p-4 mb-4 bg-white">
+        <div class="row">
+        <div class="col-sm">
+            <h4 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h4>
+            <h5 id="la_code">{{ lawyer.lawyer_code }}</h5>
+
             <h6 id="specialization"> {{ lawyer.specialization }}</h6>
             <h6 id="mail">{{ lawyer.mail_info}} </h6>
-            <h5>Надає послуги:</h5>
+            <h6>Телефони:</h6>
+               {% for phone in phones %}
+            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                {% endfor %}
+
+            <h5>Робочі дні:</h5>
+            {% for day in lawyer.work_days.all %}
+            <h6 id="work_days">{{ day }}</h6>
+            {% endfor %}
+        </div>
+        <div class="col-sm">
+            <h5>Послуги:</h5>
             {% for service in lawyer.service.all %}
                 <h6 id="service">
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
@@ -69,64 +82,56 @@
                     </a>
                 </h6>
             {% endfor %}
-            <h5>Робочі дні:</h5>
-            {% for day in lawyer.work_days.all %}
-                <h6 id="work_days">{{ day }}</h6>
+             {% if dossier_j or dossier_n %}
+            <br><br>
+             <h5>Досьє:</h5>
+            {% for dossier in dossier_n %}
+                <a class="nav-link" href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.pk }}: {{ dossier.issue }}</a>
             {% endfor %}
-            <h5>Телефони:</h5>
-               {% for phone in phones %}
-            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
-                {% endfor %}
-        {% if dossier_j or dossier_n %}
-             {% if request.user|has_group:"Секретар"%}
+            {% for dossier in dossier_j %}
+            <a class="nav-link" href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.pk }}: {{ dossier.issue }}</a>
+            {% endfor %}
+        {% endif %}
+            <div><br><br></div>
+                {% if request.user|has_group:"Секретар"%}
                 <div>
                     <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
                 </div>
             {% endif %}
-
-            <h3>Досьє</h3>
-
-            <ul class="nav nav-pills flex-column">
-            {% for dossier in dossier_n %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.issue }}</a>
-                </li>
-            {% endfor %}
-            {% for dossier in dossier_j %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.issue }}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        {% endif %}
         </div>
-        <div class="col-sm-8">
-            <h2>Всього закрито справ</h2>
-
+        </div>
+    </div>
+<div class="container">
+    <div class="card">
+    <div class="row">
+    <div class="col-sm">
+         <h4 class="p-2 text-center">Всього закрито справ</h4>
             {% for obj in closed_dossiers_n %}
-                  <p>Натуральних: {{obj.counted_dossiers}}</p>
+                  <h5 class="p-1 text-center">Натуральних: {{obj.counted_dossiers}}</h5>
             {% endfor %}
             {% for obj1 in closed_dossiers_j %}
-                <p>Юридичних: {{obj1.counted_dossiers}}</p>
+                <h5 class="p-1 text-center">Юридичних: {{obj1.counted_dossiers}}</h5>
             {% endfor %}
-            <p></p>
-            <br>
-            <h2 >Загальний дохід</h2>
-            <h5>Загалом: <b id="income_total">0</b></h5>
-            <h5 id="income_nom">Номінальний: {{ nominal_value }}</h5>
-            <h5 id="income_bonus">Бонусний: {{ bonus_value }}</h5>
-        </div>
-
     </div>
-    <div></div>
-<h2 class="text-center">Записи</h2>
+    <div class="col-sm">
+        <h4 class="p-2 text-center">Загальний дохід</h4>
+        <h5 class="p-1 text-center">Загалом: <b id="income_total">0</b></h5>
+        <h5 class="p-1 text-center" id="income_nom">Номінальний: {{ nominal_value }}</h5>
+        <h5 class="p-1 text-center" id="income_bonus">Бонусний: {{ bonus_value }}</h5>
+    </div>
+    </div>
+        </div>
+</div>
+
+    <div><br><br><hr>
+    <h2 class="text-center">Записи</h2>
+    </div>
 {% if upcoming_app_j or upcoming_app_n %}
-    <div class="row">
+    <div class="row card">
         <div class="container">
-            <br>
             <h4>Майбутні</h4>
-            <table class="table table-striped">
+            <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">
                 <tr>
                     <th>Клієнт</th>
@@ -175,19 +180,19 @@
         </div>
     </div>
     {% endif %}
-
+<br>
     {% if appointments_j or appointments_n %}
-    <div class="row">
+    <div class="row card">
         <div class="container">
             <h4>Минулі</h4>
-            <table class="table table-striped">
+            <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">
                 <tr>
                     <th>Клієнт</th>
                     <th>Послуга</th>
                     <th>Дата</th>
                     <th>Час</th>
-                    <th>Коментарій</th>
+                    <th>Коментар</th>
                     <th>Суть справи</th>
                 </tr>
                 </thead>
@@ -229,7 +234,6 @@
 
         </div>
     </div>
-
 </div>
     {% endif %}
 {% endblock %}

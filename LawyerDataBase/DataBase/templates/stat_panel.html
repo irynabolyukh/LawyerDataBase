@@ -1,5 +1,5 @@
 {% extends "stat_generic.html" %}
-{% block title %}Statistics{% endblock %}
+{% block title %}Статистика{% endblock %}
 
 
 {% block content %}
@@ -7,17 +7,17 @@
     <div class="col-md-12 col-sm-8">
             <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
 
-{#        <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>#}
-{#            <div class="row">#}
-{##}
-{#                    <div class="container">#}
-{#                        <p><label for="date1">З</label>#}
-{#                        <input id="date1" name="date1" type="text" autocomplete="off">#}
-{#                        <p><label for="date2">По</label>#}
-{#                        <input id="date2" name="date2" type="text" autocomplete="off">#}
-{#                    </div>#}
-{##}
-{#            </div>#}
+<!--{#        <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>#}-->
+<!--{#            <div class="row">#}-->
+<!--{##}-->
+<!--{#                    <div class="container">#}-->
+<!--{#                        <p><label for="date1">З</label>#}-->
+<!--{#                        <input id="date1" name="date1" type="text" autocomplete="off">#}-->
+<!--{#                        <p><label for="date2">По</label>#}-->
+<!--{#                        <input id="date2" name="date2" type="text" autocomplete="off">#}-->
+<!--{#                    </div>#}-->
+<!--{##}-->
+<!--{#            </div>#}-->
     <div class="row">
         <div class="col-md-6 text_styles">
             <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers }}</div></div>
@@ -47,7 +47,7 @@
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
 
-            <table class="table table-hover table_border" id="services">
+            <table class="table table-hover table-striped table_border" id="services">
                 <thead class="thead-dark">
                     <tr>
                         <th>Назва</th>
@@ -86,7 +86,7 @@
         <div class="col-12">
             <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
 
-            <table class="table table-hover table_border" id="lawyers">
+            <table class="table table-hover table-striped table_border" id="lawyers">
                 <thead class="thead-dark">
                     <tr>
                         <th>ПІБ</th>

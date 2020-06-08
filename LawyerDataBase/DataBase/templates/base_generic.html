@@ -13,7 +13,7 @@
     {% block stylesheet %}{% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark top-bar fixed" style="z-index:10000; position:fixed; top: 0; width:100%" >
     {% block navbar%}
     {%endblock%}
     <div class="nav-item ml-auto justify-content-end">
@@ -21,6 +21,7 @@
     </div>
 </nav>
 <div class="container-fluid">
+    <br><br><br>
     {% block content %}
     {% endblock %}
 </div>
