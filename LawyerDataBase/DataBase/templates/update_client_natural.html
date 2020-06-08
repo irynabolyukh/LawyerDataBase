@@ -2,14 +2,21 @@
 {% block title %}Профіль клієнта{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="{% url 'ncustomers' %}">🢀Усі фізичні клієнти</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-{% endblock %}
+    {% load user_tags %}
+ {% if request.user|has_group:"Секретар"%}
+    <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
+{% endif %}
+{% if request.user|has_group:"Фізичний клієнт"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
+{% endif %}{% endblock %}
 
 {% block content %}
+ {% if request.user|has_group:"Секретар"%}
     <h1 class="row align-items-center justify-content-center">Редагувати дані про клієнта</h1>
+{% endif %}
+{% if request.user|has_group:"Фізичний клієнт"%}
+    <h1 class="row align-items-center justify-content-center">Редагувати мій профіль</h1>
+{% endif %}
 <div class="row align-items-center justify-content-center">
 <div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
@@ -19,4 +26,9 @@
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти зміни</button>
     </form>
 </div></div>
+<script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock %}
