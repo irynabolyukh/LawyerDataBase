@@ -103,6 +103,7 @@ class ServicesForm(ModelForm):
         model = Services
         fields = '__all__'
 
+
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])
 
 JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'])
@@ -147,7 +148,7 @@ class Appointment_JForm(ModelForm):
 
     class Meta:
         model = Appointment_J
-        fields = ['num_client_j','code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
 
 
     def __init__(self, *args, **kwargs):
