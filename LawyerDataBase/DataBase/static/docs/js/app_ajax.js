@@ -82,6 +82,7 @@ function time_blocked_request(event){
 function setblockedTime(data){
     var timestamp = ''
     var plusHour = ''
+    console.log(data['time'])
     for (item of data['time']){
         var array = []
         timestamp = item.split(':');
@@ -207,7 +208,7 @@ function updateServices(data){
     lawyer_block.append(`<option value="" selected="">---------</option>`)
     for (var item in data['lawyers']){
         lawyer_block.append(`<option value="${data['lawyers'][item].lawyer_code}">
-                            ${data['lawyers'][item].lawyer_code} : ${data['lawyers'][item].spec}</option>`)
+                            ${data['lawyers'][item].first_name} ${data['lawyers'][item].surname}  ${data['lawyers'][item].mid_name}, ${data['lawyers'][item].spec}</option>`)
     }
 
 

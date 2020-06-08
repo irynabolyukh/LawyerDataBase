@@ -128,7 +128,7 @@ class Appointment_NForm(ModelForm):
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
-    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all())
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
 
     class Meta:
         model = Appointment_N
@@ -147,7 +147,7 @@ class Appointment_NForm(ModelForm):
             user_id = Client_natural.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_n'].initial=user_id.pk
             self.fields['num_client_n'].disabled = True
-            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id)
+            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id).filter(status='open')
 
 class Appointment_JForm(ModelForm):
     app_date = forms.DateField(label='Дата',widget=TextInput(attrs={'readonly':'readonly'}))
@@ -156,7 +156,7 @@ class Appointment_JForm(ModelForm):
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
     num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
-    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all())
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(status='open'))
 
     class Meta:
         model = Appointment_J
@@ -170,7 +170,7 @@ class Appointment_JForm(ModelForm):
             user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_j'].initial=user_id.pk
             self.fields['num_client_j'].disabled = True
-            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(num_client_j=user_id)
+            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(num_client_j=user_id).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):
