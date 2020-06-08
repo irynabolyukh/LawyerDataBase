@@ -51,6 +51,9 @@
 <h2 style="color: white">Мій профіль</h2>
 </div>
 {% endif %}
+{% if request.user|has_group:"Адвокат"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+{% endif %}
 {% endblock %}
 {% block content %}
 <div></div>
@@ -71,10 +74,14 @@
         <div class="container row align-items-center justify-content-center">
 
             <div class="container row align-items-center justify-content-center">
-            <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
+                {% if request.user|has_group:"Юридичний клієнт"%}
+                    <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
+                {% endif %}
                 {% if request.user|has_group:"Секретар"%}
-            <br><br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
-                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
+                    <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
+                    <br><br>
+                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
                 {% endif %}
             </div>
         </div>
@@ -87,7 +94,7 @@
 </div>
 </div>
 {% endif %}
-
+{% if not request.user|has_group:"Адвокат"%}
 {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -112,7 +119,7 @@
             <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
             <td>{{ appointment.app_time|time:"H:i" }}</td>
             <td>{{ appointment.comment }}</td>
-            {% if request.user|has_group:"Secretaries"%}
+            {% if request.user|has_group:"Секретар"%}
             <td>
                 {% for service in appointment.service.all %}
                 <a href="{% url 'service-detailed-view' service.service_code %}">
@@ -226,4 +233,10 @@
             <div class="container row align-items-center justify-content-center">
                 <a style="margin: 1%;" class="btn  btn-block btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити клієнта</a></div>
          {% endif %}
+{% endif %}
+<script>
+        function goBack() {
+            window.history.back();
+        }
+</script>
 {% endblock %}
