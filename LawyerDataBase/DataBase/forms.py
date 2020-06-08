@@ -222,8 +222,8 @@ class Client_NForm(ModelForm):
     adr_street = forms.CharField(label='Вулиця', max_length=20)
     adr_build = forms.IntegerField(label='Будинок')
     mail_info = forms.EmailField(label='E-mail', max_length=30)
-    birth_date = forms.DateField(label='Дата народження')
-    passport_date = forms.DateField(label='Дата паспорта')
+    birth_date = forms.DateField(label='Дата народження', widget=SelectDateWidget())
+    passport_date = forms.DateField(label='Дата паспорта', widget=SelectDateWidget())
     passport_authority = forms.CharField(label='Орган паспорта', max_length=6)
 
     class Meta:
