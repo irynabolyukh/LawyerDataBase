@@ -104,6 +104,18 @@ class ServicesForm(ModelForm):
         fields = '__all__'
 
 
+class ServicesUpdateForm(ModelForm):
+    service_code = forms.CharField(label='Код послуги')
+    name_service = forms.CharField(label='Послуга')
+    nominal_value = forms.DecimalField(label='Номінальна вартість')
+    bonus_value = forms.DecimalField(label='Бонусна вартість')
+
+    class Meta:
+        model = Services
+        fields = ['service_code', 'name_service', 'nominal_value',
+                  'bonus_value']
+
+
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])
 
 JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'])

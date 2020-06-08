@@ -433,7 +433,7 @@ class ServicesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_services'
     model = Services
-    form_class = ServicesForm
+    form_class = ServicesUpdateForm
     template_name = 'update_service.html'
 
     def get_context_data(self, **kwargs):
@@ -442,8 +442,6 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def form_valid(self, form):
         self.object = form.save()
-        for lawyer in form.cleaned_data['lawyers']:
-            lawyer.service.add(self.object)
         return super().form_valid(form)
 
     def get_success_url(self):
