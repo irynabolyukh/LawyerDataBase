@@ -6,13 +6,13 @@
         <div class="nav-item mr-5">
             <a class="navbar-brand" href="{% url 'ndossiers' %}">🢀Усі фізичні досьє</a>
         </div>
-       <div class="nav-item mr-3">
+       <div class="nav-item">
             <a class="navbar-brand" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item">
             <a class="navbar-brand" href="{% url 'services' %}">Послуги</a>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown">
             <a class="navbar-brand dropdown-toggle" href="#" data-toggle="dropdown">
                 Клієнти
             </a>
@@ -21,7 +21,7 @@
                 <a class="nav-link dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown">
             <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Досьє
             </a>
@@ -30,7 +30,7 @@
                 <a class="nav-link dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
             </div>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown">
             <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Записи
             </a>
@@ -39,10 +39,10 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item">
             <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endif %}
@@ -59,7 +59,7 @@
 <div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 70%;">
     <h2>Деталі досьє</h2>
-    <table class="table" style="width: max-content">
+    <table class="table table-striped" style="width: max-content">
         <tbody>
         <tr>
             <th>Код</th>

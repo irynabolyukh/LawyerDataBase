@@ -6,13 +6,13 @@
        <div class="nav-item mr-5">
             <a class="navbar-brand" href="{% url 'jcustomers' %}">🢀Усі юридичні клієнти</a>
         </div>
-       <div class="nav-item mr-3">
+       <div class="nav-item ">
             <a class="navbar-brand" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item ">
             <a class="navbar-brand" href="{% url 'services' %}">Послуги</a>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown">
             <a class="navbar-brand dropdown-toggle" href="#" data-toggle="dropdown">
                 Клієнти
             </a>
@@ -21,7 +21,7 @@
                 <a class="nav-link dropdown-item" href="{% url 'ncustomers' %}">Фізичні клієнти</a>
             </div>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown ">
             <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Досьє
             </a>
@@ -30,7 +30,7 @@
                 <a class="nav-link dropdown-item" href="{% url 'ndossiers' %}">Фізичні досьє</a>
             </div>
         </div>
-        <div class="nav-item dropdown mr-3">
+        <div class="nav-item dropdown ">
             <a class="navbar-brand dropdown-toggle" href="#"  data-toggle="dropdown">
                 Записи
             </a>
@@ -39,10 +39,10 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item ">
             <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>
         </div>
-        <div class="nav-item mr-3">
+        <div class="nav-item">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endif %}
@@ -89,7 +89,7 @@
 {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
         <tr>
             <th>Дата</th>
@@ -167,7 +167,7 @@
     {% if dossiers %}
         <div class="container">
     <h5>Досьє</h5>
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
         <tr>
             <th>Код</th>
