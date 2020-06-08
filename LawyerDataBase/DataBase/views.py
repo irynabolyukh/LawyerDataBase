@@ -51,7 +51,6 @@ def lawyer_service_code(request):
     if request.method == 'POST':
         response = {}
         response['lawyers'] = []
-        print(request.POST)
         lawyers = Lawyer.objects.all()
         for lawyer in lawyers:
             if lawyer.service.filter(service_code=request.POST['service']).exists():
