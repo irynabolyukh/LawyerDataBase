@@ -439,7 +439,7 @@ def lawyers_appointment(services):
         row = cursor.fetchall()
     res = []
     for record in row:
-        print(record)
+
         res.append({'lawyer_code': record[0],
                     'first_name': record[1],
                     'surname': record[2],
