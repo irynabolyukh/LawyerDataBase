@@ -6,18 +6,6 @@
     <div class="container">
     <div class="col-md-12 col-sm-8">
             <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
-
-<!--{#        <p id="reload"><button onClick="window.location.reload();">За весь рік</button></p>#}-->
-<!--{#            <div class="row">#}-->
-<!--{##}-->
-<!--{#                    <div class="container">#}-->
-<!--{#                        <p><label for="date1">З</label>#}-->
-<!--{#                        <input id="date1" name="date1" type="text" autocomplete="off">#}-->
-<!--{#                        <p><label for="date2">По</label>#}-->
-<!--{#                        <input id="date2" name="date2" type="text" autocomplete="off">#}-->
-<!--{#                    </div>#}-->
-<!--{##}-->
-<!--{#            </div>#}-->
     <div class="row">
         <div class="col-md-6 text_styles">
             <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers }}</div></div>
@@ -29,16 +17,16 @@
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
         <div class="col-md-4 offset-md-2">
-            <div style="margin-bottom: 4%" id="reload" class="text-center">
-                <button style="font-size: 15.5pt" onClick="window.location.reload();">За весь час</button>
-            </div>
             <div class="container align_right">
 
                     <p><label for="date1">З </label>
-                    <input id="date1" name="date1" type="text" autocomplete="off">
+                    <input id="date1" name="date1" type="text" autocomplete="off" size="15">
                     <p><label for="date2">По</label>
-                    <input id="date2" name="date2" type="text" autocomplete="off">
+                    <input id="date2" name="date2" type="text" autocomplete="off" size="15">
                 </div>
+            <div id="reload" class="float-right">
+                <button onClick="window.location.reload();">За весь час</button>
+            </div>
         </div>
     </div>
     <hr>
@@ -46,8 +34,8 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
-
-            <table class="table table-hover table-striped table_border" id="services">
+            <div class="container-fluid" id="services_container">
+            <table class="table table-hover table_border" id="services">
                 <thead class="thead-dark">
                     <tr>
                         <th>Назва</th>
@@ -78,6 +66,7 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </div>
 
     <hr>
@@ -85,8 +74,8 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
-
-            <table class="table table-hover table-striped table_border" id="lawyers">
+            <div class="container-fluid" id="lawyer_container">
+            <table class="table table-hover table_border" id="lawyers">
                 <thead class="thead-dark">
                     <tr>
                         <th>ПІБ</th>
@@ -104,12 +93,13 @@
                         <th>{{ lawyer.lawyer_code }}</th>
                         <th>{{ lawyer.spec }}</th>
                         <th>{{ lawyer.count}}</th>
-                        <th>;;;</th>
+                        <th>{{ lawyer.sum }}</th>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
     <hr>
     </div>
