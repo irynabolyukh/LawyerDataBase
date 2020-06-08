@@ -68,13 +68,15 @@
             {% endfor %}
         </h6>
         <div class="container row align-items-center justify-content-center">
-        {% if request.user|has_group:"Секретар"%}
+
                 <div  class="container row align-items-center justify-content-center">
                     <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
                     <br><br>
+                     {% if request.user|has_group:"Секретар"%}
                 <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
-                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a></div>
-        {% endif %}
+                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
+                        {% endif %}
+                </div>
         </div>
     </div>
 </div>

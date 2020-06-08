@@ -93,12 +93,14 @@
             {% endfor %}
         {% endif %}
             <div><br><br></div>
-                {% if request.user|has_group:"Секретар"%}
+
                 <div>
                     <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
+                    {% if request.user|has_group:"Секретар"%}
                     <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
+                    {% endif %}
                 </div>
-            {% endif %}
+
         </div>
         </div>
     </div>
