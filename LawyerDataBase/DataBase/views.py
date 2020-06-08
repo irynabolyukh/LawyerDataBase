@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -24,7 +25,7 @@ def register(request):
     return render(request, 'Database/register.html', {'form': form})
 
 
-@login_required()
+@login_required
 @requires_csrf_token
 def client_ajax(request):
     if request.method == 'POST':
@@ -352,7 +353,8 @@ def index(request):
 
 
 def visitCard(request):
-    return render(request, 'visitCard.html', {})
+    context = {}
+    return render(request, 'visitCard.html', context)
 
 
 class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
