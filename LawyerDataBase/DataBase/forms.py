@@ -131,7 +131,7 @@ class Appointment_NForm(ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="ClientsN").exists():
+        if user.groups.filter(name="Фізичний клієнт").exists():
             user_id = Client_natural.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_n'].initial=user_id.pk
             self.fields['num_client_n'].disabled = True
@@ -154,7 +154,7 @@ class Appointment_JForm(ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="ClientsJ").exists():
+        if user.groups.filter(name="Юридичний клієнт").exists():
             user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_j'].initial=user_id.pk
             self.fields['num_client_j'].disabled = True
