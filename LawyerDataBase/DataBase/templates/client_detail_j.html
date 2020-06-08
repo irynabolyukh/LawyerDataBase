@@ -94,7 +94,7 @@
 </div>
 </div>
 {% endif %}
-
+{% if not request.user|has_group:"Адвокат"%}
 {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -233,6 +233,7 @@
             <div class="container row align-items-center justify-content-center">
                 <a style="margin: 1%;" class="btn  btn-block btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити клієнта</a></div>
          {% endif %}
+{% endif %}
 <script>
         function goBack() {
             window.history.back();

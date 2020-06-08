@@ -11,6 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 
 
+@login_required()
+@requires_csrf_token
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
