@@ -35,9 +35,9 @@
             <div class="container align_right">
 
                     <p><label for="date1">З </label>
-                    <input id="date1" name="date1" type="text" autocomplete="off">
+                    <input id="date1" name="date1" type="text" autocomplete="off" size="15">
                     <p><label for="date2">По</label>
-                    <input id="date2" name="date2" type="text" autocomplete="off">
+                    <input id="date2" name="date2" type="text" autocomplete="off" size="15">
                 </div>
         </div>
     </div>
@@ -46,8 +46,8 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
-
-            <table class="table table-hover table-striped table_border" id="services">
+            <div class="container-fluid" id="services_container">
+            <table class="table table-hover table_border" id="services">
                 <thead class="thead-dark">
                     <tr>
                         <th>Назва</th>
@@ -78,6 +78,7 @@
                 </tbody>
             </table>
         </div>
+        </div>
     </div>
 
     <hr>
@@ -85,8 +86,8 @@
     <div class="row">
         <div class="col-12">
             <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
-
-            <table class="table table-hover table-striped table_border" id="lawyers">
+            <div class="container-fluid" id="lawyer_container">
+            <table class="table table-hover table_border" id="lawyers">
                 <thead class="thead-dark">
                     <tr>
                         <th>ПІБ</th>
@@ -104,12 +105,13 @@
                         <th>{{ lawyer.lawyer_code }}</th>
                         <th>{{ lawyer.spec }}</th>
                         <th>{{ lawyer.count}}</th>
-                        <th>;;;</th>
+                        <th>{{ lawyer.sum }}</th>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
+    </div>
     </div>
     <hr>
     </div>

@@ -31,12 +31,12 @@ def client_ajax(request):
         response = {}
         response['dossier'] = []
         if request.POST['dosJ'] == 'true':
-            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client'])
+            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client']).filter(status='open')
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_j,
                                             'issue': dossier.issue})
         else:
-            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client'])
+            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client']).filter(status='open')
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_n,
                                             'issue': dossier.issue})

@@ -75,16 +75,32 @@ function updateInfo(data) {
     $('#open_dossier_n')[0].innerHTML = data['open_n'];
     $('#open_dossier')[0].innerHTML = data['open'];
     $('#total_value')[0].innerHTML = data['value'];
-    var servicesBody = $('#services_body')
-    var lawyerBody = $('#lawyers_body')
-    servicesBody.find('tr').remove();
-    lawyerBody.find('tr').remove();
-    // var servicesBody = $('#services_body')
 
-    if (data['service_count'].length > 0)
-        for (var service of data['service_count']){
-             servicesBody.append(
-                     `<tr class="border_top">
+
+
+
+
+
+    var serviceContainer = $('#services_container')
+    serviceContainer.empty()
+
+    if (data['service_count'].length > 0) {
+        serviceContainer.append(`<table class="table table-hover table_border" id="services">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Назва</th>
+                        <th>Номінальна вартість</th>
+                        <th>Бонусна вартість</th>
+                        <th>Кількість записів</th>
+                        <th>Загальна сума</th>
+                    </tr>
+
+                </thead>
+                <tbody id="services_body">`)
+        var servicesBody = $('#services_body')
+        for (var service of data['service_count']) {
+            servicesBody.append(
+                `<tr class="border_top">
                         <th rowspan="2" class="vertical_align">
                             <a href="/database/service/${service.service_code}/">${service.name_service}</a></th>
                         <th>${service.nominal_value}</th>
@@ -98,31 +114,46 @@ function updateInfo(data) {
                         <th>${service.fulltimeCount}</th>
                         <th>${service.fulltimeSum} грн</th>
                     </tr>`)
+        }
+        serviceContainer.append(` </tbody></table>`)
     }
     else{
-        var serviceTable = $('#services')
-        serviceTable.find('tr').remove()
-        $('#given_services').append("<h4 >За заданий проміжок не були надані послуги</h4>")
+        serviceContainer.append("<h6 >За заданий проміжок не були надані послуги</h6>")
     }
 
-    if (data['lawyer_counter'].length > 0)
-        for (var lawyer of data['lawyer_counter']){
-             lawyerBody
-                 .append(
-                     `<tr>
+    var lawyerContainer = $('#lawyer_container')
+    lawyerContainer.empty()
+
+    if (data['lawyer_counter'].length > 0) {
+        lawyerContainer.append(`<table class="table table-hover table_border" id="lawyers">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>ПІБ</th>
+                        <th>Код адвоката</th>
+                        <th>Спеціалізація</th>
+                        <th>Кількість записів</th>
+                        <th>Загальна сума</th>
+                    </tr>
+                </thead>
+                <tbody id="lawyers_body">`)
+        var lawyerBody = $('#lawyers_body')
+        for (var lawyer of data['lawyer_counter']) {
+            lawyerBody
+                .append(
+                    `<tr>
                         <th><a href="/database/lawyer/${lawyer.lawyer_code}">
                             ${lawyer.first_name} ${lawyer.surname} ${lawyer.mid_name}</a></th>
                         <th>${lawyer.lawyer_code}</th>
                         <th>${lawyer.spec}</th>
                         <th>${lawyer.count}</th>
-                        <th>;;;</th>
+                        <th>${lawyer.sum} грн</th>
                     </tr>
                     `)
+        }
+        lawyerContainer.append(` </tbody></table>`)
     }
     else{
-        var lawyerTable = $('#lawyers')
-        lawyerTable.find('tr').remove()
-        $('#lawyers_stats').append("<h4 >За заданий проміжок адвокати не надавали послуги</h4>")
+        lawyerContainer.append("<h6 >За заданий проміжок адвокати не надавали послуги</h6>")
     }
 }
 
