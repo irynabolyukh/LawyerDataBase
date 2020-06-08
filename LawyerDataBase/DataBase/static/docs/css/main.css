@@ -1,5 +1,5 @@
-/*div {*/
-/*  display: inline-block; }*/
+div {
+  display: inline-block; }
 
 .container_stat {
   display: block; }
@@ -55,3 +55,4 @@ ul{
 *{
     font-family: Verdana, sans-serif;
 }
+

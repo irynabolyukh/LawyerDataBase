@@ -76,8 +76,9 @@ function updateInfo(data) {
     $('#open_dossier')[0].innerHTML = data['open'];
     $('#total_value')[0].innerHTML = data['value'];
     var servicesBody = $('#services_body')
-    $('#lawyers').find('tr').remove();
+    var lawyerBody = $('#lawyers_body')
     servicesBody.find('tr').remove();
+    lawyerBody.find('tr').remove();
     // var servicesBody = $('#services_body')
 
     if (data['service_count'].length > 0)
@@ -103,19 +104,26 @@ function updateInfo(data) {
         serviceTable.find('tr').remove()
         $('#given_services').append("<h4 >За заданий проміжок не були надані послуги</h4>")
     }
-    //
-    // if (data['lawyer_counter'].length > 0)
-    //     for (var lawyer in data['lawyer_counter']){
-    //          lawyer_service
-    //              .append(
-    //                  `<p><a href="/database/lawyer/${data['lawyer_counter'][lawyer].lawyer_code}">
-    //                     ${data['lawyer_counter'][lawyer].lawyer_code}</a> - <b>
-    //                     ${data['lawyer_counter'][lawyer].first_name}
-    //                      ${data['lawyer_counter'][lawyer].surname}</b> : ${data['lawyer_counter'][lawyer].count}</p>`)
-    // }
-    // else{
-    //     lawyer_service.append("<p>Адвокати не надавали послуги за заданий проміжок</p>")
-    // }
+
+    if (data['lawyer_counter'].length > 0)
+        for (var lawyer of data['lawyer_counter']){
+             lawyerBody
+                 .append(
+                     `<tr>
+                        <th><a href="/database/lawyer/${lawyer.lawyer_code}">
+                            ${lawyer.first_name} ${lawyer.surname} ${lawyer.mid_name}</a></th>
+                        <th>${lawyer.lawyer_code}</th>
+                        <th>${lawyer.spec}</th>
+                        <th>${lawyer.count}</th>
+                        <th>;;;</th>
+                    </tr>
+                    `)
+    }
+    else{
+        var lawyerTable = $('#lawyers')
+        lawyerTable.find('tr').remove()
+        $('#lawyers_stats').append("<h4 >За заданий проміжок адвокати не надавали послуги</h4>")
+    }
 }
 
 function getCookie(name) {
