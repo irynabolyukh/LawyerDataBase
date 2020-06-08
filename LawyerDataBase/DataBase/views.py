@@ -226,24 +226,9 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
-        try:
-            context['closed_dossiers_n'] = Dossier_N.objects.raw(
-                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-                'FROM "Dossier_N" '
-                'WHERE lawyer_code_id = %s AND status <> %s '
-                'GROUP BY code_dossier_n',
-                [la_code, 'open'])[1]
-        except:
-            context['closed_dossiers_n'] = 0
-        try:
-            context['closed_dossiers_j'] = Dossier_J.objects.raw(
-                'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
-                'FROM "Dossier_J" '
-                'WHERE lawyer_code_id = %s AND status <> %s '
-                'GROUP BY code_dossier_j',
-                [la_code, 'open'])[1]
-        except:
-            context['closed_dossiers_j'] = 0
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
+
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
         except:
