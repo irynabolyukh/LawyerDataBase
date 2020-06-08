@@ -76,7 +76,7 @@ function updateInfo(data) {
     $('#open_dossier')[0].innerHTML = data['open'];
     $('#total_value')[0].innerHTML = data['value'];
     var servicesBody = $('#services_body')
-    var lawyerBody = $('#lawyers')
+    var lawyerBody = $('#lawyers_body')
     servicesBody.find('tr').remove();
     lawyerBody.find('tr').remove();
     // var servicesBody = $('#services_body')
@@ -106,7 +106,7 @@ function updateInfo(data) {
     }
 
     if (data['lawyer_counter'].length > 0)
-        for (var lawyer in data['lawyer_counter']){
+        for (var lawyer of data['lawyer_counter']){
              lawyerBody
                  .append(
                      `<tr>
