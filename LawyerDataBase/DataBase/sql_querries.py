@@ -570,20 +570,27 @@ def filter_dossier_j_by_status(param): #filter Dossier J by status
 def blocked_time_lawyer(lawyer,date):
     with connection.cursor() as cursor:
         cursor.execute(
-            'SELECT to_char(RES.app_time, %s) '
-            'FROM ( '
-            '   (SELECT app_time '
-        '        FROM "Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA ON AJ.lawyer_code_id = LA.lawyer_code '
-            '    WHERE AJ.app_date = %s::date AND LA.lawyer_code = %s ) '
-            'UNION ALL '
-            '   (SELECT app_time '
-            '    FROM "Appointment_N" AS AN INNER JOIN "Lawyer" AS LA ON AN.lawyer_code_id = LA.lawyer_code '
-            '    WHERE AN.app_date = %s::date AND LA.lawyer_code = %s )) AS RES;',
+            'SELECT to_char(RES.app_time, %s), COUNT(*) '
+            'FROM ( (SELECT app_time, services_id '
+            '       FROM ("Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA '
+            '           ON AJ.lawyer_code_id = LA.lawyer_code) '
+            '       INNER JOIN "Appointment_J_service" AS AJS '
+            '           ON AJS.appointment_j_id = AJ.appoint_code_j '
+            '       WHERE AJ.app_date = %s::date AND LA.lawyer_code = %s ) '
+            '   UNION ALL '
+            '       (SELECT app_time, services_id '
+            '       FROM ("Appointment_N" AS AN INNER JOIN "Lawyer" AS LA '
+            '           ON AN.lawyer_code_id = LA.lawyer_code) '
+            '       INNER JOIN "Appointment_N_service" AS ANS '
+            '           ON ANS.appointment_n_id = AN.appoint_code_n '
+            '       WHERE AN.app_date = %s::date AND LA.lawyer_code = %s )) AS RES '
+            'GROUP BY app_time ',
             ['HH24:MI',f'{date.year}-{date.month}-{date.day}',lawyer,
             f'{date.year}-{date.month}-{date.day}',lawyer])
         row = cursor.fetchall()
     res = []
     for record in row:
-        res.append(record[0])
+        res.append({'time': record[0],
+                    'count': record[1]})
     return res
 

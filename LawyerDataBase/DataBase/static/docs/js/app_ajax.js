@@ -55,41 +55,45 @@ function lawyer_workdays_request(event){
             });
 }
 
-function time_blocked_request(event){
+function time_blocked_request(event) {
 
-    date2 = $('#id_app_date').datepicker( "getDate" );
+    date2 = $('#id_app_date').datepicker("getDate");
     lawyer = $('#id_lawyer_code').val()
     $.ajax({
-                type: "POST",
-                async: true,
-                    url: '/database/dayBlockedTime/',
-                data: {
-                    csrfmiddlewaretoken: getCookie('csrftoken'),
-                    date: {
-                        day: date2.getDate(),
-                        month: String(parseInt(date2.getMonth()) + 1),
-                        year: date2.getFullYear(),
-                    },
-                    lawyer: lawyer,
-                },
-                success: setblockedTime,
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-            });
+        type: "POST",
+        async: true,
+        url: '/database/dayBlockedTime/',
+        data: {
+            csrfmiddlewaretoken: getCookie('csrftoken'),
+            date: {
+                day: date2.getDate(),
+                month: String(parseInt(date2.getMonth()) + 1),
+                year: date2.getFullYear(),
+            },
+            lawyer: lawyer,
+        },
+        success: setblockedTime,
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+        }
+    });
 }
+
 
 function setblockedTime(data){
     var timestamp = ''
     var plusHour = ''
-    console.log(data['time'])
     for (item of data['time']){
-        var array = []
-        timestamp = item.split(':');
-        plusHour = '' + (parseInt(timestamp[0]) + 1);
+
+        timestamp = item['time'].split(':');
+        plusHour = '' + (parseInt(timestamp[0]) + item['count']);
         plusHour += ':' + ((parseInt(timestamp[1]) + 10)%60)
-        array.push(item);
+
+        //creating time pair
+        var array = []
+        array.push(item['time']);
         array.push(plusHour);
+
         blockedTime.push(array)
     }
     $('#id_app_time').timepicker({
