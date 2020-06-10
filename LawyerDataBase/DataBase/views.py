@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from .sql_querries import *
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count, F
 
 
 @login_required
@@ -237,6 +238,8 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             context['bonus_value'] = lawyer_extra_value(la_code)[1]
         except:
             context['bonus_value'] = 0
+
+        context['value'] = int(context['bonus_value']) + int(context['nominal_value'])
         return context
 
 
@@ -248,6 +251,9 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
+        dossier.fee = fee_dossier_j(dossier.code_dossier_j)
+        dossier.save()
         context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
 
         return context
@@ -261,6 +267,9 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
+        dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        dossier.save()
         context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
 
         return context
@@ -434,8 +443,12 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def form_valid(self, form):
         self.object = form.save()
+        not_selected_lawyers = Lawyer.objects.all()
         for lawyer in form.cleaned_data['lawyers']:
             lawyer.service.add(self.object)
+            not_selected_lawyers = not_selected_lawyers.exclude(lawyer_code=lawyer.lawyer_code)
+        for not_selected_lawyer in not_selected_lawyers:
+            not_selected_lawyer.service.remove(form.cleaned_data['service_code'])
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -521,7 +534,6 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return data
 
     def form_valid(self, form):
-        print(form.cleaned_data['lawyers'])
         not_selected_lawyers = Lawyer.objects.all()
         for lawyer in form.cleaned_data['lawyers']:
             lawyer.service.add(form.cleaned_data['service_code'])

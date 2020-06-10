@@ -39,7 +39,14 @@ function main() {
 
 function lawyer_workdays_request(event){
     lawyer = $('#id_lawyer_code').val()
-
+    $('#id_app_time').timepicker({
+        timeFormat: 'H:i',
+        minTime: '10:00',
+        maxTime: '19:00',
+        interval: 15,
+        disableTextInput: true,
+        disableTimeRanges: blockedTime,
+    }).on('change',checkTime);
     $.ajax({
                 type: "POST",
                 async: true,

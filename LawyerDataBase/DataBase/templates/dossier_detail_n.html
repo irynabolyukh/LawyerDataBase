@@ -180,6 +180,7 @@
             <th>Час</th>
             <th>Коментар</th>
             <th>Адвокат</th>
+            <th>Послуги</th>
         </tr>
         </thead>
         <tbody>
@@ -199,6 +200,7 @@
             {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
+        <td> {% for service in appointment.service.all %}<p>{{ service.name_service }}</p>{% endfor %}</td>
         </tr>
         {% endfor %}
         </tbody>
