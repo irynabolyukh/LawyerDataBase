@@ -54,3 +54,8 @@ ul{
     font-family: Verdana, sans-serif;
 }
 
+@media print{
+    .no-print{
+        display: none;
+    }
+}

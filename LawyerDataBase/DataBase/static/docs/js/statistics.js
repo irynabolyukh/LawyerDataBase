@@ -2,9 +2,32 @@ $(document).ready(main());
 
 function main() {
     addDatePicker()
-
+    window.addEventListener("beforeprint", handlePrint);
+    window.addEventListener("afterprint", afterPrint);
 }
 
+
+function afterPrint(){
+    $('.printed_word').detach()
+}
+
+function handlePrint(){
+    date1_elem = $('#date1')
+    date2_elem = $('#date2')
+
+    date1 = date1_elem.datepicker( "getDate" );
+    date2 = date2_elem.datepicker( "getDate" );
+    if (date1 !== null && date2 !== null){
+        $('#dates').prepend(`<h3 class="printed_word">З ${date1.getDate()}/${String(parseInt(date1.getMonth()) + 1)}/${date1.getFullYear()} </h3>`)
+            .append(`<h3 class="printed_word">По ${date2.getDate()}/${String(parseInt(date2.getMonth()) + 1)}/${date2.getFullYear()} </h3>`)
+
+
+        date2.detach();
+    }
+    else{
+        $('#dates').prepend(`<h3 class="printed_word">За весь час</h3>`)
+    }
+}
 
 function addDatePicker() {
     $('#date1').datepicker({
@@ -62,7 +85,12 @@ function getStats(date) {
     else{
         date1_elem.val('').addClass('wrong_input')
         date2_elem.val('').addClass('wrong_input')
-        // alert("Дата З має бути раніше, за дату ПО")
+        $("#container-stat").prepend('<div class="alert alert-danger alert-dismissible fade show d-print-none" role="alert">\n' +
+            '  Дата "З" має бути раніше за Дату "По" ' +
+            '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
+            '    <span aria-hidden="true">&times;</span>\n' +
+            '  </button>\n' +
+            '</div>')
     }
     }
 }

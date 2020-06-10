@@ -3,7 +3,8 @@
 
 
 {% block content %}
-    <div class="container">
+
+    <div class="container" id="container-stat">
     <div class="col-md-12 col-sm-8">
             <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
     <div class="row">
@@ -16,7 +17,7 @@
             <div class="tabulated secondary_text"><b>З них виграно: </b><div id="won_dossiers" class="inline_div">{{ won_dossiers }}</div></div>
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
-        <div class="col-md-4 offset-md-2">
+        <div class="col-md-4 offset-md-2" id="dates">
             <div class="container align_right">
 
                     <p><label for="date1">З </label>
@@ -25,7 +26,7 @@
                     <input id="date2" name="date2" type="text" autocomplete="off" size="15">
                 </div>
             <div id="reload" class="float-right">
-                <button onClick="window.location.reload();">За весь час</button>
+                <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
             </div>
         </div>
     </div>
