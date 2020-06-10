@@ -51,6 +51,9 @@
 <h2 style="color: white">Мій профіль</h2>
 </div>
 {% endif %}
+{% if request.user|has_group:"Адвокат"%}
+ <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+{% endif %}
 {% endblock %}
 {% block content %}
 <div></div>
@@ -70,11 +73,14 @@
         <div class="container row align-items-center justify-content-center">
 
                 <div  class="container row align-items-center justify-content-center">
+                    {% if request.user|has_group:"Фізичний клієнт"%}
                     <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
-                    <br><br>
+                    {% endif %}
                      {% if request.user|has_group:"Секретар"%}
-                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
-                <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
+                    <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
+                    <br><br>
+                        <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_n-create' %}">Нове Досьє</a>
+                        <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
                         {% endif %}
                 </div>
         </div>
@@ -87,6 +93,7 @@
 </div>
 </div>
 {% endif %}
+{% if not request.user|has_group:"Адвокат"%}
     {% if appointments %}
     <div class="container">
     <h5>Записи</h5>
@@ -224,4 +231,10 @@
                 <div  class="container row align-items-center justify-content-center">
                     <a style="margin: 1%;" class="btn btn-outline-danger btn-block" href="{% url 'client_natural-delete' pk=object.pk %}">Видалити</a></div>
         {% endif %}
+{% endif %}
+<script>
+        function goBack() {
+            window.history.back();
+        }
+</script>
 {% endblock %}

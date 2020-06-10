@@ -109,10 +109,8 @@
     <div class="row">
     <div class="col-sm">
          <h4 class="p-2 text-center">Всього закрито справ</h4>
-
-              <h5 class="p-1 text-center">Натуральних: {{closed_dossiers_n}}</h5>
-            <h5 class="p-1 text-center">Юридичних: {{closed_dossiers_j}}</h5>
-
+        <h5 class="p-1 text-center">Натуральних: {{closed_dossiers_n}}</h5>
+        <h5 class="p-1 text-center">Юридичних: {{closed_dossiers_j}}</h5>
     </div>
     <div class="col-sm">
         <h4 class="p-2 text-center">Загальний дохід</h4>
@@ -145,7 +143,11 @@
                 <tbody>
                 {% for appointment in upcoming_app_j %}
                 <tr>
-                    <td>{{appointment.num_client_j.getfullname }}</td>
+                    <td>
+                        <a href="{% url 'client-detailed-view-j' appointment.num_client_j.num_client_j %}">
+                       {{appointment.num_client_j.getfullname }}
+                        </a>
+                    </td>
                     <td>
                     {% for service in appointment.service.all %}
                     <a href="{% url 'service-detailed-view' service.service_code %}">
@@ -161,7 +163,11 @@
                 {% endfor %}
                 {% for appointment in upcoming_app_n %}
                 <tr>
-                    <td>{{appointment.num_client_n.getfullname }}</td>
+                    <td>
+                        <a href="{% url 'client-detailed-view-n' appointment.num_client_n.num_client_n %}">
+                       {{appointment.num_client_n.getfullname }}
+                        </a>
+                    </td>
                     <td>
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
@@ -199,7 +205,11 @@
                 <tbody>
                 {% for appointment in appointments_j %}
                 <tr>
-                    <td>{{appointment.num_client_j.getfullname }}</td>
+                    <td>
+                        <a href="{% url 'client-detailed-view-j' appointment.num_client_j.num_client_j %}">
+                       {{appointment.num_client_j.getfullname }}
+                        </a>
+                    </td>
                     <td>
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
@@ -215,7 +225,11 @@
                 {% endfor %}
                 {% for appointment in appointments_n %}
                 <tr>
-                    <td>{{appointment.num_client_n.getfullname }}</td>
+                    <td>
+                        <a href="{% url 'client-detailed-view-n' appointment.num_client_n.num_client_n %}">
+                       {{appointment.num_client_n.getfullname }}
+                        </a>
+                    </td>
                     <td>
                     {% for service in appointment.service.all %}
                     <a href=" {% url 'service-detailed-view' service.service_code %}">

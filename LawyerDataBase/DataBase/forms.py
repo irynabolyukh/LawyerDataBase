@@ -55,13 +55,15 @@ class LawyerForm(ModelForm):
     mid_name = forms.CharField(label='По батькові')
     specialization = forms.CharField(label='Спеціалізація')
     mail_info = forms.EmailField(label='E-mail')
+    service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
+                                             queryset=Services.objects.all(),
+                                             widget=CheckboxSelectMultiple)
+    work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
+                                             queryset=Work_days.objects.all(),
+                                             widget=CheckboxSelectMultiple)
 
     class Meta:
         model = Lawyer
-        widgets = {
-            'service': forms.CheckboxSelectMultiple,
-            'work_days': forms.CheckboxSelectMultiple,
-        }
         fields = ['lawyer_code', 'first_name', 'surname',
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 
@@ -102,6 +104,18 @@ class ServicesForm(ModelForm):
     class Meta:
         model = Services
         fields = '__all__'
+
+
+class ServicesUpdateForm(ModelForm):
+    service_code = forms.CharField(label='Код послуги')
+    name_service = forms.CharField(label='Послуга')
+    nominal_value = forms.DecimalField(label='Номінальна вартість')
+    bonus_value = forms.DecimalField(label='Бонусна вартість')
+
+    class Meta:
+        model = Services
+        fields = ['service_code', 'name_service', 'nominal_value',
+                  'bonus_value']
 
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])
@@ -210,8 +224,8 @@ class Client_NForm(ModelForm):
     adr_street = forms.CharField(label='Вулиця', max_length=20)
     adr_build = forms.IntegerField(label='Будинок')
     mail_info = forms.EmailField(label='E-mail', max_length=30)
-    birth_date = forms.DateField(label='Дата народження')
-    passport_date = forms.DateField(label='Дата паспорта')
+    birth_date = forms.DateField(label='Дата народження', widget=SelectDateWidget())
+    passport_date = forms.DateField(label='Дата паспорта', widget=SelectDateWidget())
     passport_authority = forms.CharField(label='Орган паспорта', max_length=6)
 
     class Meta:

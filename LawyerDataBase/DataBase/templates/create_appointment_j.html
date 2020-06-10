@@ -19,7 +19,7 @@
 {% if request.user|has_group:"Секретар"%}
     <h1 class="row align-items-center justify-content-center">Запис Юридичного клієнта</h1>
 {% endif %}
-{% if request.user|has_group:"Фізичний клієнт"%}
+{% if request.user|has_group:"Юридичний клієнт"%}
     <h1 class="row align-items-center justify-content-center">Запис на послугу</h1>
 {% endif %}
 <div class="row align-items-center justify-content-center">

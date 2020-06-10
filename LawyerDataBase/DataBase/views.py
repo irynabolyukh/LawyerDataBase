@@ -12,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
 
-@login_required
+@login_required()
+@requires_csrf_token
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -26,7 +27,7 @@ def register(request):
     return render(request, 'Database/register.html', {'form': form})
 
 
-@login_required
+@login_required()
 @requires_csrf_token
 def client_ajax(request):
     if request.method == 'POST':
@@ -434,7 +435,7 @@ class ServicesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_services'
     model = Services
-    form_class = ServicesForm
+    form_class = ServicesUpdateForm
     template_name = 'update_service.html'
 
     def get_context_data(self, **kwargs):
@@ -443,12 +444,6 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
 
     def form_valid(self, form):
         self.object = form.save()
-        not_selected_lawyers = Lawyer.objects.all()
-        for lawyer in form.cleaned_data['lawyers']:
-            lawyer.service.add(self.object)
-            not_selected_lawyers = not_selected_lawyers.exclude(lawyer_code=lawyer.lawyer_code)
-        for not_selected_lawyer in not_selected_lawyers:
-            not_selected_lawyer.service.remove(form.cleaned_data['service_code'])
         return super().form_valid(form)
 
     def get_success_url(self):
