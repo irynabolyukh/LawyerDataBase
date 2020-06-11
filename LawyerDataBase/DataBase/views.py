@@ -19,9 +19,12 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-
-            return redirect('stats')
-
+            if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
+                return redirect('dossier_j-create')
+            elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
+                return redirect('dossier_n-create')
+            else:
+                return redirect('stats')
     else:
         form = CustomUserCreationForm()
 
@@ -255,9 +258,10 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
         context = super().get_context_data(**kwargs)
         dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
         dossier.fee = fee_dossier_j(dossier.code_dossier_j)
+        client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
         context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
-
+        context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         return context
 
 
@@ -271,9 +275,10 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
         context = super().get_context_data(**kwargs)
         dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
         dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()
         context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
-
+        context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         return context
 
 
@@ -286,7 +291,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "Фізичний клієнт":
             cl_code = self.kwargs['pk']
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -297,6 +303,11 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
+        today = date.today()
+        context['upcoming_app_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+            .filter(app_date__gte=today).order_by('app_date')
+        context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+            .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
                             order_by('-app_date', '-app_time')
@@ -313,7 +324,8 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "Юридичний клієнт":
             cl_code = self.kwargs['pk']
             cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -323,6 +335,11 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
+        today = date.today()
+        context['upcoming_app_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+            .filter(app_date__gte=today).order_by('app_date')
+        context['appointments_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+            .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
