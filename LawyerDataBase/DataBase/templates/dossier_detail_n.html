@@ -59,7 +59,7 @@
 <div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 70%;">
     <h2>Деталі досьє</h2>
-    <table class="table table-striped" style="width: max-content">
+    <table class="table table-striped" style="width: 100%">
         <tbody>
         <tr>
             <th>Код</th>
@@ -171,9 +171,10 @@
     </table>
      {% if request.user|has_group:"Секретар"%}
                 <div>
-                    {% if not dossier.paid %}
+                {% if not dossier.paid %}
                     <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=object.pk %}">Редагувати</a>
-                    {% endif %}
+                {% endif %}
+
                     <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=object.pk %}">Видалити</a>
                 </div>
     {% endif %}
@@ -225,3 +226,4 @@
         }
 </script>
 {% endblock %}
+

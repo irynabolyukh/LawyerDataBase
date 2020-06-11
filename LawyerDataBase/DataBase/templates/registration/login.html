@@ -22,13 +22,13 @@
                     <input class="login100-form-btn" name="btn-submit" id="btn-submit" type="submit" value="Увійти" />
                     <input type="hidden" name="next" value="{{ next }}" />
                     {% if form.errors %}
-                          <p style="color: red">Ваш пароль не збігається з ім'ям користувача. Будь ласка, введіть ваші дані знову.</p>
+                        <div style="color: red; font-size: 21px"class="container mt-3"><div>Ваш пароль не збігається з ім'ям користувача.</div><div> Будь ласка, введіть ваші дані знову.</div></div>
                     {% endif %}
                     {% if next %}
                           {% if user.is_authenticated %}
-                            <p style="color: red">Ваш акаунт не має доступу до перегляду цієї сторінки. Щоб переглянути, будь ласка, увійдіть з відповідного акаунту.</p>
+                              <div style="color: red; font-size: 21px" class="container mt-3"><div>Ваш акаунт не має доступу до перегляду цієї сторінки.</div><div>Щоб переглянути, будь ласка, увійдіть з відповідного акаунту.</div></div>
                           {% else %}
-                            <p style="color: red">Будь ласка, увійдіть у свій акаунт, щоб переглянути цю сторінку.</p>
+                              <div style="color: red; font-size: 21px" class="container mt-3"><div>Будь ласка, увійдіть у свій акаунт, щоб переглянути цю сторінку.</div></div>
                           {% endif %}
                     {% endif %}
                 </div>

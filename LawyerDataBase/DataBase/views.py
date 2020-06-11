@@ -153,7 +153,7 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['lawyer_counter'] = lawyer_counter()
         context['won_dossiers'] = won_dossiers()
 
-        context['counter_dossiers'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
+        context['counter_dossiers'] = (int(context['closed_dossiers_j']) + int(context['closed_dossiers_n']))
 
         return context
 
