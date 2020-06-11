@@ -62,7 +62,7 @@
             <h5 id="la_code">{{ lawyer.lawyer_code }}</h5>
 
             <h6 id="specialization"> {{ lawyer.specialization }}</h6>
-            <h6 id="mail">{{ lawyer.mail_info}} </h6>
+            <a id="mail" href=mailto:lawyer.mail_info>{{ lawyer.mail_info }}</a>
             <h6>Телефони:</h6>
                {% for phone in phones %}
             <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>

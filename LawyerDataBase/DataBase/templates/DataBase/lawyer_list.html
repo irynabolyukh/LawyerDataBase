@@ -23,7 +23,7 @@
             <td><a href="{{ lawyer.get_absolute_url }}">{{ lawyer.pk }}</a></td>
             <td>{{ lawyer.surname }} {{ lawyer.first_name }} {{ lawyer.mid_name }}</td>
             <td>{{ lawyer.specialization }}</td>
-            <td>{{ lawyer.mail_info }}</td>
+            <td><a href=mailto:lawyer.mail_info>{{ lawyer.mail_info }}</a></td>
             <td>
                 <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Видалити</a>
