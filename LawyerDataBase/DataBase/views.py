@@ -285,7 +285,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "Фізичний клієнт":
             cl_code = self.kwargs['pk']
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
@@ -312,7 +313,8 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def test_func(self):
         if self.request.user.is_superuser:
             return True
-        if self.request.user.groups.filter(name="Фізичний клієнт").exists():
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        if group.name == "Юридичний клієнт":
             cl_code = self.kwargs['pk']
             cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
             return cl_pk == cl_code
