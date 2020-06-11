@@ -26,7 +26,7 @@
             <td>{{ client.name_of_company }}</td>
             <td>{{ client.first_name }} {{ client.surname }} {{ client.mid_name }}</td>
             <td>{{ client.client_position }}</td>
-            <td>{{ client.mail_info }}</td>
+            <td><a href=mailto:client.mail_info>{{ client.mail_info }}</a></td>
             <td>
                 <a class="btn btn-outline-info" href="{% url 'client_juridical-update' pk=client.pk  %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'client_juridical-delete' pk=client.pk  %}">Видалити</a>

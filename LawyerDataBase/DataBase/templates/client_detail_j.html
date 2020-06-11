@@ -65,7 +65,7 @@
         <h6>Компанія: {{ client_juridical.name_of_company }}</h6>
         <h6>Посада: {{ client_juridical.client_position }}</h6>
         <h6>IBAN: {{ client_juridical.iban }}</h6>
-        <h6>E-mail: {{ client_juridical.mail_info }}</h6>
+        <h6>E-mail: <a href=mailto:client_juridical.mail_info>{{ client_juridical.mail_info }}</a></h6>
         <h6>Номер телефону:
             {% for phone in phones %}
                 <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
