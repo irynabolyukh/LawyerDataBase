@@ -55,13 +55,15 @@ class LawyerForm(ModelForm):
     mid_name = forms.CharField(label='По батькові')
     specialization = forms.CharField(label='Спеціалізація')
     mail_info = forms.EmailField(label='E-mail')
+    service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
+                                             queryset=Services.objects.all(),
+                                             widget=CheckboxSelectMultiple)
+    work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
+                                             queryset=Work_days.objects.all(),
+                                             widget=CheckboxSelectMultiple)
 
     class Meta:
         model = Lawyer
-        widgets = {
-            'service': forms.CheckboxSelectMultiple,
-            'work_days': forms.CheckboxSelectMultiple,
-        }
         fields = ['lawyer_code', 'first_name', 'surname',
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 

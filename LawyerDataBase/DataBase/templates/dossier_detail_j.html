@@ -163,7 +163,9 @@
     </table>
    {% if request.user|has_group:"Секретар"%}
                 <div>
+                {% if dossier.status == 'open' %}
                     <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
+                {% endif %}
                     <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
                 </div>
     {% endif %}
@@ -180,6 +182,7 @@
             <th>Час</th>
             <th>Коментар</th>
             <th>Адвокат</th>
+            <th>Послуга</th>
         </tr>
         </thead>
         <tbody>
@@ -199,6 +202,7 @@
             {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
+            <td> {% for service in appointment.service.all %}<p>{{ service.name_service }}</p>{% endfor %}</td>
         </tr>
         {% endfor %}
         </tbody>
