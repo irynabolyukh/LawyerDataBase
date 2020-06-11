@@ -303,6 +303,11 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
+        today = date.today()
+        context['upcoming_app_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+            .filter(app_date__gte=today).order_by('app_date')
+        context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+            .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
                             order_by('-app_date', '-app_time')
@@ -330,6 +335,11 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
+        today = date.today()
+        context['upcoming_app_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+            .filter(app_date__gte=today).order_by('app_date')
+        context['appointments_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+            .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
         context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])

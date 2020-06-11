@@ -167,7 +167,7 @@
     </table>
    {% if request.user|has_group:"Секретар"%}
                 <div>
-                {% if dossier.status == 'open' %}
+                {% if not dossier.paid %}
                     <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
                 {% endif %}
                     <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>

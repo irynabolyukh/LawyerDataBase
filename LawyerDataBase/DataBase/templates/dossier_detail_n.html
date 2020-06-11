@@ -171,7 +171,9 @@
     </table>
      {% if request.user|has_group:"Секретар"%}
                 <div>
+                    {% if not dossier.paid %}
                     <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=object.pk %}">Редагувати</a>
+                    {% endif %}
                     <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=object.pk %}">Видалити</a>
                 </div>
     {% endif %}
