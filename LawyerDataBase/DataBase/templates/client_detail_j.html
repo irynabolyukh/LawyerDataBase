@@ -122,9 +122,9 @@
             {% if request.user|has_group:"Секретар"%}
             <td>
                 {% for service in appointment.service.all %}
-                <a href="{% url 'service-detailed-view' service.service_code %}">
+               <div> <a href="{% url 'service-detailed-view' service.service_code %}">
                 {{ service.name_service }}
-                </a>;
+                </a>;</div>
                 {% endfor %}
             </td>
              {% endif %}
@@ -212,14 +212,16 @@
             {% else %}
             <td>-------</td>
             {% endif %}
-            {% if dossier.paid is True %}
+            {% if dossier.paid %}
             <td>Оплачено</td>
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
             {% if request.user|has_group:"Секретар"%}
             <td>
+                {% if not dossier.paid %}
                 <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
+                {% endif %}
                 <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
             {% endif %}
