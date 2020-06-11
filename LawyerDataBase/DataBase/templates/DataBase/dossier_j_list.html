@@ -40,14 +40,16 @@
             <td>-------</td>
             {% endif %}
             <td>{{ dossier.fee }}</td>
-             {% if dossier.paid is True %}
+             {% if dossier.paid %}
             <td>Оплачено</td>
             {% else %}
             <td>Не оплачено</td>
             {% endif %}
             <td><a href="{{ dossier.num_client_j.get_absolute_url }}">{{ dossier.num_client_j.getfullname }}</a></td>
             <td>
+                {% if not dossier.paid %}
                 <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
+                {% endif %}
                 <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
         </tr>

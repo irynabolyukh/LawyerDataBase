@@ -46,7 +46,9 @@
             {% endif %}
             <td><a href="{{ dossier.num_client_n.get_absolute_url }}">{{ dossier.num_client_n.getfullname }}</a></td>
             <td>
+                {% if not dossier.paid %}
                 <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Редагувати</a>
+                {% endif %}
                 <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
         </tr>
