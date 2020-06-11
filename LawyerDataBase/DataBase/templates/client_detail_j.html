@@ -57,6 +57,7 @@
 {% endblock %}
 {% block content %}
 <div></div>
+<div class="container">
 <div style="margin-top: 3%" class="container-fluid row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
         <h5> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</h5>
@@ -95,9 +96,11 @@
 </div>
 {% endif %}
 {% if not request.user|has_group:"Адвокат"%}
-{% if appointments %}
-    <div class="container">
-    <h5>Записи</h5>
+<hr>
+    <div class="container mt-5">
+     <h2 class="text-center">Записи</h2>
+     {% if upcoming_app_j %}
+    <h5>Майбутні</h5>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
         <tr>
@@ -111,10 +114,9 @@
             <th></th>
             {% endif %}
         </tr>
-        </tr>
         </thead>
         <tbody>
-        {% for appointment in appointments.all %}
+        {% for appointment in upcoming_app_j %}
         <tr>
             <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
             <td>{{ appointment.app_time|time:"H:i" }}</td>
@@ -122,22 +124,20 @@
             {% if request.user|has_group:"Секретар"%}
             <td>
                 {% for service in appointment.service.all %}
-               <div> <a href="{% url 'service-detailed-view' service.service_code %}">
+               <div><a href="{% url 'service-detailed-view' service.service_code %}">
                 {{ service.name_service }}
                 </a>;</div>
                 {% endfor %}
             </td>
              {% endif %}
-             {% if request.user|has_group:"Адвокат"%}
+            {% if request.user|has_group:"Юридичний клієнт"%}
             <td>
                 {% for service in appointment.service.all %}
-                <a href="{% url 'service-detailed-view' service.service_code %}">
-                {{ service.name_service }}
-                </a>;
+                {{ service.name_service }};
                 {% endfor %}
             </td>
              {% endif %}
-            {% if request.user|has_group:"Юридичний клієнт"%}
+             {% if request.user|has_group:"Адвокат"%}
             <td>
                 {% for service in appointment.service.all %}
                 {{ service.name_service }};
@@ -153,16 +153,95 @@
             <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
             {% if request.user|has_group:"Адвокат"%}
-            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            <td>{{appointment.lawyer_code.getfullname}}</td>
             {% endif %}
-               <td>
+
+            <td>
                 <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
                     {{ appointment.code_dossier_j.code_dossier_j }}
                 </a>
             </td>
-             {% if request.user|has_group:"Секретар"%}
+
+            {% if request.user|has_group:"Секретар"%}
             <td>
-                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk %}">Редагувати</a>
+                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    {% endif %}
+
+    {% if appointments_j %}
+    <div class="container">
+    <h5>Минулі</h5>
+    <table class="table table-striped table-hover table_border">
+        <thead class="thead-dark">
+        <tr>
+            <th>Дата</th>
+            <th>Час</th>
+            <th>Коментар</th>
+            <th>Послуга</th>
+            <th>Адвокат</th>
+            <th>Досьє</th>
+            {% if request.user|has_group:"Секретар"%}
+            <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for appointment in appointments_j %}
+        <tr>
+            <td>{{ appointment.app_date|date:"d.m.Y" }}</td>
+            <td>{{ appointment.app_time|time:"H:i" }}</td>
+            <td>{{ appointment.comment }}</td>
+            {% if request.user|has_group:"Секретар"%}
+            <td>
+                {% for service in appointment.service.all %}
+               <div><a href="{% url 'service-detailed-view' service.service_code %}">
+                {{ service.name_service }}
+                </a>;</div>
+                {% endfor %}
+            </td>
+             {% endif %}
+            {% if request.user|has_group:"Юридичний клієнт"%}
+            <td>
+                {% for service in appointment.service.all %}
+                {{ service.name_service }};
+                {% endfor %}
+            </td>
+             {% endif %}
+             {% if request.user|has_group:"Адвокат"%}
+            <td>
+                {% for service in appointment.service.all %}
+                {{ service.name_service }};
+                {% endfor %}
+            </td>
+             {% endif %}
+             {% if request.user|has_group:"Секретар"%}
+            <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
+                    {{appointment.lawyer_code.getfullname}}
+                </a></td>
+            {% endif %}
+             {% if request.user|has_group:"Юридичний клієнт"%}
+            <td>{{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
+            {% if request.user|has_group:"Адвокат"%}
+            <td>{{appointment.lawyer_code.getfullname}}</td>
+            {% endif %}
+
+            <td>
+                <a href="{% url 'dossier-detailed-j' appointment.code_dossier_j.code_dossier_j%}">
+                    {{ appointment.code_dossier_j.code_dossier_j }}
+                </a>
+            </td>
+
+            {% if request.user|has_group:"Секретар"%}
+            <td>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
             {% endif %}
@@ -174,8 +253,9 @@
 
     {% endif %}
     {% if dossiers %}
-        <div class="container">
-    <h5>Досьє</h5>
+
+    <div class="container mt-5">
+    <h2 class="text-center">Досьє</h2>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
         <tr>
@@ -236,6 +316,7 @@
                 <a style="margin: 1%;" class="btn  btn-block btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити клієнта</a></div>
          {% endif %}
 {% endif %}
+    </div>
 <script>
         function goBack() {
             window.history.back();

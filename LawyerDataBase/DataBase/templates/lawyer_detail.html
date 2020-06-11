@@ -121,8 +121,8 @@
     </div>
         </div>
 </div>
-
-    <div><br><br><hr>
+    <hr>
+    <div class="mt-5">
     <h2 class="text-center">Записи</h2>
     </div>
 {% if upcoming_app_j or upcoming_app_n %}
@@ -232,9 +232,9 @@
                     </td>
                     <td>
                     {% for service in appointment.service.all %}
-                    <a href=" {% url 'service-detailed-view' service.service_code %}">
+                    <div><a href=" {% url 'service-detailed-view' service.service_code %}">
                         {{ service.name_service }}
-                    </a>;
+                    </a>;</div>
                     {% endfor %}
                     </td>
                     <td>{{appointment.app_date|date:"d.m.Y"}}</td>
