@@ -36,7 +36,9 @@
             <td><a href="{{ appointment.lawyer_code.get_absolute_url }}">{{ appointment.lawyer_code.getfullname }}</a></td>
             <td><a href="{{ appointment.num_client_n.get_absolute_url }}">{{ appointment.num_client_n.getfullname }}</a></td>
             <td>
+                {% if appointment.is_open %}
                 <a class="btn btn-outline-info" href="{% url 'appointment_n-update' pk=appointment.pk  %}">Редагувати</a>
+                {% endif %}
                 <a class="btn btn-outline-danger" href="{% url 'appointment_n-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
         </tr>
