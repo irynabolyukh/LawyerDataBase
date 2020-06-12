@@ -21,8 +21,10 @@
 <div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
         {% csrf_token %}
-        {{ form.as_p }}
-         {{ nphone.as_p }}
+        <table>
+         {{ form.as_table }}
+         {{ nphone.as_table }}
+        </table>
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти зміни</button>
     </form>
 </div></div>
