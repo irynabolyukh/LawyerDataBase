@@ -69,12 +69,6 @@ class LawyerForm(ModelForm):
 
 
 
-class LPhoneForm(ModelForm):
-    class Meta:
-        model = LPhone
-        exclude = ()
-
-
 LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'])
 
 

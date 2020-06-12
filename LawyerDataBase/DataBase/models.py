@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.core import validators
 
 # Create your models here.
 
@@ -76,7 +77,8 @@ class Lawyer(models.Model):
 
 
 class LPhone(models.Model):
-    phone_num = models.CharField(max_length=10, primary_key=True)
+    phone_regex = validators.RegexValidator(regex=r'^\d{10}$$', message="Телефон має складатись з 10 цифр")
+    phone_num = models.CharField(max_length=10,primary_key=True, validators=[phone_regex])
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
     def __str__(self):
@@ -120,7 +122,8 @@ class Client_natural(Client):
 
 
 class NPhone(models.Model):
-    phone_num = models.CharField(max_length=10, primary_key=True)
+    phone_regex = validators.RegexValidator(regex=r'^\d{10}$$', message="Телефон має складатись з 10 цифр")
+    phone_num = models.CharField(max_length=10, primary_key=True, validators=[phone_regex])
     client_natural = models.ForeignKey(Client_natural, on_delete=models.CASCADE, related_name='phones')
 
     def __str__(self):
@@ -150,7 +153,8 @@ class Client_juridical(Client):
 
 
 class JPhone(models.Model):
-    phone_num = models.CharField(max_length=10, primary_key=True)
+    phone_regex = validators.RegexValidator(regex=r'^\d{10}$$', message="Телефон має складатись з 10 цифр")
+    phone_num = models.CharField(max_length=10, primary_key=True, validators=[phone_regex])
     client_juridical = models.ForeignKey(Client_juridical, on_delete=models.CASCADE, related_name='phones')
 
     def __str__(self):
