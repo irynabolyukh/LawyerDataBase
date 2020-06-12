@@ -65,7 +65,7 @@
             <a id="mail" href=mailto:lawyer.mail_info>{{ lawyer.mail_info }}</a>
             <h6>Телефони:</h6>
                {% for phone in phones %}
-            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+            <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
                 {% endfor %}
 
             <h5>Робочі дні:</h5>
@@ -121,10 +121,11 @@
     </div>
         </div>
 </div>
+   {% if upcoming_app_j or upcoming_app_n or appointments_j or appointments_n %}
     <hr>
     <div class="mt-5">
     <h2 class="text-center">Записи</h2>
-    </div>
+    </div> {% endif %}
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row card">
         <div class="container">

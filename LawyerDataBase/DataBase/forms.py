@@ -75,7 +75,7 @@ class LPhoneForm(ModelForm):
         exclude = ()
 
 
-LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'])
+LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
 
 class LawyerServiceForm(forms.Form):
@@ -118,9 +118,9 @@ class ServicesUpdateForm(ModelForm):
                   'bonus_value']
 
 
-NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'])
+NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
-JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'])
+JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
 
 class Appointment_NForm(ModelForm):
