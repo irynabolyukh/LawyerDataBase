@@ -125,10 +125,11 @@
     </div>
         </div>
 </div>
+   {% if upcoming_app_j or upcoming_app_n or appointments_j or appointments_n %}
     <hr>
     <div class="mt-5">
     <h2 class="text-center">Записи</h2>
-    </div>
+    </div> {% endif %}
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row card">
         <div class="container">
