@@ -13,7 +13,7 @@
             <th>Дата</th>
             <th>Час</th>
             <th>Коментарій</th>
-            <th>Послуги</th>
+            <th>ыПослуги</th>
             <th>Досьє</th>
             <th>Адвокат</th>
             <th>Клієнт</th>
@@ -37,7 +37,9 @@
             <td><a href="{{ appointment.lawyer_code.get_absolute_url }}">{{ appointment.lawyer_code.getfullname }}</a></td>
             <td><a href="{{ appointment.num_client_j.get_absolute_url }}">{{ appointment.num_client_j.getfullname }}</a></td>
             <td>
+                {% if appointment.is_open %}
                 <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Редагувати</a>
+                {% endif %}
                 <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
         </tr>

@@ -20,9 +20,9 @@ def register(request):
         if form.is_valid():
             form.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                return redirect('dossier_j-create')
+                return redirect('client_juridical-create-create')
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                return redirect('dossier_n-create')
+                return redirect('client_natural-create-create')
             else:
                 return redirect('stats')
     else:
@@ -920,6 +920,7 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     permission_required = 'DataBase.view_all_nappointments'
     model = Appointment_N
     paginate_by = 25
+    ordering = ['-app_date']
     queryset = Appointment_N.objects.order_by('app_date').order_by('app_time')
 
 
@@ -927,5 +928,6 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     permission_required = 'DataBase.view_all_jappointments'
     model = Appointment_J
     paginate_by = 25
+    ordering = ['-app_date']
     queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')
 
