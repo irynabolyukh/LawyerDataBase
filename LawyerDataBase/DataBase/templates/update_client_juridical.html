@@ -35,3 +35,9 @@
         }
     </script>
 {% endblock %}
+
+{% block script %}
+{% load static %}
+    <script src="{% static 'docs/js/highlightRequired.js' %}"></script>
+    <script src="{% static 'docs/js/client.js' %}"></script>
+{% endblock %}

@@ -269,9 +269,7 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
             return cl_pk == dos
         elif group.name == "Адвокат":
             lawyer = Lawyer.objects.get(mail_info=self.request.user.email).pk
-            print("lawyer: " + lawyer)
             dos = Dossier_J.objects.get(code_dossier_j=code).lawyer_code_id
-            print(dos)
             return lawyer == dos
         else:
             return True
@@ -305,9 +303,7 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
             return cl_pk == dos
         elif group.name == "Адвокат":
             lawyer = Lawyer.objects.get(mail_info=self.request.user.email).pk
-            print("lawyer: " + lawyer)
             dos = Dossier_N.objects.get(code_dossier_n=code).lawyer_code_id
-            print(dos)
             return lawyer == dos
         else:
             return True
