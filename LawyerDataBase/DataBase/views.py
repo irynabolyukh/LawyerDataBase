@@ -21,11 +21,9 @@ def register(request):
         if form.is_valid():
             form.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                return redirect('client_juridical-create')
+                return redirect('dossier_j-create')
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                return redirect('client_natural-create')
-            elif str(form.cleaned_data['group']) == str('Адвокат'):
-                return redirect('lawyer-create')
+                return redirect('dossier_n-create')
             else:
                 return redirect('stats')
     else:
@@ -421,7 +419,7 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False)
+        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["lphone"] = phoneFormSet(self.request.POST)
         else:
@@ -438,7 +436,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register", kwargs={self.object.mail_info})
+        return reverse("register")
+        # return reverse("register", kwargs={self.object.mail_info})
         # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
@@ -530,7 +529,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False)
+        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["nphone"] = phoneFormSet(self.request.POST)
         else:
@@ -622,7 +621,7 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        PhoneFormSet = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'],can_delete=False)
+        PhoneFormSet = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["jphone"] = PhoneFormSet(self.request.POST)
         else:
