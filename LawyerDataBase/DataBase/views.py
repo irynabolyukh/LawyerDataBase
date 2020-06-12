@@ -418,10 +418,11 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False)
         if self.request.POST:
-            data["lphone"] = LPhoneFormSet(self.request.POST)
+            data["lphone"] = phoneFormSet(self.request.POST)
         else:
-            data["lphone"] = LPhoneFormSet()
+            data["lphone"] = phoneFormSet()
         return data
 
     def form_valid(self, form):
@@ -459,6 +460,9 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         if lphone.is_valid():
             lphone.instance = self.object
             lphone.save()
+        else:
+            return self.form_invalid(form)
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -523,10 +527,11 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False)
         if self.request.POST:
-            data["nphone"] = NPhoneFormset(self.request.POST)
+            data["nphone"] = phoneFormSet(self.request.POST)
         else:
-            data["nphone"] = NPhoneFormset()
+            data["nphone"] = phoneFormSet()
         return data
 
     def form_valid(self, form):
@@ -564,6 +569,8 @@ class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
         if nphone.is_valid():
             nphone.instance = self.object
             nphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -612,10 +619,11 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        PhoneFormSet = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'],can_delete=False)
         if self.request.POST:
-            data["jphone"] = JPhoneFormset(self.request.POST)
+            data["jphone"] = PhoneFormSet(self.request.POST)
         else:
-            data["jphone"] = JPhoneFormset()
+            data["jphone"] = PhoneFormSet()
         return data
 
     def form_valid(self, form):
@@ -653,6 +661,8 @@ class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
         if jphone.is_valid():
             jphone.instance = self.object
             jphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):

@@ -60,21 +60,23 @@
         <div class="col-sm">
             <h4 id="name">{{ lawyer.first_name }} {{ lawyer.surname }} {{ lawyer.mid_name }}</h4>
             <h5 id="la_code">{{ lawyer.lawyer_code }}</h5>
-
-            <h6 id="specialization"> {{ lawyer.specialization }}</h6>
-            <a id="mail" href=mailto:lawyer.mail_info>{{ lawyer.mail_info }}</a>
-            <h6>Телефони:</h6>
+            <h6 id="specialization"><b>Спеціалізація:</b> {{ lawyer.specialization }}</h6>
+            <h6 id="mail"><b>Пошта:</b> <a href="mailto:{{ lawyer.mail_info}}">{{ lawyer.mail_info}} </a></h6>
+        <div class="mt-5">
+            <h6><b>Телефони:</b></h6>
                {% for phone in phones %}
-            <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+            <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
                 {% endfor %}
-
-            <h5>Робочі дні:</h5>
+        </div>
+            <div class="mt-5">
+                <h5><b>Робочі дні:</b></h5>
             {% for day in lawyer.work_days.all %}
-            <h6 id="work_days">{{ day }}</h6>
+            <h6 id="work_days">{{ day }}: 10:00 - 19:00</h6>
             {% endfor %}
+            </div>
         </div>
         <div class="col-sm">
-            <h5>Послуги:</h5>
+            <h5><b>Послуги:</b></h5>
             {% for service in lawyer.service.all %}
                 <h6 id="service">
                     <a href=" {% url 'service-detailed-view' service.service_code %}">
@@ -84,12 +86,14 @@
             {% endfor %}
              {% if dossier_j or dossier_n %}
             <br><br>
-             <h5>Досьє:</h5>
+             <h5>Досьє, в яких представляє клієнта:</h5>
             {% for dossier in dossier_n %}
-                <a class="nav-link" href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.pk }}: {{ dossier.issue }}</a>
+                <div class="m-1 mt-1"><a  href="{% url 'dossier-detailed-n' dossier.code_dossier_n %}">{{ dossier.pk }}: {{ dossier.issue }}</a></div>
             {% endfor %}
             {% for dossier in dossier_j %}
-            <a class="nav-link" href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.pk }}: {{ dossier.issue }}</a>
+                <div class="m-1 mt-1">
+            <a  href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.pk }}: {{ dossier.issue }}</a>
+                </div>
             {% endfor %}
         {% endif %}
             <div><br><br></div>
@@ -188,7 +192,7 @@
     {% endif %}
 <br>
     {% if appointments_j or appointments_n %}
-    <div class="row card">
+    <div class="row card mb-3">
         <div class="container">
             <h4>Минулі</h4>
             <table class="table table-striped table_border table-hover">
