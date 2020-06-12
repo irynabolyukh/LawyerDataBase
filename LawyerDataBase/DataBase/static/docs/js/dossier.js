@@ -6,5 +6,9 @@ function main(){
         dateFormat: "dd/mm/yy",
         changeMonth: true,
         changeYear: true,
+        defaultDate: Date.now(),
+        minDate:Date.now(),
+        disableTextInput: true,
     })
+
 }
