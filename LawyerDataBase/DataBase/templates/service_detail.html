@@ -61,6 +61,7 @@
         <h6>Послуга : {{ service.name_service }}</h6>
         <h6>Номінальна вартіть : {{ service.nominal_value }}</h6>
         <h6>Бонусна вартість : {{ service.bonus_value }}</h6>
+        <h6>Група : {{ service.service_group }}</h6>
         {% if request.user|has_group:"Секретар"%}
         <div class="container row align-items-center justify-content-center">
             <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'service-update' pk=object.pk %}">Редагувати</a>
