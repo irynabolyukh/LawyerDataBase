@@ -17,6 +17,7 @@ from django.db.models import Sum, Count, F
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
+
         if form.is_valid():
             form.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
@@ -437,7 +438,7 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
+        return reverse("register", kwargs={self.object.mail_info})
         # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
