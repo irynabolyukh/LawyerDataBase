@@ -181,8 +181,8 @@ class Dossier_JForm(ModelForm):
     date_closed = forms.DateField(label='Дата закриття', required=False)
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
-    court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=70, label='Адрес', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
@@ -201,8 +201,8 @@ class Dossier_NForm(ModelForm):
     date_closed = forms.DateField(label='Дата закриття', required=False)
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
-    court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=70, label='Адрес', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
@@ -212,11 +212,11 @@ class Dossier_NForm(ModelForm):
 
 class Client_NForm(ModelForm):
     num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
-    first_name = forms.CharField(label='Ім`я', max_length=25)
-    surname = forms.CharField(label='Прізвище', max_length=25)
-    mid_name = forms.CharField(label='По батькові', max_length=25)
-    adr_city = forms.CharField(label='Місто', max_length=30)
-    adr_street = forms.CharField(label='Вулиця', max_length=50)
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
     adr_build = forms.CharField(label='Будинок', max_length=5)
     mail_info = forms.EmailField(label='E-mail', max_length=30)
     birth_date = forms.DateField(label='Дата народження')
@@ -230,15 +230,15 @@ class Client_NForm(ModelForm):
 
 class Client_JForm(ModelForm):
     num_client_j = forms.CharField(label='ЄДРПОУ', max_length=8, min_length=8)
-    first_name = forms.CharField(label='Ім`я', max_length=25)
-    surname = forms.CharField(label='Прізвище', max_length=25)
-    mid_name = forms.CharField(label='По батькові', max_length=25)
-    adr_city = forms.CharField(label='Місто', max_length=30)
-    adr_street = forms.CharField(label='Вулиця', max_length=50)
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
     adr_build = forms.CharField(label='Будинок', max_length=5)
     mail_info = forms.EmailField(label='E-mail', max_length=30)
-    client_position = forms.CharField(label='Посада', max_length=25)
-    name_of_company = forms.CharField(label='Компанія', max_length=25)
+    client_position = forms.CharField(label='Посада', max_length=50)
+    name_of_company = forms.CharField(label='Компанія', max_length=100)
     iban = forms.CharField(label='IBAN', max_length=29, min_length=29)
 
     class Meta:
@@ -277,8 +277,8 @@ class Dossier_JFormUpdate(ModelForm):
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
     paid = forms.BooleanField(label='Оплачено', required=False)
-    court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
@@ -291,8 +291,8 @@ class Dossier_NFormUpdate(ModelForm):
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
     paid = forms.BooleanField(label='Оплачено', required=False)
-    court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
