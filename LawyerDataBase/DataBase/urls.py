@@ -30,6 +30,7 @@ urlpatterns = [
     path('appointment_J/<pk>/update', views.Appointment_JUpdateView.as_view(), name='appointment_j-update'),
     path('appointment_N/<pk>/delete', views.Appointment_NDeleteView.as_view(), name='appointment_n-delete'),
     path('appointment_J/<pk>/delete', views.Appointment_JDeleteView.as_view(), name='appointment_j-delete'),
+    path('service_group/create', views.ServiceGroupCreateView.as_view(), name='service_group-create'),
     path('service/create', views.ServicesCreateView.as_view(), name='service-create'),
     path('service/<pk>/update', views.ServicesUpdateView.as_view(), name='service-update'),
     path('service/<pk>/delete', views.ServicesDeleteView.as_view(), name='service-delete'),

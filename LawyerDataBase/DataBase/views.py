@@ -197,6 +197,9 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        service = Services.objects.get(service_code=self.kwargs['pk'])
+        group = service.__getattribute__('service_group')
+        context['group'] = ServiceGroup.objects.filter(name_group=group)
         context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
         return context
 
@@ -472,6 +475,24 @@ class LawyerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Lawyer
     template_name = 'confirm_delete.html'
     success_url = reverse_lazy('lawyers')
+
+
+class ServiceGroupCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_services'
+    model = ServiceGroup
+    form_class = ServiceGroupForm
+    template_name = 'create_service_group.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("services")
 
 
 class ServicesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

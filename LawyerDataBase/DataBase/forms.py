@@ -85,6 +85,13 @@ class LawyerServiceForm(forms.Form):
         # self.fields['lawyers'].queryset = Lawyer.objects.exclude(service=pk)
 
 
+class ServiceGroupForm(ModelForm):
+    name_group = forms.CharField(label='Назва групи', max_length=50)
+
+    class Meta:
+        model = ServiceGroup
+        fields = '__all__'
+
 
 class ServicesForm(ModelForm):
     service_code = forms.CharField(label='Код послуги', max_length=5, min_length=5)
@@ -94,6 +101,7 @@ class ServicesForm(ModelForm):
     lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
                                              queryset=Lawyer.objects.all(),
                                              widget=CheckboxSelectMultiple)
+    service_group = forms.ModelChoiceField(label='Група послуг', required=False, queryset=ServiceGroup.objects.all())
 
     class Meta:
         model = Services
@@ -105,11 +113,12 @@ class ServicesUpdateForm(ModelForm):
     name_service = forms.CharField(label='Послуга', max_length=50)
     nominal_value = forms.DecimalField(label='Номінальна вартість', max_digits=6, decimal_places=2)
     bonus_value = forms.DecimalField(label='Бонусна вартість', max_digits=6, decimal_places=2)
+    service_group = forms.ModelChoiceField(label='Група послуг', queryset=ServiceGroup.objects.all())
 
     class Meta:
         model = Services
         fields = ['service_code', 'name_service', 'nominal_value',
-                  'bonus_value']
+                  'bonus_value', 'service_group']
 
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})

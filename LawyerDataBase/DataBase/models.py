@@ -25,11 +25,26 @@ class Work_days(models.Model):
         ordering = ['id']
 
 
+class ServiceGroup(models.Model):
+    service_group_code = models.AutoField(primary_key=True)
+    name_group = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.name_group}'
+
+    def getfullname(self):
+        return f'{self.name_group}'
+
+    class Meta:
+        db_table = 'ServiceGroup'
+
+
 class Services(models.Model):
     service_code = models.CharField(max_length=5, primary_key=True)
     name_service = models.CharField(max_length=50)
     nominal_value = models.DecimalField(max_digits=6, decimal_places=2)
     bonus_value = models.DecimalField(max_digits=6, decimal_places=2)
+    service_group = models.ForeignKey(ServiceGroup, on_delete=models.DO_NOTHING, related_name='group')
 
     def __str__(self):
         return f'{self.service_code} : {self.name_service}'
