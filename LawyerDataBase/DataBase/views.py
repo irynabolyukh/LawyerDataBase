@@ -248,11 +248,29 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
         return context
 
 
-class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, generic.DetailView):
     permission_required = 'DataBase.view_dossier_j'
     model = Dossier_J
     context_object_name = "dossier"
     template_name = "dossier_detail_j.html"
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        code = self.kwargs['pk']
+        if group.name == "Юридичний клієнт":
+            cl_pk = Client_juridical.objects.get(mail_info=self.request.user.email).pk
+            dos = Dossier_J.objects.get(code_dossier_j=code).num_client_j_id
+            return cl_pk == dos
+        elif group.name == "Адвокат":
+            lawyer = Lawyer.objects.get(mail_info=self.request.user.email).pk
+            print("lawyer: " + lawyer)
+            dos = Dossier_J.objects.get(code_dossier_j=code).lawyer_code_id
+            print(dos)
+            return lawyer == dos
+        else:
+            return True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -265,11 +283,33 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, generic.De
         return context
 
 
-class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, generic.DetailView):
+class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin, generic.DetailView):
     permission_required = 'DataBase.view_dossier_n'
     model = Dossier_N
     context_object_name = "dossier"
     template_name = "dossier_detail_n.html"
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        group = self.request.user.groups.filter(user=self.request.user)[0]
+        code = self.kwargs['pk']
+        print(code)
+        if group.name == "Фізичний клієнт":
+            cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
+            dos = Dossier_N.objects.get(code_dossier_n=code).num_client_n_id
+            return cl_pk == dos
+        elif group.name == "Адвокат":
+            lawyer = Lawyer.objects.get(mail_info=self.request.user.email).pk
+            print("lawyer: " + lawyer)
+            dos = Dossier_N.objects.get(code_dossier_n=code).lawyer_code_id
+            print(dos)
+            return lawyer == dos
+        else:
+            return True
+
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -65,7 +65,7 @@
         <h6>Адреса: {{ client_natural.adr_city }}, {{ client_natural.adr_street }}, {{ client_natural.adr_build }}</h6>
         <h6>Дата народження: {{ client_natural.birth_date|date:"d.m.Y" }}</h6>
         <h6>Паспортні дані: {{ client_natural.passport_date|date:"d.m.Y" }}  {{ client_natural.passport_authority }}</h6>
-        <h6>E-mail: {{ client_natural.mail_info }}</h6>
+        <h6>E-mail: <a href=mailto:client_natural.mail_info>{{ client_natural.mail_info }}</a></h6>
         <h6>Номер телефону:
             {% for phone in phones %}
                 <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
@@ -252,7 +252,7 @@
 
     {% endif %}
     {% if dossiers %}
-        <div class="container mt-5">
+    <div class="container mt-5">
          <h2 class="text-center">Досьє</h2>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
