@@ -20,9 +20,11 @@ def register(request):
         if form.is_valid():
             form.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                return redirect('client_juridical-create-create')
+                return redirect('client_juridical-create')
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                return redirect('client_natural-create-create')
+                return redirect('client_natural-create')
+            elif str(form.cleaned_data['group']) == str('Адвокат'):
+                return redirect('lawyer-create')
             else:
                 return redirect('stats')
     else:
