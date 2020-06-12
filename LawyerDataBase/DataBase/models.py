@@ -234,8 +234,14 @@ class Appointment_N(Appointment):
     def __str__(self):
         return f'{self.appoint_code_n} : {self.num_client_n.getfullname()}'
 
+    def is_open(self):
+        if not str(self.code_dossier_n.statssus) == 'open':
+            return False
+        return True
+
     class Meta(Appointment.Meta):
         db_table = 'Appointment_N'
+        ordering = ['app_date']
 
 
 class Appointment_J(Appointment):
@@ -246,6 +252,11 @@ class Appointment_J(Appointment):
 
     def __str__(self):
         return f'{self.appoint_code_j} : {self.num_client_j.getfullname()}'
+
+    def is_open(self):
+        if not str(self.code_dossier_j.status) == 'open':
+            return False
+        return True
 
     class Meta(Appointment.Meta):
         db_table = 'Appointment_J'
