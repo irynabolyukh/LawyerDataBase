@@ -84,12 +84,14 @@ class LawyerServiceForm(forms.Form):
         self.fields['service_code'].initial = pk
         # self.fields['lawyers'].queryset = Lawyer.objects.exclude(service=pk)
 
+
 class ServiceGroupForm(ModelForm):
     name_group = forms.CharField(label='Назва групи', max_length=50)
 
     class Meta:
         model = ServiceGroup
         fields = '__all__'
+
 
 class ServicesForm(ModelForm):
     service_code = forms.CharField(label='Код послуги', max_length=5, min_length=5)

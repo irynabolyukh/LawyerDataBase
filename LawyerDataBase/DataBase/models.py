@@ -32,6 +32,9 @@ class ServiceGroup(models.Model):
     def __str__(self):
         return f'{self.name_group}'
 
+    def getfullname(self):
+        return f'{self.name_group}'
+
     class Meta:
         db_table = 'ServiceGroup'
 

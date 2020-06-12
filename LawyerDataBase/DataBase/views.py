@@ -197,6 +197,9 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        service = Services.objects.get(service_code=self.kwargs['pk'])
+        group = service.__getattribute__('service_group')
+        context['group'] = ServiceGroup.objects.filter(name_group=group)
         context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
         return context
 
