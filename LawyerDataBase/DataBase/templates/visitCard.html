@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load user_tags %}
 <head>
     <meta charset="UTF-8">
     <base href="/">
@@ -24,10 +25,15 @@
                                             </div>
                 <div class="col-4">
                        <ul class="soc" style="border-right:0px; border-left: 0px">
+                           {% if not request.user.is_authenticated %}
                            <li style="border-right:0px; border-left: 0px">
-                               <a href="{% url 'login' %}">Особистий кабінет</a>
+                               <a href="{% url 'login' %}">Логін</a>
                            </li>
+                           {% endif %}
                            {% if request.user.is_authenticated %}
+                            <li style="border-right:0px; border-left: 0px">
+                               <a href="{% url 'index' %}">Мій Кабінет</a>
+                           </li>
                            <li style="border-right:0px; border-left: 0px">
                                <a href="{% url 'logout' %}">Вийти</a>
                            </li>
@@ -39,33 +45,33 @@
                 </div>
             </div>
         </div>
-        <div class="bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-9 col-lg-5 col-xl-5">
-                        <div id="logo"><h2>Адвокатське бюро</h2></div>
-                    </div>
-                    <div class="col-3 col-lg-7 col-xl-7">
-                        <button class="toggle-menu d-md-block d-lg-none d-xl-none">
-                            <span class="toggle-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
-                            </span>
-                        </button>
-                        <div id="top_menu">
-                            <div class="close-btn d-md-block d-lg-none d-xl-none">
-                                <svg viewport="0 0 24 24" width="24" height="24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                    <line x1="1" y1="23" x2="23" y2="1" stroke-width="2"></line>
-                                    <line x1="1" y1="1" x2="23" y2="23" stroke-width="2"></line>
-                                </svg>
-                            </div>
-                            <div class="phone d-md-block d-lg-none d-xl-none">
-                                <i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:+380123456789">+38 012 345 67 89</a>
-                            </div>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="bottom">-->
+<!--            <div class="container">-->
+<!--                <div class="row">-->
+<!--                    <div class="col-9 col-lg-5 col-xl-5">-->
+<!--                        <div id="logo"><h2>Адвокатське бюро</h2></div>-->
+<!--                    </div>-->
+<!--                    <div class="col-3 col-lg-7 col-xl-7">-->
+<!--                        <button class="toggle-menu d-md-block d-lg-none d-xl-none">-->
+<!--                            <span class="toggle-icon">-->
+<!--                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>-->
+<!--                            </span>-->
+<!--                        </button>-->
+<!--                        <div id="top_menu">-->
+<!--                            <div class="close-btn d-md-block d-lg-none d-xl-none">-->
+<!--                                <svg viewport="0 0 24 24" width="24" height="24" version="1.1" xmlns="http://www.w3.org/2000/svg">-->
+<!--                                    <line x1="1" y1="23" x2="23" y2="1" stroke-width="2"></line>-->
+<!--                                    <line x1="1" y1="1" x2="23" y2="23" stroke-width="2"></line>-->
+<!--                                </svg>-->
+<!--                            </div>-->
+<!--                            <div class="phone d-md-block d-lg-none d-xl-none">-->
+<!--                                <i class="fa fa-phone" aria-hidden="true"></i> <a href="tel:+380123456789">+38 012 345 67 89</a>-->
+<!--                            </div>-->
+<!--                            </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </header>
 
 
