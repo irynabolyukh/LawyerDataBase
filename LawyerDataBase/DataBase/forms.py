@@ -49,7 +49,7 @@ class CustomUserCreationForm(forms.Form):
 
 
 class LawyerForm(ModelForm):
-    lawyer_code = forms.CharField(label='Код свідоцтва')
+    lawyer_code = forms.CharField(label='Код свідоцтва', max_length=8)
     first_name = forms.CharField(label='Ім`я')
     surname = forms.CharField(label='Прізвище')
     mid_name = forms.CharField(label='По батькові')
@@ -181,7 +181,7 @@ class Dossier_JForm(ModelForm):
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
+    court_adr = forms.CharField(max_length=70, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
@@ -201,7 +201,7 @@ class Dossier_NForm(ModelForm):
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
-    court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
+    court_adr = forms.CharField(max_length=70, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False)
 
     class Meta:
@@ -215,8 +215,8 @@ class Client_NForm(ModelForm):
     surname = forms.CharField(label='Прізвище', max_length=25)
     mid_name = forms.CharField(label='По батькові', max_length=25)
     adr_city = forms.CharField(label='Місто', max_length=30)
-    adr_street = forms.CharField(label='Вулиця', max_length=20)
-    adr_build = forms.IntegerField(label='Будинок')
+    adr_street = forms.CharField(label='Вулиця', max_length=50)
+    adr_build = forms.CharField(label='Будинок', max_length=5)
     mail_info = forms.EmailField(label='E-mail', max_length=30)
     birth_date = forms.DateField(label='Дата народження')
     passport_date = forms.DateField(label='Дата паспорта')
@@ -234,7 +234,7 @@ class Client_JForm(ModelForm):
     mid_name = forms.CharField(label='По батькові', max_length=25)
     adr_city = forms.CharField(label='Місто', max_length=30)
     adr_street = forms.CharField(label='Вулиця', max_length=50)
-    adr_build = forms.IntegerField(label='Будинок')
+    adr_build = forms.CharField(label='Будинок', max_length=5)
     mail_info = forms.EmailField(label='E-mail', max_length=30)
     client_position = forms.CharField(label='Посада', max_length=25)
     name_of_company = forms.CharField(label='Компанія', max_length=25)

@@ -78,7 +78,7 @@ class Lawyer(models.Model):
 
 class LPhone(models.Model):
     phone_regex = validators.RegexValidator(regex=r'^\d{10}$$', message="Телефон має складатись з 10 цифр")
-    phone_num = models.CharField(max_length=10,primary_key=True, validators=[phone_regex])
+    phone_num = models.CharField(max_length=10, primary_key=True, validators=[phone_regex])
     lawyer = models.ForeignKey(Lawyer, on_delete=models.CASCADE, related_name='phones')
 
     def __str__(self):
@@ -93,8 +93,8 @@ class Client(models.Model):
     surname = models.CharField(max_length=25)
     mid_name = models.CharField(max_length=25)
     adr_city = models.CharField(max_length=30)
-    adr_street = models.CharField(max_length=20)
-    adr_build = models.IntegerField()
+    adr_street = models.CharField(max_length=50)
+    adr_build = models.CharField(max_length=5)
     mail_info = models.EmailField(max_length=30)
 
     class Meta:
@@ -178,7 +178,7 @@ class Dossier(models.Model):
     fee = models.DecimalField(max_digits=7, decimal_places=2, default=0)
     paid = models.BooleanField(default=False)
     court_name = models.CharField(max_length=50, blank=True, null=True)
-    court_adr = models.CharField(max_length=50, blank=True, null=True)
+    court_adr = models.CharField(max_length=70, blank=True, null=True)
     court_date = models.DateTimeField(blank=True, null=True)
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING,
                                     blank=True, null=True)

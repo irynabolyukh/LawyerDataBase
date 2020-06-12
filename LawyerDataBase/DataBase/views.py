@@ -436,7 +436,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register", kwargs={self.object.mail_info})
+        return reverse("register")
+        # return reverse("register", kwargs={self.object.mail_info})
         # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
