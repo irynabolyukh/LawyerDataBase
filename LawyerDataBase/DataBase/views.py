@@ -478,6 +478,24 @@ class LawyerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('lawyers')
 
 
+class ServiceGroupCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_services'
+    model = ServiceGroup
+    form_class = ServiceGroupForm
+    template_name = 'create_service_group.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("services")
+
+
 class ServicesCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_services'
     model = Services
