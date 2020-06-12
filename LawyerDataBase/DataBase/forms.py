@@ -195,9 +195,9 @@ class Dossier_NForm(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_signed = forms.DateField(label='Дата підписання', widget=SelectDateWidget())
-    date_expired = forms.DateField(label='Дата спливу', widget=SelectDateWidget())
-    date_closed = forms.DateField(label='Дата закриття', widget=SelectDateWidget(), required=False)
+    date_signed = forms.DateField(label='Дата підписання')
+    date_expired = forms.DateField(label='Дата спливу')
+    date_closed = forms.DateField(label='Дата закриття', required=False)
     fee = forms.DecimalField(label='Гонорар')
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
@@ -218,8 +218,8 @@ class Client_NForm(ModelForm):
     adr_street = forms.CharField(label='Вулиця', max_length=20)
     adr_build = forms.IntegerField(label='Будинок')
     mail_info = forms.EmailField(label='E-mail', max_length=30)
-    birth_date = forms.DateField(label='Дата народження', widget=SelectDateWidget())
-    passport_date = forms.DateField(label='Дата паспорта', widget=SelectDateWidget())
+    birth_date = forms.DateField(label='Дата народження')
+    passport_date = forms.DateField(label='Дата паспорта')
     passport_authority = forms.CharField(label='Орган паспорта', max_length=6)
 
     class Meta:
@@ -274,7 +274,7 @@ class Appointment_JFormUpdate(ModelForm):
 class Dossier_JFormUpdate(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
+    date_closed = forms.DateField(label='Дата закриття', required=False)
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
     court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
@@ -286,9 +286,10 @@ class Dossier_JFormUpdate(ModelForm):
 
 
 class Dossier_NFormUpdate(ModelForm):
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(),
+                                         required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False, widget=SelectDateWidget())
+    date_closed = forms.DateField(label='Дата закриття', required=False)
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=50, label='Суд', required=False)
     court_adr = forms.CharField(max_length=50, label='Адрес', required=False)
