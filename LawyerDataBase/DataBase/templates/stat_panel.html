@@ -3,72 +3,6 @@
 
 
 {% block content %}
-    <style>
-    a:link {
-        text-decoration: none;
-    }
-    a {
-        color: black;
-    }
-
-    #print-foot {
-         display: table-footer-group;
-    }
-
-    {##print-foot {#}
-    {#        display: block;#}
-    {#        position: fixed;#}
-    {#        bottom: 0pt;#}
-    {#        right: 0pt;#}
-            {#font-size: 200%;#}
-    {#    }#}
-
-        {##print-foot:before {#}
-        {#    counter-increment: page;#}
-        {#    content: counter(page) "/";#}
-        #print-foot:after {
-        {#counter-increment: pages;#}
-        {#content: counter(pages);#}
-            counter-increment: page;
-            content: counter(page);
-        }
-
-    #date {
-        visibility: hidden;
-    }
-
-    @media print {
-        a {
-            text-decoration: none;
-            color: black;
-        }
-         a[href]:after {
-            content: none !important;
-         }
-
-        .d-print-none {
-            display: none !important
-        }
-
-        #date {
-            font-size: 15pt;
-            visibility: visible;
-            margin-bottom: 4%;
-        }
-
-        .statH {
-            font-size: 45pt;
-        }
-
-        .containerToPrint {
-            max-width: fit-content;
-        }
-
-        .tbl {
-            font-size: 19pt;
-        }
-    }
-    </style>
     <p id="date"></p>
 
     <div class="container-fluid" id="container-stat">
@@ -85,7 +19,7 @@
             <div class="tabulated secondary_text"><b>Виграно: </b><div id="won_dossiers" class="inline_div">{{ won_dossiers }}</div></div>
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
-        <div class="col-md-4 offset-md-2" id="dates">
+        <div style="margin-top: 2%;" class="col-md-4 offset-md-2" id="dates">
             <div class="container align_right">
 
                     <p><label for="date1">З </label>
@@ -96,9 +30,9 @@
             <div id="reload" class="float-right">
                 <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
             </div>
-            <div class="d-print-none"><form>
-                <input type="button" value="Сформувати звіт" onClick="window.print()">
-            </form></div>
+            <div style="margin-right: 10%" class="d-print-none float-right">
+                <button class="fa fa-print" onClick="window.print()"></button>
+            </div>
         </div>
     </div>
     <hr>
@@ -130,7 +64,7 @@
                     </tr>
                     <tr>
                         <th></th>
-                        <th class="lnr-text-align-right">За весь час</th>
+                        <th>За весь час</th>
                         <th>{{service.count}}</th>
                         <th>{{service.sum}} грн</th>
                     </tr>
@@ -178,13 +112,9 @@
 </div>
 </div>
     </div>
-    <div id="print-foot">Page </div>
+    <div id="print-foot"></div>
 {% endblock %}
 {% block script %}
         {% load static %}
         <script src="{% static 'docs/js/statistics.js' %}"></script>
-    <script>
-    var d = new Date().toLocaleString();
-    document.getElementById("date").innerHTML = d;
-    </script>
 {% endblock %}
