@@ -16,4 +16,5 @@ admin.site.register(Client_natural)
 admin.site.register(LPhone)
 admin.site.register(Appointment_N)
 admin.site.register(Appointment_J)
+admin.site.register(ServiceGroup)
 
