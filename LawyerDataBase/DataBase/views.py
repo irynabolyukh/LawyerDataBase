@@ -891,6 +891,23 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     queryset = Lawyer.objects.order_by('surname')
 
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        lawyer = self.request.GET.get('lawyer_id', '')
+        surname = self.request.GET.get('surname', '')
+        mail = self.request.GET.get('mail', '')
+        spec = self.request.GET.get('spec', '')
+        data['object_list'] = Lawyer.objects.filter(lawyer_code__icontains=lawyer).\
+                                            filter(mail_info__icontains=mail).\
+                                            filter(surname__icontains=surname).\
+                                            filter(specialization__icontains=spec)
+        data['spec'] = spec
+        data['lawyer_id'] = lawyer
+        data['mail'] = mail
+        data['surname'] = surname
+        return data
+
+
 class ServicesListView(ListView):
     model = Services
 
