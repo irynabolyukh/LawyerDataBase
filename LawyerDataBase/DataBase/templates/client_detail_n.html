@@ -97,7 +97,9 @@
 {% if not request.user|has_group:"Адвокат"%}
 <hr>
     <div class="container mt-5">
-        <h2 class="text-center">Записи</h2>
+        {% if upcoming_app_n or appointments_n%}
+            <h2 class="text-center">Записи</h2>
+        {% endif %}
         {% if upcoming_app_n %}
     <h5>Майбутні</h5>
     <table class="table table-striped table-hover table_border">

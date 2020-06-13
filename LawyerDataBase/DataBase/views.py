@@ -799,19 +799,18 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     form_class = Dossier_NForm
     template_name = 'create_dossier_n.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_NCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        client = Client_natural.objects.get(num_client_n=self.kwargs['pk'])
-        kwargs['client'] = client
-        print(client)
         return data
 
     def form_valid(self, form):
-        client = Client_natural.objects.get(num_client_n=self.kwargs['pk'])
-        form.instance.client = client
+        self.object = form.save()
         return super().form_valid(form)
-        # self.object = form.save()
-        # return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
@@ -849,6 +848,11 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     model = Dossier_J
     form_class = Dossier_JForm
     template_name = 'create_dossier_j.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_JCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

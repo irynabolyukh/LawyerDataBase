@@ -207,6 +207,12 @@ class Dossier_JForm(ModelForm):
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_JForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_j'].initial = user_id
+        self.fields['num_client_j'].disabled = True
+
     class Meta:
         model = Dossier_J
         fields = '__all__'
@@ -214,7 +220,7 @@ class Dossier_JForm(ModelForm):
 
 class Dossier_NForm(ModelForm):
     code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
-    # num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
@@ -239,9 +245,15 @@ class Dossier_NForm(ModelForm):
         print(cleaned_data)
         return cleaned_data
 
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_NForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_n'].initial = user_id
+        self.fields['num_client_n'].disabled = True
+
     class Meta:
         model = Dossier_N
-        exclude = ['num_client_n']
+        fields = '__all__'
 
 
 class Client_NForm(ModelForm):
