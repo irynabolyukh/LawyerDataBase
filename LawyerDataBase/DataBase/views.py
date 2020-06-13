@@ -811,11 +811,17 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        client = Client_natural.objects.get(num_client_n=self.kwargs['pk'])
+        kwargs['client'] = client
+        print(client)
         return data
 
     def form_valid(self, form):
-        self.object = form.save()
+        client = Client_natural.objects.get(num_client_n=self.kwargs['pk'])
+        form.instance.client = client
         return super().form_valid(form)
+        # self.object = form.save()
+        # return super().form_valid(form)
 
     def get_success_url(self):
         # return reverse("register")

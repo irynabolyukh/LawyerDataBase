@@ -164,6 +164,7 @@
 
             {% if request.user|has_group:"Секретар"%}
             <td>
+
                 <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>

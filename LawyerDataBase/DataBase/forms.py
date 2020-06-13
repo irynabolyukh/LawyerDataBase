@@ -201,7 +201,7 @@ class Dossier_JForm(ModelForm):
 
 class Dossier_NForm(ModelForm):
     code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
+    # num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
@@ -216,11 +216,11 @@ class Dossier_NForm(ModelForm):
 
     class Meta:
         model = Dossier_N
-        fields = '__all__'
+        exclude = ['num_client_n']
 
 
 class Client_NForm(ModelForm):
-    num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
+    # num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
     first_name = forms.CharField(label='Ім`я', max_length=50)
     surname = forms.CharField(label='Прізвище', max_length=50)
     mid_name = forms.CharField(label='По батькові', max_length=50)
