@@ -226,6 +226,7 @@ class Dossier_J(Dossier):
     class Meta(Dossier.Meta):
         db_table = 'Dossier_J'
 
+
     def get_absolute_url(self):
         return reverse("dossier-detailed-j", kwargs={"pk": self.code_dossier_j})
 

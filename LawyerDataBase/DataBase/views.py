@@ -270,7 +270,6 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
             return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
         code = self.kwargs['pk']
-        print(code)
         if group.name == "Фізичний клієнт":
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             dos = Dossier_N.objects.get(code_dossier_n=code).num_client_n_id
@@ -406,6 +405,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         if lphone.is_valid():
             lphone.instance = self.object
             lphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -534,6 +535,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         if nphone.is_valid():
             nphone.instance = self.object
             nphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -626,6 +629,8 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         if jphone.is_valid():
             jphone.instance = self.object
             jphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -792,8 +797,7 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse("register")
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+        return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
 
 
 class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -811,7 +815,7 @@ class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+        return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
 
 
 class Dossier_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -839,7 +843,7 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 
     def get_success_url(self):
         # return reverse("register")
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+        return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
 class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -857,7 +861,7 @@ class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+        return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
 class Dossier_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

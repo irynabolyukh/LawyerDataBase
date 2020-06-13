@@ -192,7 +192,7 @@ class Dossier_JForm(ModelForm):
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
-    court_date = forms.DateTimeField(label='Дата засідання', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
     class Meta:
         model = Dossier_J
@@ -212,7 +212,21 @@ class Dossier_NForm(ModelForm):
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
-    court_date = forms.DateTimeField(label='Дата засідання', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        print(paidcontext)
+        print(self.cleaned_data['status'])
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            print("mem")
+        return paidcontext
+
+    def clean(self):
+        cleaned_data = super(Dossier_NForm, self).clean()
+
+        print(cleaned_data)
+        return cleaned_data
 
     class Meta:
         model = Dossier_N
@@ -257,7 +271,7 @@ class Client_JForm(ModelForm):
 
 
 class Appointment_NFormUpdate(ModelForm):
-    app_date = forms.DateField(label='Дата')
+    app_date = forms.DateField(label='Дата',widget=TextInput(attrs={'autocomplete':'off'}))
     app_time = forms.TimeField(label='Час')
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
 
@@ -270,7 +284,7 @@ class Appointment_NFormUpdate(ModelForm):
 
 
 class Appointment_JFormUpdate(ModelForm):
-    app_date = forms.DateField(label='Дата')
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'autocomplete':'off'}))
     app_time = forms.TimeField(label='Час')
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
 
@@ -285,11 +299,11 @@ class Appointment_JFormUpdate(ModelForm):
 class Dossier_JFormUpdate(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
-    court_date = forms.DateTimeField(label='Дата засідання', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
     class Meta:
         model = Dossier_J
@@ -300,11 +314,11 @@ class Dossier_NFormUpdate(ModelForm):
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(),
                                          required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
-    date_closed = forms.DateField(label='Дата закриття', required=False)
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
-    court_date = forms.DateTimeField(label='Дата засідання', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
     class Meta:
         model = Dossier_N
