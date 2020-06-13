@@ -251,6 +251,9 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
+        today = date.today()
+        if (dossier.date_expired < today):
+            print("expired")
         dossier.fee = fee_dossier_j(dossier.code_dossier_j)
         client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
@@ -287,6 +290,14 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
+        today = date.today()
+        # Якщо дата спливу угоди менша за поточну
+        # if dossier.date_expired < today :
+        #     if dossier.date_closed > dossier.date_expired:
+        #
+        #     else:
+
+
         dossier.fee = fee_dossier_n(dossier.code_dossier_n)
         client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()

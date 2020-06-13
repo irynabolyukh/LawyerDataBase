@@ -5,6 +5,8 @@ from django import forms
 from .models import *
 from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
 
+from django.utils.translation import ugettext_lazy as _
+
 
 
 class CustomUserCreationForm(forms.Form):
@@ -120,6 +122,11 @@ class ServicesUpdateForm(ModelForm):
         fields = ['service_code', 'name_service', 'nominal_value',
                   'bonus_value', 'service_group']
 
+    def clean_bonus_value(self):
+        bonus_value = self.cleaned_data['bonus_value']
+        if bonus_value < self.cleaned_data['nominal_value']:
+            raise ValidationError(_('Бонусна вартість не може бути меншою за номінальну'), code='invalid')
+        return bonus_value
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
@@ -188,11 +195,17 @@ class Dossier_JForm(ModelForm):
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
     date_expired = forms.DateField(label='Дата спливу', widget=TextInput(attrs={'autocomplete':'off'}))
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
-    fee = forms.DecimalField(label='Гонорар', initial=0)
+    fee = forms.DecimalField(label='Гонорар', initial=0, widget=TextInput(attrs={'readonly ':'readonly'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+        return paidcontext
 
     class Meta:
         model = Dossier_J
@@ -208,7 +221,7 @@ class Dossier_NForm(ModelForm):
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
     date_expired = forms.DateField(label='Дата спливу', widget=TextInput(attrs={'autocomplete':'off'}))
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
-    fee = forms.DecimalField(label='Гонорар', initial=0)
+    fee = forms.DecimalField(label='Гонорар', initial=0, widget=TextInput(attrs={'readonly ':'readonly'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
@@ -216,10 +229,8 @@ class Dossier_NForm(ModelForm):
 
     def clean_paid(self):
         paidcontext = self.cleaned_data['paid']
-        print(paidcontext)
-        print(self.cleaned_data['status'])
         if paidcontext and str(self.cleaned_data['status']) == 'open':
-            print("mem")
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
     def clean(self):
@@ -305,6 +316,12 @@ class Dossier_JFormUpdate(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+        return paidcontext
+
     class Meta:
         model = Dossier_J
         fields = ['date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
@@ -319,6 +336,12 @@ class Dossier_NFormUpdate(ModelForm):
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+        return paidcontext
 
     class Meta:
         model = Dossier_N
