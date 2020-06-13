@@ -2,7 +2,7 @@ $(document).ready(main());
 
 function main(){
     $('#id_birth_date').datepicker({
-        dateFormat: "dd/mm/yy",
+        dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         maxDate: '-16y',
@@ -10,7 +10,7 @@ function main(){
     }).on('change',setPassportDate);
 
     $('#id_passport_date').datepicker({
-        dateFormat: "dd/mm/yy",
+        dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         maxDate: "+0d",

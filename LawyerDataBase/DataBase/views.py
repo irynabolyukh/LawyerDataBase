@@ -11,7 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
-
 @login_required()
 @requires_csrf_token
 def register(request):
@@ -284,21 +283,12 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         else:
             return True
 
-
-
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
-        today = date.today()
-        # Якщо дата спливу угоди менша за поточну
-        # if dossier.date_expired < today :
-        #     if dossier.date_closed > dossier.date_expired:
-        #
-        #     else:
-
-
-        dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        # dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        dossier.count_fee()
+        print()
         client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()
         context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
@@ -715,12 +705,17 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    form_class = Appointment_NFormUpdate
+    form_class = Appointment_NForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_NUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
@@ -769,7 +764,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    form_class = Appointment_JFormUpdate
+    form_class = Appointment_JForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -779,6 +774,11 @@ class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_JUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
@@ -915,6 +915,8 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Dossier_J
     paginate_by = 25
     queryset = Dossier_J.objects.order_by('date_signed')
+    for object in queryset:
+        object.count_fee()
 
 
 class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -922,6 +924,8 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Dossier_N
     paginate_by = 25
     queryset = Dossier_N.objects.order_by('date_signed')
+    for object in queryset:
+        object.count_fee()
 
 
 class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):

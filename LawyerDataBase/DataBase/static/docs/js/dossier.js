@@ -4,7 +4,7 @@ $(document).ready(main());
 function main(){
     today = Date.now()
     $('#id_court_date').datepicker({
-        dateFormat: "dd/mm/yy",
+        dateFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         defaultDate: today,

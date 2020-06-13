@@ -33,7 +33,14 @@ function main() {
     catch (e) {
         $('#id_num_client_j')[0].addEventListener('change',dossier_ajax_request);
     }
-    
+
+    if ($('#id_lawyer_code').val() !== ""){
+        lawyer_workdays_request()
+    }
+     if ($('#id_app_date').val() !== ""){
+        time_blocked_request()
+    }
+
 }
 
 

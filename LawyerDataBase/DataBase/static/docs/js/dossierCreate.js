@@ -6,7 +6,7 @@ function main() {
 
     var date_signed = $('#id_date_signed')
     date_signed.datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "dd/mm/yy",
         changeMonth: true,
         changeYear: true,
         defaultDate: today,
@@ -15,7 +15,7 @@ function main() {
     }).on('change',setDateSigned);
 
     $('#id_date_expired').datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: "dd/mm/yy",
         changeMonth: true,
         changeYear: true,
         minDate:today,
