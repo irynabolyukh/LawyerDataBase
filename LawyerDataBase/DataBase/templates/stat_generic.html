@@ -1,6 +1,8 @@
 {% extends "base_generic.html" %}
+{% load user_tags %}
 
 {% block navbar %}
+       {% if request.user|has_group:"Секретар"%}
         <div class="nav-item mr-3">
             <a class="navbar-brand" href="{% url 'lawyers' %}">Адвокати</a>
         </div>
@@ -40,5 +42,6 @@
         <div class="nav-item mr-3">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
+         {% endif %}
 {% endblock %}
 
