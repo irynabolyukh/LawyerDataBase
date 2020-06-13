@@ -61,7 +61,7 @@
         <h6>Послуга : {{ service.name_service }}</h6>
         <h6>Номінальна вартіть : {{ service.nominal_value }}</h6>
         <h6>Бонусна вартість : {{ service.bonus_value }}</h6>
-                {% for group in group.all %}
+        {% for group in group.all %}
         <h6>Група : {{group.name_group}}</h6>
          {% endfor %}
         {% if request.user|has_group:"Секретар"%}
