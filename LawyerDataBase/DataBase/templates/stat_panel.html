@@ -3,10 +3,78 @@
 
 
 {% block content %}
+    <style>
+    a:link {
+        text-decoration: none;
+    }
+    a {
+        color: black;
+    }
 
-    <div class="container" id="container-stat">
+    #print-foot {
+         display: table-footer-group;
+    }
+
+    {##print-foot {#}
+    {#        display: block;#}
+    {#        position: fixed;#}
+    {#        bottom: 0pt;#}
+    {#        right: 0pt;#}
+            {#font-size: 200%;#}
+    {#    }#}
+
+        {##print-foot:before {#}
+        {#    counter-increment: page;#}
+        {#    content: counter(page) "/";#}
+        #print-foot:after {
+        {#counter-increment: pages;#}
+        {#content: counter(pages);#}
+            counter-increment: page;
+            content: counter(page);
+        }
+
+    #date {
+        visibility: hidden;
+    }
+
+    @media print {
+        a {
+            text-decoration: none;
+            color: black;
+        }
+         a[href]:after {
+            content: none !important;
+         }
+
+        .d-print-none {
+            display: none !important
+        }
+
+        #date {
+            font-size: 15pt;
+            visibility: visible;
+            margin-bottom: 4%;
+        }
+
+        .statH {
+            font-size: 45pt;
+        }
+
+        .containerToPrint {
+            max-width: fit-content;
+        }
+
+        .tbl {
+            font-size: 19pt;
+        }
+    }
+    </style>
+    <p id="date"></p>
+
+    <div class="container-fluid" id="container-stat">
     <div class="col-md-12 col-sm-8">
-            <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
+            <h1 class="statH text-center" style="margin-bottom: 5%">Статистика Адвокатського Бюро</h1>
+        <div class="container containerToPrint">
     <div class="row">
         <div class="col-md-6 text_styles">
             <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers }}</div></div>
@@ -28,11 +96,14 @@
             <div id="reload" class="float-right">
                 <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
             </div>
+            <div class="d-print-none"><form>
+                <input type="button" value="Сформувати звіт" onClick="window.print()">
+            </form></div>
         </div>
     </div>
     <hr>
 
-    <div class="row">
+    <div class="row tbl">
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
             <div class="container-fluid" id="services_container">
@@ -72,7 +143,7 @@
 
     <hr>
 
-    <div class="row">
+    <div class="row tbl">
         <div class="col-12">
             <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
             <div class="container-fluid" id="lawyer_container">
@@ -103,12 +174,17 @@
     </div>
     </div>
     <hr>
-    </div>
-
 
 </div>
+</div>
+    </div>
+    <div id="print-foot">Page </div>
 {% endblock %}
 {% block script %}
         {% load static %}
         <script src="{% static 'docs/js/statistics.js' %}"></script>
+    <script>
+    var d = new Date().toLocaleString();
+    document.getElementById("date").innerHTML = d;
+    </script>
 {% endblock %}

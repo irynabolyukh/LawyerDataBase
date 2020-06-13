@@ -59,7 +59,22 @@ ul{
 }
 
 @media print{
+    * {
+        color: black;
+    }
     .no-print{
         display: none;
     }
+    a[href]:after {
+            content: none !important;
+    }
+}
+
+a:link {
+    text-decoration: none;
+    color: black;
+}
+a {
+    text-decoration: none;
+    color: black;
 }
