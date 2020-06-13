@@ -10,8 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class CustomUserCreationForm(forms.Form):
-    username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150)
-    email = forms.EmailField(label='E-mail')
+    # username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150, required=False)
+    # email = forms.EmailField(label='E-mail')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Підтвердіть пароль', widget=forms.PasswordInput)
     group = forms.ModelChoiceField(label='Група', queryset=Group.objects.all(), required=True)
@@ -39,15 +39,18 @@ class CustomUserCreationForm(forms.Form):
 
         return password2
 
-
     def save(self, commit=True):
         user = User.objects.create_user(
-            self.cleaned_data['username'],
-            self.cleaned_data['email'],
+            'username',
+            'email',
             self.cleaned_data['password1']
         )
         user.groups.add(self.cleaned_data['group'])
         return user
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'group']
 
 
 class LawyerForm(ModelForm):
@@ -127,6 +130,7 @@ class ServicesUpdateForm(ModelForm):
         if bonus_value < self.cleaned_data['nominal_value']:
             raise ValidationError(_('Бонусна вартість не може бути меншою за номінальну'), code='invalid')
         return bonus_value
+
 
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
@@ -257,7 +261,7 @@ class Dossier_NForm(ModelForm):
 
 
 class Client_NForm(ModelForm):
-    # num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
+    num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
     first_name = forms.CharField(label='Ім`я', max_length=50)
     surname = forms.CharField(label='Прізвище', max_length=50)
     mid_name = forms.CharField(label='По батькові', max_length=50)

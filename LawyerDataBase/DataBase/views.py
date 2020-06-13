@@ -11,20 +11,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
+
 @login_required()
 @requires_csrf_token
-def register(request):
+def register(request, pk, mail):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            page = form.save(commit=False)
+            page.username = pk
+            page.email = mail
+            page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                return redirect('dossier_j-create')
+                # return redirect('dossier_j-create')
+                return redirect("stats")
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                return redirect('dossier_n-create')
+                return redirect("stats")
+                # return redirect('dossier_n-create')
+                # return reverse("dossier_n-create", kwargs={'pk': pk})
             else:
-                return redirect('stats')
+                return redirect("stats")
     else:
         form = CustomUserCreationForm()
 
@@ -411,8 +418,7 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
-        # return reverse("register", kwargs={self.object.mail_info})
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
@@ -541,7 +547,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
@@ -605,7 +611,7 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return kwargs
 
     def get_success_url(self):
-        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -635,7 +641,7 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
@@ -863,7 +869,6 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse("register")
         return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
