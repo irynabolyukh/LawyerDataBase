@@ -58,6 +58,10 @@ ul{
     font-family: Verdana, sans-serif;
 }
 
+.errorlist{
+    color: red;
+}
+
  a:link {
         text-decoration: none;
     }
