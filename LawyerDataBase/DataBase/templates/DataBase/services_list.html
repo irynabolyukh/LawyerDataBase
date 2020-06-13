@@ -4,6 +4,42 @@
 {% block title %}Послуги{% endblock %}
 
 {% block content %}
+    {% if request.user|has_group:"Секретар"%}
+    <div class="container shadow p-3 mb-5 bg-white rounded">
+        <div class="justify-content-center text-center"><h2>Фільтри пошуку</h2></div>
+        <form method="get" action=".">
+            <div class="row">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="service_id_search">Ідентифікатор послуги</label>
+                            <input class="form-control border" id='service_id_search' type="search"
+                                   placeholder="Ідентифікатор послуги..." name="service_id" value="{{ service_id }}">
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="se_name_search">Назва</label>
+                            <input class="form-control border" id='se_name_search' type="search"
+                                   placeholder="Назва послуги..." name="se_name" value="{{ se_name }}">
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="group_search">Група</label>
+                            <input class="form-control border" id='group_search' type="search"
+                                   placeholder="Група послуги..." name="group" value="{{ group }}">
+
+                        </div>
+
+                    </div>
+                    <div class="align-right float-right">
+                        <a class="btn btn-info align-right" href="{% url 'services' %}">Очистити фільтри</a>
+                        <button type="submit" class="btn btn-primary align-right" >Пошук</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
 <div class="container">
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
         <h2 class="font-weight-bold">Послуги</h2>
@@ -12,6 +48,7 @@
          <a class="btn btn-outline-success btn-block m-2" href="{% url 'service-create' %}">Додати нову послугу</a>
          {% endif %}
     </div>
+{% if object_list %}
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
         <tr>
@@ -45,5 +82,8 @@
         {% endfor %}
         </tbody>
     </table>
+{% else %}
+    <h4 class="text-center"><b>Послуг не знайдено</b></h4>
+{% endif %}
 </div>
 {% endblock %}
