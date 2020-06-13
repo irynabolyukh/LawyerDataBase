@@ -207,6 +207,12 @@ class Dossier_JForm(ModelForm):
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_JForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_j'].initial = user_id
+        self.fields['num_client_j'].disabled = True
+
     class Meta:
         model = Dossier_J
         fields = '__all__'
@@ -239,13 +245,19 @@ class Dossier_NForm(ModelForm):
         print(cleaned_data)
         return cleaned_data
 
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_NForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_n'].initial = user_id
+        self.fields['num_client_n'].disabled = True
+
     class Meta:
         model = Dossier_N
         fields = '__all__'
 
 
 class Client_NForm(ModelForm):
-    num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
+    # num_client_n = forms.CharField(label='Ідентифікаційний код', max_length=10, min_length=10)
     first_name = forms.CharField(label='Ім`я', max_length=50)
     surname = forms.CharField(label='Прізвище', max_length=50)
     mid_name = forms.CharField(label='По батькові', max_length=50)
