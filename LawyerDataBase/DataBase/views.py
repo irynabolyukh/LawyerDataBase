@@ -66,6 +66,7 @@ def lawyer_service_code(request):
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
+
 @login_required()
 @requires_csrf_token
 def lawyer_work_days(request):
@@ -86,8 +87,8 @@ def dayblockedtime(request):
     if request.method == 'POST':
         response = {}
         date_lawyer = date(int(request.POST['date[year]']),
-                      int(request.POST['date[month]']),
-                      int(request.POST['date[day]']))
+                           int(request.POST['date[month]']),
+                           int(request.POST['date[day]']))
         response['time'] = blocked_time_lawyer(request.POST['lawyer'], date_lawyer)
         return JsonResponse(response)
     else:
@@ -154,9 +155,6 @@ def getStats(request):
         for service in response['service_count']:
             response['value'] += service['sum']
 
-
-
-
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
@@ -209,8 +207,10 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
+            status__istartswith='closed').count()
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
+            status__istartswith='closed').count()
 
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
@@ -313,7 +313,6 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         else:
             return True
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
@@ -323,8 +322,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
-                            order_by('-app_date', '-app_time')
+        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']). \
+            order_by('-app_date', '-app_time')
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
 
@@ -392,7 +391,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False,
+                                             labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["lphone"] = phoneFormSet(self.request.POST)
         else:
@@ -522,7 +522,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False,
+                                             labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["nphone"] = phoneFormSet(self.request.POST)
         else:
@@ -616,7 +617,9 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        PhoneFormSet = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        PhoneFormSet = inlineformset_factory(
+            Client_juridical, JPhone, max_num=2, fields=['phone_num'],
+            can_delete=False, labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["jphone"] = PhoneFormSet(self.request.POST)
         else:
@@ -951,4 +954,3 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     paginate_by = 25
     ordering = ['-app_date']
     queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')
-

@@ -3,10 +3,12 @@
 
 
 {% block content %}
+    <p id="date"></p>
 
-    <div class="container" id="container-stat">
+    <div class="container-fluid" id="container-stat">
     <div class="col-md-12 col-sm-8">
-            <h1 class="mb-3">Статистика Адвокатського Бюро</h1>
+            <h1 class="statH text-center" style="margin-bottom: 5%">Статистика Адвокатського Бюро</h1>
+        <div class="container containerToPrint">
     <div class="row">
         <div class="col-md-6 text_styles">
             <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers_open }}</div></div>
@@ -17,7 +19,7 @@
             <div class="tabulated secondary_text"><b>Виграно: </b><div id="won_dossiers" class="inline_div">{{ won_dossiers }}</div></div>
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
-        <div class="col-md-4 offset-md-2" id="dates">
+        <div style="margin-top: 2%;" class="col-md-4 offset-md-2" id="dates">
             <div class="container align_right">
 
                     <p><label for="date1">З </label>
@@ -28,11 +30,14 @@
             <div id="reload" class="float-right">
                 <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
             </div>
+            <div style="margin-right: 10%" class="d-print-none float-right">
+                <button class="fa fa-print" onClick="window.print()"></button>
+            </div>
         </div>
     </div>
     <hr>
 
-    <div class="row">
+    <div class="row tbl">
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
             <div class="container-fluid" id="services_container">
@@ -59,7 +64,7 @@
                     </tr>
                     <tr>
                         <th></th>
-                        <th class="lnr-text-align-right">За весь час</th>
+                        <th>За весь час</th>
                         <th>{{service.count}}</th>
                         <th>{{service.sum}} грн</th>
                     </tr>
@@ -72,7 +77,7 @@
 
     <hr>
 
-    <div class="row">
+    <div class="row tbl">
         <div class="col-12">
             <h2 class="mb-5" id="lawyers_stats">Статистика Адвокатів</h2>
             <div class="container-fluid" id="lawyer_container">
@@ -103,10 +108,11 @@
     </div>
     </div>
     <hr>
-    </div>
-
 
 </div>
+</div>
+    </div>
+    <div id="print-foot"></div>
 {% endblock %}
 {% block script %}
         {% load static %}
