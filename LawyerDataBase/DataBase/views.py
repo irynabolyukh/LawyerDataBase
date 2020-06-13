@@ -112,49 +112,23 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['lawyers'] = Lawyer.objects.all()
-        try:
-            context['closed_dossiers_n'] = Dossier_N.objects.raw(
-                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-                'FROM "Dossier_N" '
-                'WHERE status <> %s '
-                'GROUP BY code_dossier_n',
-                ['open'])[0].counted_dossiers
-        except:
-            context['closed_dossiers_n'] = 0
-        try:
-            context['closed_dossiers_j'] = Dossier_J.objects.raw(
-                'SELECT code_dossier_j, COUNT(*) AS counted_dossiers '
-                'FROM "Dossier_J" '
-                'WHERE status <> %s '
-                'GROUP BY code_dossier_j',
-                ['open'])[0].counted_dossiers
-        except:
-            context['closed_dossiers_j'] = 0
-        try:
-            context['open_dossiers_n'] = Dossier_N.objects.raw(
-                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-                'FROM "Dossier_N" '
-                'WHERE status = %s '
-                'GROUP BY code_dossier_n',
-                ['open'])[0].counted_dossiers
-        except:
-            context['open_dossiers_n'] = 0
-        try:
-            context['open_dossiers_j'] = Dossier_J.objects.raw(
-                'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
-                'FROM "Dossier_J" '
-                'WHERE status = %s '
-                'GROUP BY code_dossier_j',
-                ['open'])[0].counted_dossiers
-        except:
-            context['open_dossiers_j'] = 0
+
+        context['closed_dossiers_j'] = Dossier_J.objects.exclude(status='open').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.exclude(status='open').count()
+
+        context['open_dossiers_n'] = Dossier_N.objects.filter(status='open').count()
+        context['open_dossiers_j'] = Dossier_J.objects.filter(status='open').count()
+
         context['value'] = str(nom_value() + extra_value())
+
         context['service_count'] = service_counter()
         context['lawyer_counter'] = lawyer_counter()
+
         context['won_dossiers'] = won_dossiers()
 
-        context['counter_dossiers'] = (int(context['closed_dossiers_j']) + int(context['closed_dossiers_n']))
+        context['counter_dossiers_open'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
+        context['counter_dossiers_closed'] = (int(context['closed_dossiers_n']) + int(context['closed_dossiers_j']))
+
 
         return context
 
