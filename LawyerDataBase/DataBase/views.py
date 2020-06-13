@@ -891,8 +891,7 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     queryset = Lawyer.objects.order_by('surname')
 
 
-class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'DataBase.view_all_services'
+class ServicesListView(ListView):
     model = Services
 
 

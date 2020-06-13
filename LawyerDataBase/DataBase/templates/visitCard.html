@@ -27,12 +27,12 @@
                        <ul class="soc" style="border-right:0px; border-left: 0px">
                            {% if not request.user.is_authenticated %}
                            <li style="border-right:0px; border-left: 0px">
-                               <a href="{% url 'login' %}">Логін</a>
+                               <a target="_blank" href="{% url 'login' %}">Логін</a>
                            </li>
                            {% endif %}
                            {% if request.user.is_authenticated %}
                             <li style="border-right:0px; border-left: 0px">
-                               <a href="{% url 'index' %}">Мій Кабінет</a>
+                               <a target="_blank" href="{% url 'index' %}">Мій Кабінет</a>
                            </li>
                            <li style="border-right:0px; border-left: 0px">
                                <a href="{% url 'logout' %}">Вийти</a>
@@ -205,6 +205,8 @@
                         <li><a>Будівельне право</a></li>
                         <li><a>Pro bono</a></li>
                     </ul>
+                    <div class="caption"></div>
+                    <div class="caption"><a style="color: white" target="_blank" href="{% url 'services' %}">Детальніше про послуги та ціни</a></div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-4">
                     <div class="caption">Напишіть нам</div>
@@ -241,3 +243,4 @@
 <script type='text/javascript' src="{% static 'docs/js/lib.js' %}"></script>
 </body>
 </html>
++
