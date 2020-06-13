@@ -11,7 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
-
 @login_required()
 @requires_csrf_token
 def register(request):
@@ -112,49 +111,23 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['lawyers'] = Lawyer.objects.all()
-        try:
-            context['closed_dossiers_n'] = Dossier_N.objects.raw(
-                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-                'FROM "Dossier_N" '
-                'WHERE status <> %s '
-                'GROUP BY code_dossier_n',
-                ['open'])[0].counted_dossiers
-        except:
-            context['closed_dossiers_n'] = 0
-        try:
-            context['closed_dossiers_j'] = Dossier_J.objects.raw(
-                'SELECT code_dossier_j, COUNT(*) AS counted_dossiers '
-                'FROM "Dossier_J" '
-                'WHERE status <> %s '
-                'GROUP BY code_dossier_j',
-                ['open'])[0].counted_dossiers
-        except:
-            context['closed_dossiers_j'] = 0
-        try:
-            context['open_dossiers_n'] = Dossier_N.objects.raw(
-                'SELECT code_dossier_n, COUNT(code_dossier_n) AS counted_dossiers '
-                'FROM "Dossier_N" '
-                'WHERE status = %s '
-                'GROUP BY code_dossier_n',
-                ['open'])[0].counted_dossiers
-        except:
-            context['open_dossiers_n'] = 0
-        try:
-            context['open_dossiers_j'] = Dossier_J.objects.raw(
-                'SELECT code_dossier_j, COUNT(code_dossier_j) AS counted_dossiers '
-                'FROM "Dossier_J" '
-                'WHERE status = %s '
-                'GROUP BY code_dossier_j',
-                ['open'])[0].counted_dossiers
-        except:
-            context['open_dossiers_j'] = 0
+
+        context['closed_dossiers_j'] = Dossier_J.objects.exclude(status='open').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.exclude(status='open').count()
+
+        context['open_dossiers_n'] = Dossier_N.objects.filter(status='open').count()
+        context['open_dossiers_j'] = Dossier_J.objects.filter(status='open').count()
+
         context['value'] = str(nom_value() + extra_value())
+
         context['service_count'] = service_counter()
         context['lawyer_counter'] = lawyer_counter()
+
         context['won_dossiers'] = won_dossiers()
 
-        context['counter_dossiers'] = (int(context['closed_dossiers_j']) + int(context['closed_dossiers_n']))
+        context['counter_dossiers_open'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
+        context['counter_dossiers_closed'] = (int(context['closed_dossiers_n']) + int(context['closed_dossiers_j']))
+
 
         return context
 
@@ -277,6 +250,9 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
+        today = date.today()
+        if (dossier.date_expired < today):
+            print("expired")
         dossier.fee = fee_dossier_j(dossier.code_dossier_j)
         client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
@@ -296,7 +272,6 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
             return True
         group = self.request.user.groups.filter(user=self.request.user)[0]
         code = self.kwargs['pk']
-        print(code)
         if group.name == "Фізичний клієнт":
             cl_pk = Client_natural.objects.get(mail_info=self.request.user.email).pk
             dos = Dossier_N.objects.get(code_dossier_n=code).num_client_n_id
@@ -308,13 +283,12 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         else:
             return True
 
-
-
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
-        dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        # dossier.fee = fee_dossier_n(dossier.code_dossier_n)
+        dossier.count_fee()
+        print()
         client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()
         context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
@@ -432,6 +406,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         if lphone.is_valid():
             lphone.instance = self.object
             lphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -560,6 +536,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         if nphone.is_valid():
             nphone.instance = self.object
             nphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -652,6 +630,8 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         if jphone.is_valid():
             jphone.instance = self.object
             jphone.save()
+        else:
+            return self.form_invalid(form)
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -725,12 +705,17 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    form_class = Appointment_NFormUpdate
+    form_class = Appointment_NForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_NUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
@@ -779,7 +764,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    form_class = Appointment_JFormUpdate
+    form_class = Appointment_JForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -789,6 +774,11 @@ class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_JUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
@@ -818,8 +808,7 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse("register")
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+        return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
 
 
 class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -837,7 +826,7 @@ class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+        return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
 
 
 class Dossier_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -865,7 +854,7 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
 
     def get_success_url(self):
         # return reverse("register")
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+        return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
 class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -883,7 +872,7 @@ class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+        return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
 class Dossier_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -925,6 +914,8 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Dossier_J
     paginate_by = 25
     queryset = Dossier_J.objects.order_by('date_signed')
+    for object in queryset:
+        object.count_fee()
 
 
 class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -932,6 +923,8 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Dossier_N
     paginate_by = 25
     queryset = Dossier_N.objects.order_by('date_signed')
+    for object in queryset:
+        object.count_fee()
 
 
 class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):

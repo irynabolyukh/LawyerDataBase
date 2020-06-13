@@ -4,6 +4,11 @@
     <a class="navbar-brand" href="{% url 'nappointments' %}">🢀Фізичні записи</a>
     <a class="navbar-brand" href="{% url 'jappointments' %}">🢀Юридичні записи</a>
 {% endblock %}
+{% block stylesheet %}
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.css">
+    <link rel="stylesheet" href="{% static 'docs/css/app_css.css'%}">
+{% endblock %}
 {% block content %}
     <h1 class="row align-items-center justify-content-center">Редагувати запис</h1>
 <div class="row align-items-center justify-content-center">
@@ -16,4 +21,16 @@
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти зміни</button>
     </form>
 </div></div>
+{% endblock %}
+
+{% block script %}
+{% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.min.js"></script>
+    <script src="{% static 'docs/js/app_ajax.js' %}"></script>
+    <script src="{% static 'docs/js/highlightRequired.js' %}"></script>
+ <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 {% endblock %}
