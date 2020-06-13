@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load user_tags %}
 {% load static %}
 <html lang="uk">
 <head>
@@ -18,9 +19,11 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark top-bar fixed" style="z-index:10000; position:fixed; top: 0; width:100%" >
     {% block navbar%}
     {%endblock%}
+    {% if request.user.is_authenticated %}
     <div class="nav-item ml-auto justify-content-end">
             <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
     </div>
+    {% endif %}
 </nav>
 <div class="container-fluid" id="container-main">
     <br><br><br>

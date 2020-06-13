@@ -81,7 +81,7 @@
                 {% if request.user|has_group:"Секретар"%}
                     <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
                     <br><br>
-                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
+                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create'  pk=object.pk %}">Нове Досьє</a>
                     <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
                 {% endif %}
             </div>
@@ -98,7 +98,9 @@
 {% if not request.user|has_group:"Адвокат"%}
 <hr>
     <div class="container mt-5">
+        {% if upcoming_app_j or appointments_j%}
      <h2 class="text-center">Записи</h2>
+        {% endif %}
      {% if upcoming_app_j %}
     <h5>Майбутні</h5>
     <table class="table table-striped table-hover table_border">
@@ -164,6 +166,7 @@
 
             {% if request.user|has_group:"Секретар"%}
             <td>
+
                 <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk %}">Редагувати</a>
                 <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>

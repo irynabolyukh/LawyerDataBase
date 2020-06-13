@@ -1,6 +1,9 @@
+from datetime import date
+
 from django.db import models
 from django.urls import reverse
 from django.core import validators
+from .sql_querries import fee_dossier_j, fee_dossier_n
 
 # Create your models here.
 
@@ -198,8 +201,13 @@ class Dossier(models.Model):
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING,
                                     blank=True, null=True)
 
+
+
+
     class Meta:
         abstract = True
+
+
 
 
 class Dossier_N(Dossier):
@@ -211,6 +219,15 @@ class Dossier_N(Dossier):
 
     class Meta(Dossier.Meta):
         db_table = 'Dossier_N'
+
+    def count_fee(self):
+        today = date.today()
+        if self.date_expired < today and self.court_date is None:
+            self.date_closed = today
+            self.fee = 0
+            self.status = 'closed'
+        else:
+            self.fee = fee_dossier_n(self.code_dossier_n)
 
     def get_absolute_url(self):
         return reverse("dossier-detailed-n", kwargs={"pk": self.code_dossier_n})
@@ -225,6 +242,16 @@ class Dossier_J(Dossier):
 
     class Meta(Dossier.Meta):
         db_table = 'Dossier_J'
+
+    def count_fee(self):
+        today = date.today()
+        if str(self.status) == 'open' and self.date_expired < today and self.court_date is None:
+            self.date_closed = today
+            self.fee = 0
+            self.status = 'closed'
+        else:
+            self.fee = fee_dossier_j(self.code_dossier_j)
+
 
     def get_absolute_url(self):
         return reverse("dossier-detailed-j", kwargs={"pk": self.code_dossier_j})
