@@ -920,6 +920,24 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
 
 
+class Doss_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_dossier_n'
+    model = Dossier_N
+    form_class = Doss_NForm
+    template_name = 'create_dossier_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
+
+
 class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_dossier_n'
     model = Dossier_N
@@ -948,6 +966,24 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         kwargs = super(Dossier_JCreateView, self).get_form_kwargs()
         kwargs.update({'pk': self.kwargs['pk']})
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
+
+
+class Doss_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_dossier_j'
+    model = Dossier_J
+    form_class = Doss_JForm
+    template_name = 'create_dossier_j.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
