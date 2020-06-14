@@ -1,10 +1,9 @@
 import json
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import requires_csrf_token
-from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, ListView, FormView
+from django.views.generic import CreateView, UpdateView, TemplateView, ListView, FormView
 from django.views import generic
 from .forms import *
 from django.http import JsonResponse
@@ -13,6 +12,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
+# class UserCreateView(LoginRequiredMixin, CreateView):
+#     model = User
+#     form_class = CustomUserCreationForm
+#     template_name = 'DataBase/register.html'
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(UserCreateView, self).get_form_kwargs()
+#         kwargs.update({'username': self.kwargs['pk']})
+#         kwargs.update({'email': self.kwargs['mail']})
+#         return kwargs
+#
+#     def get_context_data(self, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         return data
+#
+#     def form_valid(self, form):
+#         self.object = form.save()
+#         return super().form_valid(form)
+#
+#     def get_success_url(self):
+#         return reverse("stats")
 
 @login_required()
 @requires_csrf_token
@@ -26,19 +46,15 @@ def register(request, pk, mail):
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                print(pk)
                 url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
                 return redirect(url)
-                # return redirect('dossier_j-create')
-                # return redirect("stats")
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                # client = Client_natural.objects.get(num_client_n=pk)
-                # client_code = client.__getattribute__('num_client_n')
                 url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
                 return redirect(url)
-                # return redirect("stats")
-                # return redirect('dossier_n-create')
-                # return reverse("dossier_n-create", kwargs={'pk': Client_natural.objects.get(num_client_n=pk).pk})
+
+            elif str(form.cleaned_data['group']) == str('Адвокат'):
+                return redirect("lawyers")
+
             else:
                 return redirect("stats")
     else:
@@ -136,11 +152,11 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['closed_dossiers_j'] = Dossier_J.objects.exclude(status='open').count()
-        context['closed_dossiers_n'] = Dossier_N.objects.exclude(status='open').count()
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).exclude(status='open').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).exclude(status='open').count()
 
-        context['open_dossiers_n'] = Dossier_N.objects.filter(status='open').count()
-        context['open_dossiers_j'] = Dossier_J.objects.filter(status='open').count()
+        context['open_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(status='open').count()
+        context['open_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(status='open').count()
 
         context['value'] = str(nom_value() + extra_value())
 
@@ -190,7 +206,7 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        service = Services.objects.get(service_code=self.kwargs['pk'])
+        service = Services.objects.filter(active=True).get(service_code=self.kwargs['pk'])
         group = service.__getattribute__('service_group')
         context['group'] = ServiceGroup.objects.filter(name_group=group)
         context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
@@ -219,19 +235,19 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
         la_code = self.kwargs['pk']
         context['phones'] = LPhone.objects.filter(lawyer=la_code)
         today = date.today()
-        context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+        context['upcoming_app_n'] = Appointment_N.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['upcoming_app_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+        context['upcoming_app_j'] = Appointment_J.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+        context['appointments_n'] = Appointment_N.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__lt=today).order_by('-app_date')
-        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+        context['appointments_j'] = Appointment_J.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__lt=today).order_by('-app_date')
-        context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
-        context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
+        context['dossier_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code)
+        context['dossier_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code)
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
 
         try:
@@ -467,13 +483,6 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class LawyerDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_lawyer'
-    model = Lawyer
-    template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('lawyers')
-
-
 class ServiceGroupCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_services'
     model = ServiceGroup
@@ -528,13 +537,6 @@ class ServicesUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
         return reverse("service-detailed-view", kwargs={'pk': self.object.pk})
 
 
-class ServicesDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_services'
-    model = Services
-    template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('services')
-
-
 class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_client_natural'
     model = Client_natural
@@ -563,6 +565,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
@@ -594,13 +597,6 @@ class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
 
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
-
-
-class Client_naturalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_client_natural'
-    model = Client_natural
-    template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('ncustomers')
 
 
 class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
@@ -692,13 +688,6 @@ class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
-class Client_juridicalDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_client_juridical'
-    model = Client_juridical
-    template_name = 'confirm_delete.html'
-    success_url = reverse_lazy('jcustomers')
-
-
 class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_appointment_n'
     model = Appointment_N
@@ -744,15 +733,6 @@ class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
-
-
-class Appointment_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_appointment_n'
-    model = Appointment_N
-    template_name = 'confirm_delete.html'
 
     def get_success_url(self):
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
@@ -808,15 +788,6 @@ class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
 
 
-class Appointment_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_appointment_j'
-    model = Appointment_J
-    template_name = 'confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
-
-
 class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'DataBase.add_dossier_n'
     model = Dossier_N
@@ -856,15 +827,6 @@ class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
 
     def get_success_url(self):
         return reverse("dossier-detailed-n", kwargs={'pk': self.object.pk})
-
-
-class Dossier_NDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_dossier_n'
-    model = Dossier_N
-    template_name = 'confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
 class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -908,20 +870,11 @@ class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
         return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
-class Dossier_JDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = 'DataBase.delete_dossier_j'
-    model = Dossier_J
-    template_name = 'confirm_delete.html'
-
-    def get_success_url(self):
-        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
-
-
 class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_lawyers'
     model = Lawyer
     paginate_by = 25
-    queryset = Lawyer.objects.order_by('surname')
+    queryset = Lawyer.objects.filter(active=True).order_by('surname')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -929,11 +882,10 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         surname = self.request.GET.get('surname', '')
         mail = self.request.GET.get('mail', '')
         spec = self.request.GET.get('spec', '')
-
-        data['object_list'] = Lawyer.objects.filter(lawyer_code__icontains=lawyer_id). \
-            filter(mail_info__icontains=mail). \
-            filter(surname__icontains=surname). \
-            filter(specialization__icontains=spec)
+        data['object_list'] = Lawyer.objects.filter(active=True).filter(lawyer_code__icontains=lawyer_id).\
+                                            filter(mail_info__icontains=mail).\
+                                            filter(surname__icontains=surname).\
+                                            filter(specialization__icontains=spec)
 
         selected_services = self.request.GET.getlist('services', '')
         if selected_services is not '':
@@ -953,21 +905,21 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return data
 
 
-class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'DataBase.view_all_services'
+class ServicesListView(ListView):
     model = Services
     paginate_by = 25
     ordering = ['service_code']
-    queryset = Services.objects.order_by('service_code')
+    queryset = Services.objects.filter(active=True).order_by('service_code')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         service_id = self.request.GET.get('service_id', '')
         se_name = self.request.GET.get('se_name', '')
         group_sel = self.request.GET.get('group', '')
-        data['object_list'] = Services.objects.filter(service_code__icontains=service_id). \
-            filter(service_group__name_group__icontains=group_sel). \
-            filter(name_service__icontains=se_name)
+        data['object_list'] = Services.objects.filter(active=True).filter(service_code__icontains=service_id).\
+                                                filter(service_group__name_group__icontains=group_sel).\
+                                                filter(name_service__icontains=se_name)
+
 
         data['service_id'] = service_id
         data['se_name'] = se_name
@@ -980,7 +932,7 @@ class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, List
     permission_required = 'DataBase.view_all_jclients'
     model = Client_juridical
     paginate_by = 25
-    queryset = Client_juridical.objects.order_by('surname')
+    queryset = Client_juridical.objects.filter(active=True).order_by('surname')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -990,11 +942,12 @@ class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, List
         surname = self.request.GET.get('surname', '')
         city = self.request.GET.get('city', '')
         phone_num = self.request.GET.get('phone', '')
-        data['object_list'] = Client_juridical.objects.filter(num_client_j__icontains=edrp_id). \
-            filter(surname__icontains=surname). \
-            filter(mail_info__icontains=mail). \
-            filter(name_of_company__icontains=comp_name). \
-            filter(adr_city__icontains=city)
+        data['object_list'] = Client_juridical.objects.filter(active=True).filter(num_client_j__icontains=edrp_id).\
+                                                filter(surname__icontains=surname).\
+                                                filter(mail_info__icontains=mail).\
+                                                filter(name_of_company__icontains=comp_name).\
+                                                filter(adr_city__icontains=city)
+
         if phone_num is not '':
             phones = JPhone.objects.exclude(phone_num__icontains=phone_num)
             for phone in phones:
@@ -1012,7 +965,7 @@ class Client_naturalListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
     permission_required = 'DataBase.view_all_nclients'
     model = Client_natural
     paginate_by = 25
-    queryset = Client_natural.objects.order_by('surname')
+    queryset = Client_natural.objects.filter(active=True).order_by('surname')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -1022,11 +975,13 @@ class Client_naturalListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
         mail = self.request.GET.get('mail', '')
         phone_num = self.request.GET.get('phone', '')
         city = self.request.GET.get('city', '')
-        data['object_list'] = Client_natural.objects.filter(num_client_n__icontains=ik_id). \
-            filter(passport_num__icontains=passport_id). \
-            filter(surname__icontains=surname). \
-            filter(mail_info__icontains=mail). \
-            filter(adr_city__icontains=city)
+
+        data['object_list'] = Client_natural.objects.filter(active=True).filter(num_client_n__icontains=ik_id).\
+                                                    filter(passport_num__icontains=passport_id).\
+                                                    filter(surname__icontains=surname).\
+                                                    filter(mail_info__icontains=mail).\
+                                                    filter(adr_city__icontains=city)
+
         if phone_num is not '':
             phones = NPhone.objects.exclude(phone_num__icontains=phone_num)
             for phone in phones:
@@ -1044,7 +999,7 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_jdossiers'
     model = Dossier_J
     paginate_by = 25
-    queryset = Dossier_J.objects.order_by('date_signed')
+    queryset = Dossier_J.objects.filter(active=True).order_by('date_signed')
     for object in queryset:
         object.count_fee()
 
@@ -1104,7 +1059,7 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_ndossiers'
     model = Dossier_N
     paginate_by = 25
-    queryset = Dossier_N.objects.order_by('date_signed')
+    queryset = Dossier_N.objects.filter(active=True).order_by('date_signed')
     for object in queryset:
         object.count_fee()
 
@@ -1167,7 +1122,7 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Appointment_N
     paginate_by = 25
     ordering = ['-app_date']
-    queryset = Appointment_N.objects.order_by('app_date').order_by('app_time')
+    queryset = Appointment_N.objects.filter(active=True).order_by('app_date').order_by('app_time')
 
 
 class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -1175,4 +1130,148 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Appointment_J
     paginate_by = 25
     ordering = ['-app_date']
-    queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')
+    queryset = Appointment_J.objects.filter(active=True).order_by('app_date').order_by('app_time')
+
+
+@login_required()
+@requires_csrf_token
+def ndossierDelete(request, pk):
+    obj = get_object_or_404(Dossier_N, code_dossier_n=pk)
+    if request.method == 'POST':
+        form = Dossier_NFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("ndossiers")
+    else:
+        form = Dossier_NFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def lawyerDelete(request, pk):
+    obj = get_object_or_404(Lawyer, lawyer_code=pk)
+    if request.method == 'POST':
+        form = LawyerFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("lawyers")
+    else:
+        form = LawyerFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def jdossierDelete(request, pk):
+    obj = get_object_or_404(Dossier_J, code_dossier_j=pk)
+    if request.method == 'POST':
+        form = Dossier_JFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("jdossiers")
+    else:
+        form = Dossier_JFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def serviceDelete(request, pk):
+    obj = get_object_or_404(Services, service_code=pk)
+    if request.method == 'POST':
+        form = ServiceFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("services")
+    else:
+        form = ServiceFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def nappointDelete(request, pk):
+    obj = get_object_or_404(Appointment_N, appoint_code_n=pk)
+    if request.method == 'POST':
+        form = Appoint_NFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("nappointments")
+    else:
+        form = Appoint_NFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def jappointDelete(request, pk):
+    obj = get_object_or_404(Appointment_J, appoint_code_j=pk)
+    if request.method == 'POST':
+        form = Appoint_JFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("jappointments")
+    else:
+        form = Appoint_JFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def jclientDelete(request, pk):
+    obj = get_object_or_404(Client_juridical, num_client_j=pk)
+    if request.method == 'POST':
+        form = Client_JFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("jcustomers")
+    else:
+        form = Client_JFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})
+
+
+@login_required()
+@requires_csrf_token
+def nclientDelete(request, pk):
+    obj = get_object_or_404(Client_natural, num_client_n=pk)
+    if request.method == 'POST':
+        form = Client_NFormDelete(request.POST, instance=obj)
+
+        if form.is_valid():
+            page = form.save(commit=False)
+            page.active = False
+            page.save()
+            return redirect("ncustomers")
+    else:
+        form = Client_NFormDelete()
+
+    return render(request, 'confirm_delete.html', {'form': form})

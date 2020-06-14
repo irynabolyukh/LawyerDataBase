@@ -39,15 +39,15 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item">
+        <div class="nav-item container-fluid">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endif %}
 {% if request.user|has_group:"Юридичний клієнт"%}
- <a class="navbar-brand" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">🢀Повернутись до профілю</a>
+ <a class="navbar-brand container-fluid" href="{% url 'client-detailed-view-j'  dossier.num_client_j.num_client_j  %}">🢀Повернутись до профілю</a>
 {% endif %}
 {% if request.user|has_group:"Адвокат"%}
- <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+ <a class="navbar-brand container-fluid" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
 {% endif %}
 {% endblock %}
 

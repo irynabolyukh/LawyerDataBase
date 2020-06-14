@@ -48,6 +48,7 @@ class Services(models.Model):
     nominal_value = models.DecimalField(max_digits=6, decimal_places=2)
     bonus_value = models.DecimalField(max_digits=6, decimal_places=2)
     service_group = models.ForeignKey(ServiceGroup, on_delete=models.DO_NOTHING, related_name='group', default=None)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.name_service}'
@@ -69,6 +70,7 @@ class Lawyer(models.Model):
     mail_info = models.EmailField(max_length=30)
     service = models.ManyToManyField(Services, related_name='service')
     work_days = models.ManyToManyField(Work_days)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.first_name} {self.surname} {self.mid_name}, {self.specialization}'
@@ -115,6 +117,7 @@ class Client(models.Model):
     adr_street = models.CharField(max_length=200)
     adr_build = models.CharField(max_length=5)
     mail_info = models.EmailField(max_length=30)
+    active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
@@ -126,7 +129,7 @@ class Client_natural(Client):
     birth_date = models.DateField()
     passport_date = models.DateField()
     passport_authority = models.CharField(max_length=6)
-    passport_num = models.CharField(max_length=10)
+    passport_num = models.CharField(max_length=9, default='23232323')
 
     def __str__(self):
         return f'{self.first_name} {self.surname} {self.mid_name}'
@@ -202,14 +205,10 @@ class Dossier(models.Model):
     court_date = models.DateTimeField(blank=True, null=True)
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING,
                                     blank=True, null=True)
-
-
-
+    active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True
-
-
 
 
 class Dossier_N(Dossier):
@@ -264,6 +263,7 @@ class Appointment(models.Model):
     app_time = models.TimeField()
     comment = models.TextField(blank=True, null=True)
     service = models.ManyToManyField(Services)
+    active = models.BooleanField(default=True)
 
     class Meta:
         abstract = True

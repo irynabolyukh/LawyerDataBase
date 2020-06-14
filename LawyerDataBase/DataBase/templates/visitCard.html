@@ -27,12 +27,12 @@
                        <ul class="soc" style="border-right:0px; border-left: 0px">
                            {% if not request.user.is_authenticated %}
                            <li style="border-right:0px; border-left: 0px">
-                               <a target="_blank" href="{% url 'login' %}">Логін</a>
+                               <a href="{% url 'login' %}">Логін</a>
                            </li>
                            {% endif %}
                            {% if request.user.is_authenticated %}
                             <li style="border-right:0px; border-left: 0px">
-                               <a target="_blank" href="{% url 'index' %}">Мій Кабінет</a>
+                               <a href="{% url 'index' %}">Мій Кабінет</a>
                            </li>
                            <li style="border-right:0px; border-left: 0px">
                                <a href="{% url 'logout' %}">Вийти</a>
@@ -243,4 +243,3 @@
 <script type='text/javascript' src="{% static 'docs/js/lib.js' %}"></script>
 </body>
 </html>
-+

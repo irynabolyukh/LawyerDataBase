@@ -39,15 +39,15 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-        <div class="nav-item">
+        <div class="nav-item container-fluid">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
 {% endif %}
 {% if request.user|has_group:"Фізичний клієнт"%}
- <a class="navbar-brand" href="{% url 'client-detailed-view-n'  dossier.num_client_n.num_client_n %}">🢀Повернутись до профілю</a>
+ <a class="navbar-brand container-fluid" href="{% url 'client-detailed-view-n'  dossier.num_client_n.num_client_n %}">🢀Повернутись до профілю</a>
 {% endif %}
 {% if request.user|has_group:"Адвокат"%}
- <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
+ <a class="navbar-brand container-fluid" href="#" onclick="goBack()">🢀Повернутись до кабінету</a>
 {% endif %}
 {% endblock %}
 
@@ -182,7 +182,7 @@
  {% if not request.user|has_group:"Адвокат"%}
     {% if appointments %}
 
-<div class="container-fluid">
+<div class="container-fluid ">
     <h2>Записи</h2>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
