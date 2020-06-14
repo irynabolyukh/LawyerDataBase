@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -61,6 +62,10 @@ def register(request, pk, mail):
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
                 url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
                 return redirect(url)
+
+            elif str(form.cleaned_data['group']) == str('Адвокат'):
+                return redirect("lawyers")
+
             else:
                 return redirect("stats")
     else:
@@ -76,12 +81,12 @@ def client_ajax(request):
         response = {}
         response['dossier'] = []
         if request.POST['dosJ'] == 'true':
-            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client']).filter(status='open')
+            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client']).filter(status='open').filter(active=True)
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_j,
                                             'issue': dossier.issue})
         else:
-            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client']).filter(status='open')
+            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client']).filter(status='open').filter(active=True)
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_n,
                                             'issue': dossier.issue})
@@ -114,6 +119,13 @@ def lawyer_work_days(request):
         workdays = Work_days.objects.filter(lawyer=request.POST['lawyer'])
         for day in workdays:
             response['days'].append(day.pk)
+        try:
+            if str(request.POST['dosn']) == 'true':
+                response['maxday'] = str(Dossier_N.objects.get(code_dossier_n=request.POST['dossier']).date_expired)
+            else:
+                response['maxday'] = str(Dossier_J.objects.get(code_dossier_j=request.POST['dossier']).date_expired)
+        except :
+            pass
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
@@ -166,7 +178,6 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
 
         context['counter_dossiers_open'] = (int(context['open_dossiers_j']) + int(context['open_dossiers_n']))
         context['counter_dossiers_closed'] = (int(context['closed_dossiers_n']) + int(context['closed_dossiers_j']))
-
 
         return context
 
@@ -974,15 +985,12 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     paginate_by = 25
     queryset = Lawyer.objects.filter(active=True).order_by('surname')
 
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         lawyer_id = self.request.GET.get('lawyer_id', '')
         surname = self.request.GET.get('surname', '')
         mail = self.request.GET.get('mail', '')
         spec = self.request.GET.get('spec', '')
-
-
         data['object_list'] = Lawyer.objects.filter(active=True).filter(lawyer_code__icontains=lawyer_id).\
                                             filter(mail_info__icontains=mail).\
                                             filter(surname__icontains=surname).\
@@ -990,15 +998,16 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         selected_services = self.request.GET.getlist('services', '')
         if selected_services is not '':
-            lawyers_services = lawyer_service_by_name(selected_services)
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(
+                    Services.objects.get(name_service__icontains=selected_service).service_code)
+            lawyers_services = lawyers_appointment(codeArraySelectedServices)
             all_lawyers = Lawyer.objects.all()
             for lawyer in lawyers_services:
                 all_lawyers = all_lawyers.exclude(lawyer_code=lawyer['lawyer_code'])
             for lawyer in all_lawyers:
                 data['object_list'] = data['object_list'].exclude(lawyer_code=lawyer.lawyer_code)
-
-
-
 
         data['spec'] = spec
         data['lawyer_id'] = lawyer_id
@@ -1015,7 +1024,6 @@ class ServicesListView(ListView):
     ordering = ['service_code']
     queryset = Services.objects.filter(active=True).order_by('service_code')
 
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         service_id = self.request.GET.get('service_id', '')
@@ -1024,6 +1032,7 @@ class ServicesListView(ListView):
         data['object_list'] = Services.objects.filter(active=True).filter(service_code__icontains=service_id).\
                                                 filter(service_group__name_group__icontains=group_sel).\
                                                 filter(name_service__icontains=se_name)
+
 
         data['service_id'] = service_id
         data['se_name'] = se_name
@@ -1051,8 +1060,9 @@ class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, List
                                                 filter(mail_info__icontains=mail).\
                                                 filter(name_of_company__icontains=comp_name).\
                                                 filter(adr_city__icontains=city)
+
         if phone_num is not '':
-            phones = NPhone.objects.exclude(phone_num__icontains=phone_num)
+            phones = JPhone.objects.exclude(phone_num__icontains=phone_num)
             for phone in phones:
                 data['object_list'] = data['object_list'].exclude(num_client_j=phone.client_juridical.num_client_j)
         data['edrp_id'] = edrp_id
@@ -1078,11 +1088,13 @@ class Client_naturalListView(LoginRequiredMixin, PermissionRequiredMixin, ListVi
         mail = self.request.GET.get('mail', '')
         phone_num = self.request.GET.get('phone', '')
         city = self.request.GET.get('city', '')
+
         data['object_list'] = Client_natural.objects.filter(active=True).filter(num_client_n__icontains=ik_id).\
                                                     filter(passport_num__icontains=passport_id).\
                                                     filter(surname__icontains=surname).\
                                                     filter(mail_info__icontains=mail).\
                                                     filter(adr_city__icontains=city)
+
         if phone_num is not '':
             phones = NPhone.objects.exclude(phone_num__icontains=phone_num)
             for phone in phones:
@@ -1104,6 +1116,71 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     for object in queryset:
         object.count_fee()
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier_id = self.request.GET.get('dossier_id', '')
+        status = self.request.GET.get('status', '')
+        client = self.request.GET.get('client', '')
+
+        date_signed_from = self.request.GET.get('date_signed_from', '')
+        date_signed_to = self.request.GET.get('date_signed_to', '')
+
+        date_closed_from = self.request.GET.get('date_closed_from', '')
+        date_closed_to = self.request.GET.get('date_closed_to', '')
+
+        date_expired_from = self.request.GET.get('date_expired_from', '')
+        date_expired_to = self.request.GET.get('date_expired_to', '')
+
+        allDossiers = Dossier_J.objects.all().filter(active=True). \
+            filter(code_dossier_j__icontains=dossier_id). \
+            filter(status__icontains=status). \
+            filter(num_client_j__num_client_j__icontains=client)
+        if date_signed_from is not '':
+            allDossiers = allDossiers.filter(date_signed__gte=date_signed_from)
+        if date_signed_to is not '':
+            allDossiers = allDossiers.filter(date_signed__lte=date_signed_to)
+        if date_closed_from is not '':
+            allDossiers = allDossiers.filter(date_closed__gte=date_closed_from)
+        if date_closed_to is not '':
+            allDossiers = allDossiers.filter(date_closed__lte=date_closed_to)
+        if date_expired_from is not '':
+            allDossiers = allDossiers.filter(date_expired__gte=date_expired_from)
+        if date_expired_to is not '':
+            allDossiers = allDossiers.filter(date_expired__lte=date_expired_to)
+
+        open = self.request.GET.get('open', '')
+        openDossiers = Dossier_J.objects.all()
+        if str(open) == "true":
+            openDossiers = Dossier_J.objects.filter(date_closed__isnull=True)
+        elif str(open) == "false":
+            openDossiers = Dossier_J.objects.filter(date_closed__isnull=False)
+
+        allDossiers = allDossiers.intersection(openDossiers)
+
+        paidDossiers = Dossier_J.objects.all()
+        paid = self.request.GET.get('paid', '')
+        if str(paid) == "true":
+            paidDossiers = Dossier_J.objects.filter(paid=True)
+        elif str(paid) == "false":
+            paidDossiers = Dossier_J.objects.filter(paid=False)
+
+        data['object_list'] = allDossiers.intersection(paidDossiers)
+
+        data['paid'] = paid
+        data['open'] = open
+
+        data['dossier_id'] = dossier_id
+        data['status'] = status
+        data['client'] = client
+
+        data['date_signed_from'] = date_signed_from
+        data['date_signed_to'] = date_signed_to
+        data['date_closed_to'] = date_closed_to
+        data['date_closed_from'] = date_closed_from
+        data['date_expired_to'] = date_expired_to
+        data['date_expired_from'] = date_expired_from
+        return data
+
 
 class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_ndossiers'
@@ -1113,6 +1190,74 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     for object in queryset:
         object.count_fee()
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier_id = self.request.GET.get('dossier_id', '')
+        status = self.request.GET.get('status', '')
+        client = self.request.GET.get('client', '')
+
+        date_signed_from = self.request.GET.get('date_signed_from', '')
+        date_signed_to = self.request.GET.get('date_signed_to', '')
+
+        date_closed_from = self.request.GET.get('date_closed_from', '')
+        date_closed_to = self.request.GET.get('date_closed_to', '')
+
+        date_expired_from = self.request.GET.get('date_expired_from', '')
+        date_expired_to = self.request.GET.get('date_expired_to', '')
+
+        allDossiers = Dossier_N.objects.all().filter(active=True). \
+            filter(code_dossier_n__icontains=dossier_id). \
+            filter(status__icontains=status). \
+            filter(num_client_n__num_client_n__icontains=client)
+        if date_signed_from is not '':
+            allDossiers = allDossiers.filter(date_signed__gte=date_signed_from)
+        if date_signed_to is not '':
+            allDossiers = allDossiers.filter(date_signed__lte=date_signed_to)
+        if date_closed_from is not '':
+            allDossiers = allDossiers.filter(date_closed__gte=date_closed_from)
+        if date_closed_to is not '':
+            allDossiers = allDossiers.filter(date_closed__lte=date_closed_to)
+        if date_expired_from is not '':
+            allDossiers = allDossiers.filter(date_expired__gte=date_expired_from)
+        if date_expired_to is not '':
+            allDossiers = allDossiers.filter(date_expired__lte=date_expired_to)
+
+        open = self.request.GET.get('open', '')
+        openDossiers = Dossier_N.objects.all()
+        if str(open) == "true":
+            openDossiers = Dossier_N.objects.filter(date_closed__isnull=True)
+        elif str(open) == "false":
+            openDossiers = Dossier_N.objects.filter(date_closed__isnull=False)
+
+        allDossiers = allDossiers.intersection(openDossiers)
+
+
+        paidDossiers = Dossier_N.objects.all()
+        paid = self.request.GET.get('paid', '')
+        if str(paid) == "true":
+            paidDossiers = Dossier_N.objects.filter(paid=True)
+        elif str(paid) == "false":
+            paidDossiers = Dossier_N.objects.filter(paid=False)
+
+
+        data['object_list'] = allDossiers.intersection(paidDossiers)
+
+        data['paid'] = paid
+        data['open'] = open
+
+        data['dossier_id'] = dossier_id
+        data['status'] = status
+        data['client'] = client
+
+        data['date_signed_from'] = date_signed_from
+        data['date_signed_to'] = date_signed_to
+        data['date_closed_to'] = date_closed_to
+        data['date_closed_from'] = date_closed_from
+        data['date_expired_to'] = date_expired_to
+        data['date_expired_from'] = date_expired_from
+
+        return data
+
 
 class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_nappointments'
@@ -1121,6 +1266,74 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     ordering = ['-app_date']
     queryset = Appointment_N.objects.filter(active=True).order_by('app_date').order_by('app_time')
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier = self.request.GET.get('dossier', '')
+        la_code = self.request.GET.get('la_code', '')
+        client_code = self.request.GET.get('client_code', '')
+
+        date_app_from = self.request.GET.get('date_app_from', '')
+        date_app_to = self.request.GET.get('date_app_to', '')
+
+        time_app_from = self.request.GET.get('time_app_from', '')
+        time_app_to = self.request.GET.get('time_app_to', '')
+
+
+
+        data['object_list'] = Appointment_N.objects.all().filter(active=True). \
+            filter(code_dossier_n__code_dossier_n__icontains=dossier,
+                   lawyer_code__lawyer_code__icontains=la_code,
+                   num_client_n__num_client_n__icontains=client_code)
+
+        if date_app_from is not '':
+            data['object_list'] = data['object_list'].filter(app_date__gte=date_app_from)
+        if date_app_to is not '' :
+            data['object_list'] = data['object_list'].filter(app_date__lte=date_app_to)
+
+
+        if time_app_from is not '' or time_app_to is not '':
+            begin = datetime.strptime('10:00', '%H:%M').time()
+            end = datetime.strptime('19:00', '%H:%M').time()
+            if time_app_to is '':
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+            elif time_app_from is '':
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            else:
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+
+
+        selected_services = self.request.GET.getlist('services', '')
+        if selected_services is not '':
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(
+                    Services.objects.get(name_service__icontains=selected_service).service_code)
+            # get all appointments, which are in the list
+            appointments_divided = appointments_N_by_services_dividing(codeArraySelectedServices)
+            all_appointments = Appointment_N.objects.all()
+            # exclude "good" appointments from all appointments, get bad appointments
+            for appointment_divided in appointments_divided:
+                all_appointments = all_appointments.exclude(appoint_code_n=appointment_divided['appoint_code'])
+            #     exclude bad appointments from filtered appointments
+            for appointment in all_appointments:
+                data['object_list'] = data['object_list'].exclude(appoint_code_n=appointment.appoint_code_n)
+
+        data['services'] = Services.objects.all()
+        data['selected_services'] = selected_services
+
+        data['dossier'] = dossier
+        data['la_code'] = la_code
+        data['client_code'] = client_code
+
+        data['date_app_from'] = date_app_from
+        data['date_app_to'] = date_app_to
+
+        data['time_app_from'] = time_app_from
+        data['time_app_to'] = time_app_to
+        return data
+
 
 class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_jappointments'
@@ -1128,6 +1341,76 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     paginate_by = 25
     ordering = ['-app_date']
     queryset = Appointment_J.objects.filter(active=True).order_by('app_date').order_by('app_time')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier = self.request.GET.get('dossier', '')
+        la_code = self.request.GET.get('la_code', '')
+        client_code = self.request.GET.get('client_code', '')
+
+        date_app_from = self.request.GET.get('date_app_from', '')
+        date_app_to = self.request.GET.get('date_app_to', '')
+
+        time_app_from = self.request.GET.get('time_app_from', '')
+        time_app_to = self.request.GET.get('time_app_to', '')
+
+
+
+        data['object_list'] = Appointment_J.objects.all().filter(active=True). \
+            filter(code_dossier_j__code_dossier_j__icontains=dossier,
+                   lawyer_code__lawyer_code__icontains=la_code,
+                   num_client_j__num_client_j__icontains=client_code)
+
+        # filter by date
+        if date_app_from is not '':
+            data['object_list'] = data['object_list'].filter(app_date__gte=date_app_from)
+        if date_app_to is not '' :
+            data['object_list'] = data['object_list'].filter(app_date__lte=date_app_to)
+
+        #     filter by time
+        if time_app_from is not '' or time_app_to is not '':
+            begin = datetime.strptime('10:00', '%H:%M').time()
+            end = datetime.strptime('19:00', '%H:%M').time()
+            if time_app_to is '':
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+            elif time_app_from is '':
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            else:
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+
+
+        selected_services = self.request.GET.getlist('services', '')
+
+        if selected_services is not '':
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(Services.objects.get(name_service__icontains=selected_service).service_code)
+
+            # get all appointments, which are in the list
+            appointments_divided = appointments_J_by_services_dividing(codeArraySelectedServices)
+            all_appointments = Appointment_J.objects.all()
+            # exclude "good" appointments from all appointments, get bad appointments
+            for appointment_divided in appointments_divided:
+                all_appointments = all_appointments.exclude(appoint_code_j=appointment_divided['appoint_code'])
+            #     exclude bad appointments from filtered appointments
+            for appointment in all_appointments:
+                data['object_list'] = data['object_list'].exclude(appoint_code_j=appointment.appoint_code_j)
+
+        data['services'] = Services.objects.all()
+        data['selected_services'] = selected_services
+
+        data['dossier'] = dossier
+        data['la_code'] = la_code
+        data['client_code'] = client_code
+
+        data['date_app_from'] = date_app_from
+        data['date_app_to'] = date_app_to
+
+        data['time_app_from'] = time_app_from
+        data['time_app_to'] = time_app_to
+        return data
 
 
 @login_required()

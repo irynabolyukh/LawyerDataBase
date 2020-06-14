@@ -45,7 +45,21 @@ function main() {
 
 
 function lawyer_workdays_request(event){
-    lawyer = $('#id_lawyer_code').val()
+    var lawyer = $('#id_lawyer_code').val()
+
+    var dossier =$('#id_code_dossier_n').val()
+    var dosN = true;
+    try {
+        if (dossier.length === 0) {
+            dossier = $('#id_code_dossier_j').val()
+            dosN = false;
+        }
+    }
+    catch (e){
+        dossier = $('#id_code_dossier_j').val()
+        dosN = false;
+    }
+
     $('#id_app_time').timepicker({
         timeFormat: 'H:i',
         minTime: '10:00',
@@ -54,6 +68,7 @@ function lawyer_workdays_request(event){
         disableTextInput: true,
         disableTimeRanges: blockedTime,
     }).on('change',checkTime);
+    console.log(dosN)
     $.ajax({
                 type: "POST",
                 async: true,
@@ -61,6 +76,9 @@ function lawyer_workdays_request(event){
                 data: {
                     csrfmiddlewaretoken: getCookie('csrftoken'),
                     lawyer: lawyer,
+                    dossier: dossier,
+                    dosn : dosN
+
                 },
                 success: setWorkDays,
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -121,8 +139,16 @@ function setblockedTime(data){
 }
 
 function setWorkDays(data){
-    lawyerWorkDays = data['days'];
+    lawyerWorkDays  = data['days'];
+    try {
+        var maxdateSplit = data['maxday']
+        maxdateSplit = maxdateSplit.split('-')
+        var maxDate = new Date(maxdateSplit[0], maxdateSplit[1], maxdateSplit[2])
+        $('#id_app_date').datepicker('option', 'maxDate', maxDate)
+    }
+    catch (e) {
 
+    }
 }
 
 function blockdays(date){
