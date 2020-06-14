@@ -966,8 +966,8 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return data
 
 
-class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    permission_required = 'DataBase.view_all_services'
+class ServicesListView(LoginRequiredMixin, ListView):
+    # permission_required = 'DataBase.view_all_services'
     model = Services
     paginate_by = 25
     ordering = ['service_code']

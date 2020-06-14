@@ -126,7 +126,7 @@ class Client_natural(Client):
     birth_date = models.DateField()
     passport_date = models.DateField()
     passport_authority = models.CharField(max_length=6)
-    passport_num = models.CharField(max_length=10)
+    passport_num = models.CharField(max_length=9)
 
     def __str__(self):
         return f'{self.num_client_n} : {self.first_name} {self.surname}'
