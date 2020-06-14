@@ -322,6 +322,25 @@ class Dossier_JForm(ModelForm):
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
+    def clean(self):
+        cleaned_data = super(Dossier_JForm, self).clean()
+        status = cleaned_data.get('status')
+        date_closed = cleaned_data.get('date_closed')
+
+        if date_closed is not None:
+            if str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може мати дату закриття, коли вона відкрита'},
+                                      code='invalid')
+        return cleaned_data
+
+    def clean_status(self):
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
+        return status
+
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('pk')
         super(Dossier_JForm, self).__init__(*args, **kwargs)
@@ -382,9 +401,22 @@ class Dossier_NForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(Dossier_NForm, self).clean()
+        status = cleaned_data.get('status')
+        date_closed = cleaned_data.get('date_closed')
 
-        print(cleaned_data)
+        if date_closed is not None:
+            if str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може мати дату закриття, коли вона відкрита'},
+                                      code='invalid')
         return cleaned_data
+
+    def clean_status(self):
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
+        return status
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('pk')
@@ -507,6 +539,29 @@ class Dossier_JFormUpdate(ModelForm):
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
+    def clean(self):
+        cleaned_data = super(Dossier_JFormUpdate, self).clean()
+        status = cleaned_data.get('status')
+        date_closed = cleaned_data.get('date_closed')
+
+        if date_closed is not None:
+            if str(status) == 'open':
+                raise ValidationError({'date_closed':'Справа не може мати дату закриття, коли вона відкрита'}, code='invalid')
+        return cleaned_data
+
+
+
+
+    def clean_status(self):
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
+        return status
+
+
+
     class Meta:
         model = Dossier_J
         fields = ['date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
@@ -527,6 +582,26 @@ class Dossier_NFormUpdate(ModelForm):
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
+
+    def clean(self):
+        cleaned_data = super(Dossier_NFormUpdate, self).clean()
+        status = cleaned_data.get('status')
+        date_closed = cleaned_data.get('date_closed')
+
+        if date_closed is not None:
+            if str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може мати дату закриття, коли вона відкрита'},
+                                      code='invalid')
+        return cleaned_data
+
+    def clean_status(self):
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
+        return status
+
 
     class Meta:
         model = Dossier_N
