@@ -29,36 +29,100 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group col-md-4">
-                            <label for="group_search">Дата Підписання</label>
-                            <input class="form-control border" id='group_search' type="search"
-                                   placeholder="Група послуги..." name="group" value="{{ group }}">
 
+                        <div class="form-group col-md-6">
+                            <label for="date_signed_from_search" class="cik">Дата Підписання</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_signed_from_search' type="search"
+                                           placeholder="З" name="date_signed_from" value="{{ date_signed_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_signed_to_search' type="search"
+                                           placeholder="По" name="date_signed_to" value="{{ date_signed_to }}">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="date_closed_from_search" class="text-center">Дата Закриття</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_closed_from_search' type="search"
+                                           placeholder="З" name="date_closed_from" value="{{ date_closed_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_closed_to_search' type="search"
+                                           placeholder="По" name="date_closed_to" value="{{ date_closed_to }}">
+
+                                </div>
+                            </div>
                         </div>
 
 
-                        <div class="form-group col-md-4">
-                            <label for="group_search">Дата спливу</label>
-                            <input class="form-control border" id='group_search' type="search"
-                                   placeholder="Група послуги..." name="group" value="{{ group }}">
+                        <div class="form-group col-md-6">
+                            <label for="date_expired_from_search" class="text-center">Дата Спливу</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_expired_from_search' type="search"
+                                           placeholder="З" name="date_expired_from" value="{{ date_expired_from }}">
 
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="group_search">Дата закриття</label>
-                            <input class="form-control border" id='group_search' type="search"
-                                   placeholder="Група послуги..." name="group" value="{{ group }}">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_expired_to_search' type="search"
+                                           placeholder="По" name="date_expired_to" value="{{ date_expired_to }}">
 
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-check col-md-4">
-                            <input class="form-check-input border" id='paid_search' type="checkbox"
-                            name="paid" value="{{ paid }}">
-                            <label class="form-check-label" for="paid_search">Сплачено</label>
-                        </div>
+                    <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="paid_select">Оплачено</label>
+                                <select id='paid_select' name="paid" class="form-control">
+                                    {% if paid == 'true' %}
+                                        <option >Будь-які</option>
+                                        <option value="true" selected>Оплачено</option>
+                                        <option value="false" >Не Оплачено</option>
+                                    {% elif paid == 'false' %}
+                                        <option >Будь-які</option>
+                                        <option value="true" >Оплачено</option>
+                                        <option value="false" selected>Не Оплачено</option>
+
+                                    {% else %}
+                                        <option selected>Будь-які</option>
+                                    <option value="true" >Оплачено</option>
+                                    <option value="false" >Не Оплачено</option>
+                                    {% endif %}
+                                </select>
+
+                            </div>
+                         <div class="form-group col-md-4">
+                                <label for="open-select">Відкриті</label>
+                                <select id='open-select' name="open" class="form-control">
+                                    {% if open == 'true' %}
+                                        <option selected>Будь-які</option>
+                                        <option value="true" selected>Відкриті</option>
+                                        <option value="false" >Закриті</option>
+                                    {% elif open == 'false' %}
+                                        <option >Будь-які</option>
+                                        <option value="true" >Відкриті</option>
+                                        <option value="false" selected>Закриті</option>
+                                    {% else %}
+                                        <option selected>Будь-які</option>
+                                        <option value="true" >Відкриті</option>
+                                        <option value="false" >Закриті</option>
+                                    {% endif %}
+
+                                </select>
+
+                            </div>
                     </div>
                     <div class="align-right float-right">
-                        <a class="btn btn-info align-right" href="{% url 'services' %}">Очистити фільтри</a>
+                        <a class="btn btn-info align-right" href="{% url 'ndossiers' %}">Очистити фільтри</a>
                         <button type="submit" class="btn btn-primary align-right" >Пошук</button>
                     </div>
                 </div>
@@ -122,4 +186,9 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script type="text/javascript" src="{% static "docs/js/dossierFilter.js" %}"></script>
 {% endblock %}

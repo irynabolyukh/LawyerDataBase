@@ -18,6 +18,15 @@ ul{
     width:550px;
 }
 
+.z_index_10{
+    z-index: 10;
+}
+
+.big_checkbox{
+    width:20px;
+    height: 20px;
+}
+
 .wrong_input{
     border: 1px solid rgb(238, 0, 9);
     box-shadow: 0 0 5px rgba(238, 0, 9, 1);

@@ -150,10 +150,10 @@ class Appointment_NForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
-    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.filter(status='open'))
 
     class Meta:
         model = Appointment_N
@@ -181,10 +181,10 @@ class Appoint_NForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
-    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.filter(status='open'))
 
     class Meta:
         model = Appointment_N
@@ -210,13 +210,13 @@ class Appoint_JForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
-    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
-    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.filter(status='open'))
 
     class Meta:
-        model = Appointment_N
+        model = Appointment_J
         fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
 
@@ -239,13 +239,13 @@ class App_JForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
-    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
-    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(num_client_j=num_client_j).filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.filter(status='open', active=True))
 
     class Meta:
-        model = Appointment_N
+        model = Appointment_J
         fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
         widgets = {
 
@@ -259,10 +259,10 @@ class App_NForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
-    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(num_client_n=num_client_n).filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.filter(status='open'))
 
     class Meta:
         model = Appointment_N
@@ -282,7 +282,7 @@ class Appointment_JForm(ModelForm):
     service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
     num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.filter(active=True))
     lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
-    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(active=True).filter(status='open'))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.filter(active=True).filter(status='open'))
 
     class Meta:
         model = Appointment_J
@@ -303,8 +303,8 @@ class Appointment_JForm(ModelForm):
 
 class Dossier_JForm(ModelForm):
     code_dossier_j = forms.CharField(label='Код', max_length=8, min_length=8)
-    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
@@ -361,8 +361,8 @@ class Doss_JForm(ModelForm):
 
 class Dossier_NForm(ModelForm):
     code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
@@ -493,7 +493,7 @@ class Appointment_JFormUpdate(ModelForm):
 
 
 class Dossier_JFormUpdate(ModelForm):
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
