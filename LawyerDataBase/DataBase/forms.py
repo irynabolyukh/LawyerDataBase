@@ -177,6 +177,104 @@ class Appointment_NForm(ModelForm):
         self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
+class Appoint_NForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_n', 'code_dossier_n', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('pk')
+        dossier_code = kwargs.pop('dossier_code')
+        super(Appoint_NForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_n'].initial = pk
+        self.fields['num_client_n'].disabled = True
+        self.fields['code_dossier_n'].initial = dossier_code
+        self.fields['code_dossier_n'].disabled = True
+
+
+class Appoint_JForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('pk')
+        dossier_code = kwargs.pop('dossier_code')
+        super(Appoint_JForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_j'].initial = pk
+        self.fields['num_client_j'].disabled = True
+        self.fields['code_dossier_j'].initial = dossier_code
+        self.fields['code_dossier_j'].disabled = True
+
+
+class App_JForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(num_client_j=num_client_j).filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+
+class App_NForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(num_client_n=num_client_n).filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_n', 'code_dossier_n', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+
 class Appointment_JForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly':'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
