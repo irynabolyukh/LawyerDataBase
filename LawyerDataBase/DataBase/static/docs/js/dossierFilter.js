@@ -1,4 +1,11 @@
 $(document).ready(main());
+var dayNames = ['Понеділок',"Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
+var dayNamesShort = ['Пн',"Вт","Ср","Чт","Пт","Сб","Нд"]
+var MonthNames = ["Січень","Лютий","Березень","Квітень","Травень",
+    "Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
+var monthNamesShort = ['Січ',"Лют","Бер","Квіт","Трав",
+    "Чер","Лип","Сер","Вер","Жов","Лист","Груд"]
+
 
 function main() {
     var today  = Date.now()
@@ -9,6 +16,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setSignedTo);
 
     $('#date_signed_to_search').datepicker({
@@ -17,6 +28,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setSignedFrom);
 
     $('#date_closed_from_search').datepicker({
@@ -25,6 +40,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setClosedTo);
 
     $('#date_closed_to_search').datepicker({
@@ -33,6 +52,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setClosedFrom);
 
     $('#date_expired_from_search').datepicker({
@@ -41,6 +64,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setExpiredTo);
 
     $('#date_expired_to_search').datepicker({
@@ -49,6 +76,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change',setExpiredFrom);
 }
 

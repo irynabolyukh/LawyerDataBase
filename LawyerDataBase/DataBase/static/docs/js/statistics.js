@@ -1,4 +1,10 @@
 $(document).ready(main());
+var dayNames = ['Понеділок',"Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
+var dayNamesShort = ['Пн',"Вт","Ср","Чт","Пт","Сб","Нд"]
+var MonthNames = ["Січень","Лютий","Березень","Квітень","Травень",
+    "Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
+var monthNamesShort = ['Січ',"Лют","Бер","Квіт","Трав",
+    "Чер","Лип","Сер","Вер","Жов","Лист","Груд"]
 
 function main() {
     addDatePicker()
@@ -35,12 +41,20 @@ function addDatePicker() {
         changeMonth: true,
         changeYear: true,
         onSelect: getStats,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     });
     $('#date2').datepicker({
         dateFormat: "dd/mm/yy",
         changeMonth: true,
         changeYear: true,
         onSelect: getStats,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     });
 
 }

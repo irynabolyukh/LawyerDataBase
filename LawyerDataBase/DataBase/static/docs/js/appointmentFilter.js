@@ -1,5 +1,12 @@
 $(document).ready(main());
 
+var dayNames = ['Понеділок',"Вівторок","Середа","Четвер","П'ятниця","Субота","Неділя"]
+var dayNamesShort = ['Пн',"Вт","Ср","Чт","Пт","Сб","Нд"]
+var MonthNames = ["Січень","Лютий","Березень","Квітень","Травень",
+    "Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
+var monthNamesShort = ['Січ',"Лют","Бер","Квіт","Трав",
+    "Чер","Лип","Сер","Вер","Жов","Лист","Груд"]
+
 function main() {
     var today = Date.now()
     $('#date_app_from_search').datepicker({
@@ -8,6 +15,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change', setAppTo);
 
     $('#date_app_to_search').datepicker({
@@ -16,6 +27,10 @@ function main() {
         changeYear: true,
         defaultDate: today,
         disableTextInput: true,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
     }).on('change', setAppFrom);
 
     $('#time_app_from_search').timepicker({
