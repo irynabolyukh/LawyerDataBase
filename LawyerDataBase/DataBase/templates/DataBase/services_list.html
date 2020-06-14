@@ -2,21 +2,24 @@
 {% load user_tags %}
 
 {% block title %}Послуги{% endblock %}
+{% block navbar %}
+ <a class="navbar-brand container-fluid" ></a>
+{% endblock %}
 
 {% block content %}
-    {% if request.user|has_group:"Секретар"%}
     <div class="container shadow p-3 mb-5 bg-white rounded">
         <div class="justify-content-center text-center"><h2>Фільтри пошуку</h2></div>
         <form method="get" action=".">
             <div class="row">
                 <div class="container">
                     <div class="form-row">
+                        {% if request.user|has_group:"Секретар"%}
                         <div class="form-group col-md-4">
                             <label for="service_id_search">Ідентифікатор послуги</label>
                             <input class="form-control border" id='service_id_search' type="search"
                                    placeholder="Ідентифікатор послуги..." name="service_id" value="{{ service_id }}">
 
-                        </div>
+                        </div>{% endif %}
                         <div class="form-group col-md-4">
                             <label for="se_name_search">Назва</label>
                             <input class="form-control border" id='se_name_search' type="search"
@@ -48,7 +51,6 @@
             </div>
         </form>
     </div>
-    {% endif %}
 
 <div class="container-fluid">
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">

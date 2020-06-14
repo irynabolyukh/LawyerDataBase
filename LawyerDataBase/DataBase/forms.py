@@ -280,7 +280,7 @@ class Client_NForm(ModelForm):
     birth_date = forms.DateField(label='Дата народження', widget=TextInput(attrs={'autocomplete':'off'}))
     passport_date = forms.DateField(label='Дата паспорта', widget=TextInput(attrs={'autocomplete':'off'}))
     passport_authority = forms.CharField(label='Орган паспорта', max_length=6, min_length=6)
-    passport_num = forms.CharField(label='Номер паспорта', max_length=10, min_length=6)
+    passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
 
 
     class Meta:
