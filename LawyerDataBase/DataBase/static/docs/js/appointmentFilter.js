@@ -33,12 +33,23 @@ function main() {
         disableTextInput: true,
     }).on('change',setTimeFrom);
     $("#services_search").selectpicker({
-        title: "Оберіть послугу",
-        width: '395px',
-        liveSearch: true,
-        liveSearchPlaceholder: "Пошук по послугам...",
-        size: 6,
-    });
+                title: "Оберіть послугу",
+                width: '395px',
+                liveSearch: true,
+                liveSearchPlaceholder: "Пошук по послугам...",
+                size: 6,
+                noneResultsText: 'Не знайдено варіантів {0}',
+                noneSelectedText : 'Нічого не обрано',
+                countSelectedText: function (a,amount) {
+                    if (a>4)
+                        return `Обрано ${a} варіантів`
+                    if (a===1)
+                        return `Обрано ${a} варіант`
+                    if (a>1)
+                        return `Обрано ${a} варіанти`
+
+                }
+            });
 }
 
 

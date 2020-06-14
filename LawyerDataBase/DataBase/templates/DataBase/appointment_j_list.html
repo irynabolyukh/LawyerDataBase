@@ -77,7 +77,9 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="input-group-append show height pl-3" style="height: 47px;z-index: 3"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
+                    <div class="input-group-append show height pl-3" style="height: 47px;">
+                            <a class="btn btn-outline-dark" href="#" id="reset_services_search" >Скинути</a>
+                        </div>
                     </div>
 
 
@@ -150,6 +152,10 @@
                     var selected_services = {{ selected_services|safe }}
                     $("#services_search").selectpicker('val', selected_services)
                 {% endif %}
+            $('#reset_services_search').click(function (e) {
+
+                    $('#services_search').selectpicker('deselectAll');
+                })
             })
     </script>
 {% endblock %}

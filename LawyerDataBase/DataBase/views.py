@@ -1057,6 +1057,20 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             paidDossiers = Dossier_J.objects.filter(paid=False)
 
         data['object_list'] = allDossiers.intersection(paidDossiers)
+
+        data['paid'] = paid
+        data['open'] = open
+
+        data['dossier_id'] = dossier_id
+        data['status'] = status
+        data['client'] = client
+
+        data['date_signed_from'] = date_signed_from
+        data['date_signed_to'] = date_signed_to
+        data['date_closed_to'] = date_closed_to
+        data['date_closed_from'] = date_closed_from
+        data['date_expired_to'] = date_expired_to
+        data['date_expired_from'] = date_expired_from
         return data
 
 
@@ -1119,6 +1133,21 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
 
         data['object_list'] = allDossiers.intersection(paidDossiers)
+
+        data['paid'] = paid
+        data['open'] = open
+
+        data['dossier_id'] = dossier_id
+        data['status'] = status
+        data['client'] = client
+
+        data['date_signed_from'] = date_signed_from
+        data['date_signed_to'] = date_signed_to
+        data['date_closed_to'] = date_closed_to
+        data['date_closed_from'] = date_closed_from
+        data['date_expired_to'] = date_expired_to
+        data['date_expired_from'] = date_expired_from
+
         return data
 
 
@@ -1182,7 +1211,19 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
             #     exclude bad appointments from filtered appointments
             for appointment in all_appointments:
                 data['object_list'] = data['object_list'].exclude(appoint_code_n=appointment.appoint_code_n)
+
         data['services'] = Services.objects.all()
+        data['selected_services'] = selected_services
+
+        data['dossier'] = dossier
+        data['la_code'] = la_code
+        data['client_code'] = client_code
+
+        data['date_app_from'] = date_app_from
+        data['date_app_to'] = date_app_to
+
+        data['time_app_from'] = time_app_from
+        data['time_app_to'] = time_app_to
         return data
 
 
@@ -1248,7 +1289,19 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
             #     exclude bad appointments from filtered appointments
             for appointment in all_appointments:
                 data['object_list'] = data['object_list'].exclude(appoint_code_j=appointment.appoint_code_j)
+
         data['services'] = Services.objects.all()
+        data['selected_services'] = selected_services
+
+        data['dossier'] = dossier
+        data['la_code'] = la_code
+        data['client_code'] = client_code
+
+        data['date_app_from'] = date_app_from
+        data['date_app_to'] = date_app_to
+
+        data['time_app_from'] = time_app_from
+        data['time_app_to'] = time_app_to
         return data
 
 

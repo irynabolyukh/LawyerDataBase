@@ -43,7 +43,7 @@
 
                     <div class="input-group">
                         <div class="col-md-7">
-                            <select id='services_search' name="services" multiple="multiple" class="long_input form-control border" data-selected-text-format="count">
+                            <select id='services_search' name="services" multiple="multiple" class="long_input form-control border" data-selected-text-format="count>1">
                                 {% for service in services %}
                                     {% if not service in selected_services %}
                                 <option value="{{ service.name_service }}">{{ service.name_service }}</option>
@@ -53,7 +53,9 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="input-group-append show height pl-3" style="height: 47px;"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
+                        <div class="input-group-append show height pl-3" style="height: 47px;">
+                            <a class="btn btn-outline-dark" href="#" id="reset_services_search" >Скинути</a>
+                        </div>
                     </div>
 
 
@@ -107,22 +109,36 @@
 </div>
 {% endblock %}
 {% block script %}
-{#    <script src="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@0.6.8/dist/js/BsMultiSelect.min.js"></script>#}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
     <script type="text/javascript">
             $(document).ready(function () {
-            $("select[multiple='multiple']").selectpicker({
+            $("#services_search").selectpicker({
                 title: "Оберіть послугу",
                 width: '395px',
                 liveSearch: true,
                 liveSearchPlaceholder: "Пошук по послугам...",
                 size: 6,
+                noneResultsText: 'Не знайдено варіантів {0}',
+                noneSelectedText : 'Нічого не обрано',
+                countSelectedText: function (a,amount) {
+                    if (a>4)
+                        return `Обрано ${a} варіантів`
+                    if (a===1)
+                        return `Обрано ${a} варіант`
+                    if (a>1)
+                        return `Обрано ${a} варіанти`
+
+                }
             });
                 {% if selected_services %}
                     var selected_services = {{ selected_services|safe }}
-                    $("select[multiple='multiple']").selectpicker('val', selected_services)
+                    $("#services_search").selectpicker('val', selected_services)
                 {% endif %}
+                $('#reset_services_search').click(function (e) {
 
+                    $('#services_search').selectpicker('deselectAll');
+                })
             })
 
     </script>
