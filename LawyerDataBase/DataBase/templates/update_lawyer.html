@@ -4,10 +4,10 @@
 {% block navbar %}
     {% load user_tags %}
  {% if request.user|has_group:"Секретар"%}
-    <a class="navbar-brand" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
+    <a class="navbar-brand container-fluid" href="{% url 'lawyers' %}">🢀Усі адвокати</a>
 {% endif %}
  {% if request.user|has_group:"Адвокат"%}
-    <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
+    <a class="navbar-brand container-fluid" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
 {% endif %}
 {% endblock %}
 

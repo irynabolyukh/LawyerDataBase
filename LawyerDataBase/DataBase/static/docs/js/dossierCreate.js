@@ -3,7 +3,6 @@ $(document).ready(main());
 function main() {
     var today  = Date.now()
 
-
     var date_signed = $('#id_date_signed')
     date_signed.datepicker({
         dateFormat: "yy-mm-dd",
@@ -30,5 +29,5 @@ function setDateSigned(event){
              date_signed.getMonth(),
              date_signed.getDate() + 7)
     $('#id_date_expired').datepicker('option','minDate', date_expired)
-    $('#id_date_closed').datepicker('option','minDate',date_signed)
+    $('#id_date_closed').datepicker('option','minDate', date_signed)
 }
