@@ -7,7 +7,7 @@ from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
 
 from django.utils.translation import ugettext_lazy as _
 
-
+# class CustomUserCreationForm(ModelForm):
 class CustomUserCreationForm(forms.Form):
     # username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150, required=False)
     # email = forms.EmailField(label='E-mail')
@@ -28,7 +28,7 @@ class CustomUserCreationForm(forms.Form):
         username = self.cleaned_data['username'].lower()
         r = User.objects.filter(username=username)
         if r.count():
-            raise ValidationError("Username already exists")
+             raise ValidationError("Username already exists")
         return username
 
     def clean_email(self):
@@ -43,7 +43,7 @@ class CustomUserCreationForm(forms.Form):
         password2 = self.cleaned_data.get('password2')
 
         if password1 and password2 and password1 != password2:
-            raise ValidationError("Password don't match")
+            raise ValidationError("Паролі не збігаються")
 
         return password2
 
@@ -51,7 +51,7 @@ class CustomUserCreationForm(forms.Form):
         user = User.objects.create_user(
             'username',
             'email',
-            self.cleaned_data['password1']
+             self.cleaned_data['password1']
         )
         user.groups.add(self.cleaned_data['group'])
         return user
@@ -59,6 +59,7 @@ class CustomUserCreationForm(forms.Form):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'group']
+
 
 
 class LawyerForm(ModelForm):
