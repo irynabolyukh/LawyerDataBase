@@ -24,12 +24,17 @@ def register(request, pk, mail):
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
+                print(pk)
+                url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
+                return redirect(url)
                 # return redirect('dossier_j-create')
-                return redirect("stats")
+                # return redirect("stats")
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                client = Client_natural.objects.get(num_client_n=pk)
-                client_code = client.__getattribute__('num_client_n')
-                return redirect("stats")
+                # client = Client_natural.objects.get(num_client_n=pk)
+                # client_code = client.__getattribute__('num_client_n')
+                url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
+                return redirect(url)
+                # return redirect("stats")
                 # return redirect('dossier_n-create')
                 #return reverse("dossier_n-create", kwargs={'pk': Client_natural.objects.get(num_client_n=pk).pk})
             else:
