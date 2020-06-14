@@ -167,12 +167,21 @@
         {% endif %} {% endif %}
         </tbody>
     </table>
+     {% if request.user|has_group:"Фізичний клієнт"%}
+         {% if dossier.open %}
+        <div>
+           <a class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.num_client_n.num_client_n dossier_code=object.pk %}">Записатися на послугу</a>
+        </div>
+        {% endif %}
+    {% endif %}
      {% if request.user|has_group:"Секретар"%}
                 <div>
                 {% if not dossier.paid %}
+                    {% if dossier.open %}
+                    <a class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.num_client_n.num_client_n dossier_code=object.pk %}">Записати на послугу</a>
+                    {% endif %}
                     <a class="btn btn-outline-info  d-print-none" href="{% url 'dossier_n-update' pk=object.pk %}">Редагувати</a>
                 {% endif %}
-
                     <a class="btn btn-outline-danger  d-print-none" href="{% url 'dossier_n-delete' pk=object.pk %}">Видалити</a>
                 <a class="btn btn-outline-success d-print-none" onClick="window.print()">Друкувати</a>
                 </div>

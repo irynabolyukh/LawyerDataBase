@@ -713,6 +713,106 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
         return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
 
 
+class Appoint_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_n'
+    model = Appointment_N
+    form_class = Appoint_NForm
+    template_name = 'create_appointment_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def get_form(self, form_class=None):
+        form = super(Appoint_NCreateView, self).get_form(form_class)
+        return form
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appoint_NCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        kwargs.update({'dossier_code': self.kwargs['dossier_code']})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+
+
+class Appoint_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_j'
+    model = Appointment_J
+    form_class = Appoint_JForm
+    template_name = 'create_appointment_j.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def get_form(self, form_class=None):
+        form = super(Appoint_JCreateView, self).get_form(form_class)
+        return form
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super(Appoint_JCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        kwargs.update({'dossier_code': self.kwargs['dossier_code']})
+        return kwargs
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class App_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_j'
+    model = Appointment_J
+    form_class = App_JForm
+    template_name = 'create_appointment_j.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def get_form(self, form_class=None):
+        form = super(App_JCreateView, self).get_form(form_class)
+        return form
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
+
+
+class App_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'DataBase.add_appointment_n'
+    model = Appointment_N
+    form_class = App_NForm
+    template_name = 'create_appointment_n.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data
+
+    def get_form(self, form_class=None):
+        form = super(App_NCreateView, self).get_form(form_class)
+        return form
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("client-detailed-view-n", kwargs={'pk': self.object.num_client_n.pk})
+
+
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
