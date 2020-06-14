@@ -8,13 +8,21 @@ from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
 from django.utils.translation import ugettext_lazy as _
 
 
-
 class CustomUserCreationForm(forms.Form):
     # username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150, required=False)
     # email = forms.EmailField(label='E-mail')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Підтвердіть пароль', widget=forms.PasswordInput)
     group = forms.ModelChoiceField(label='Група', queryset=Group.objects.all(), required=True)
+
+    # def __init__(self, *args, **kwargs):
+    #     user_id = kwargs.pop('username')
+    #     mail_info = kwargs.pop('email')
+    #     super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+    #     self.fields['username'].initial = user_id
+    #     self.fields['username'].disabled = True
+    #     self.fields['email'].initial = mail_info
+    #     self.fields['email'].disabled = True
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()

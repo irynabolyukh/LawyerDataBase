@@ -21,6 +21,9 @@
     {%endblock%}
     {% if request.user.is_authenticated %}
     <div class="nav-item ml-auto justify-content-end">
+            <a class="btn" href="http://127.0.0.1:8000/">Головна</a>
+    </div>
+     <div class="nav-item ml-auto justify-content-end">
             <a class="btn btn-danger " href="{% url 'logout' %}">Вийти</a>
     </div>
     {% endif %}

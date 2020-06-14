@@ -11,6 +11,27 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
+# class UserCreateView(LoginRequiredMixin, CreateView):
+#     model = User
+#     form_class = CustomUserCreationForm
+#     template_name = 'DataBase/register.html'
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(UserCreateView, self).get_form_kwargs()
+#         kwargs.update({'username': self.kwargs['pk']})
+#         kwargs.update({'email': self.kwargs['mail']})
+#         return kwargs
+#
+#     def get_context_data(self, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         return data
+#
+#     def form_valid(self, form):
+#         self.object = form.save()
+#         return super().form_valid(form)
+#
+#     def get_success_url(self):
+#         return reverse("stats")
 
 @login_required()
 @requires_csrf_token
@@ -24,14 +45,11 @@ def register(request, pk, mail):
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                # return redirect('dossier_j-create')
-                return redirect("stats")
+                url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
+                return redirect(url)
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                client = Client_natural.objects.get(num_client_n=pk)
-                client_code = client.__getattribute__('num_client_n')
-                return redirect("stats")
-                # return redirect('dossier_n-create')
-                #return reverse("dossier_n-create", kwargs={'pk': Client_natural.objects.get(num_client_n=pk).pk})
+                url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
+                return redirect(url)
             else:
                 return redirect("stats")
     else:
@@ -550,6 +568,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
+        # return reverse("register")
         return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
