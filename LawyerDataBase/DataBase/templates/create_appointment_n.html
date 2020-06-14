@@ -8,10 +8,10 @@
 {% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
-    <a class="navbar-brand" href="{% url 'nappointments' %}">🢀Усі фізичні записи</a>
+    <a class="navbar-brand container-fluid" href="{% url 'nappointments' %}">🢀Усі фізичні записи</a>
 {% endif %}
 {% if request.user|has_group:"Фізичний клієнт"%}
- <a class="navbar-brand" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
+ <a class="navbar-brand container-fluid" href="#" onclick="goBack()">🢀Повернутись до профілю</a>
 {% endif %}
 {% endblock %}
 
