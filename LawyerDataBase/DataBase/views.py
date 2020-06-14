@@ -706,7 +706,7 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_NCreateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({'pk': self.kwargs['pk']})
         return kwargs
 
     def get_success_url(self):
@@ -756,7 +756,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_JCreateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({'pk': self.kwargs['pk']})
         return kwargs
 
     def get_success_url(self):

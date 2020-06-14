@@ -79,7 +79,7 @@
                     <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
                     <br><br>
                     <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create'  pk=object.pk %}">Нове Досьє</a>
-                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
+                    <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.pk %}">Записати на послугу</a>
                 {% endif %}
             </div>
         </div>
@@ -88,7 +88,7 @@
 <div class="container-fluid margin-fix row align-items-center justify-content-center">
 {% if request.user|has_group:"Юридичний клієнт"%}
 <div class="container row align-items-center justify-content-center">
-        <a class="btn btn-outline-info" href="{% url 'appointment_j-create' %}">Записатися на послугу</a>
+        <a class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.pk %}">Записатися на послугу</a>
 </div>
 </div>
 {% endif %}

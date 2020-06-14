@@ -166,13 +166,15 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+        pk = kwargs.pop('pk')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="Фізичний клієнт").exists():
-            user_id = Client_natural.objects.filter(mail_info=user.email)[0]
-            self.fields['num_client_n'].initial=user_id.pk
-            self.fields['num_client_n'].disabled = True
-            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=user_id).filter(status='open')
+        self.fields['num_client_n'].initial = pk
+        self.fields['num_client_n'].disabled = True
+        # if user.groups.filter(name="Фізичний клієнт").exists():
+        #     user_id = Client_natural.objects.filter(mail_info=user.email)[0]
+        #     self.fields['num_client_n'].initial=user_id.pk
+        #     self.fields['num_client_n'].disabled = True
+        self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
 class Appointment_JForm(ModelForm):
@@ -190,13 +192,15 @@ class Appointment_JForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+        pk = kwargs.pop('pk')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="Юридичний клієнт").exists():
-            user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
-            self.fields['num_client_j'].initial=user_id.pk
-            self.fields['num_client_j'].disabled = True
-            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=user_id).filter(status='open')
+        self.fields['num_client_j'].initial = pk
+        self.fields['num_client_j'].disabled = True
+        # if user.groups.filter(name="Юридичний клієнт").exists():
+        #     user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
+        #     self.fields['num_client_j'].initial=user_id.pk
+        #     self.fields['num_client_j'].disabled = True
+        self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):
