@@ -18,8 +18,31 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="status_search">Статус</label>
-                            <input class="form-control border" id='status_search' type="search"
-                                   placeholder="Статус" name="status" value="{{ status }}">
+                            <select id='status_search' name="status" class="form-control border">
+                                    {% if status == 'open' %}
+                                        <option >Оберіть статус</option>
+                                        <option value="open" selected>Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
+                                    {% elif status == 'closed' %}
+                                        <option >Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" selected>Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
+                                    {% elif status == 'closed-won' %}
+                                        <option >Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" selected>Виграні</option>
+                                    {% else %}
+                                        <option selected>Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
+                                    {% endif %}
+
+                                </select>
+
 
                         </div>
                         <div class="form-group col-md-4">
@@ -105,7 +128,7 @@
                                 <label for="open-select">Відкриті</label>
                                 <select id='open-select' name="open" class="form-control">
                                     {% if open == 'true' %}
-                                        <option selected>Будь-які</option>
+                                        <option >Будь-які</option>
                                         <option value="true" selected>Відкриті</option>
                                         <option value="false" >Закриті</option>
                                     {% elif open == 'false' %}

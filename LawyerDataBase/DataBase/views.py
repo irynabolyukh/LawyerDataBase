@@ -1249,6 +1249,7 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         data['status'] = status
         data['client'] = client
 
+
         data['date_signed_from'] = date_signed_from
         data['date_signed_to'] = date_signed_to
         data['date_closed_to'] = date_closed_to
