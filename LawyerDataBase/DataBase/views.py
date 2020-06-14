@@ -29,10 +29,19 @@ from django.db.models import Sum, Count, F
 #
 #     def form_valid(self, form):
 #         self.object = form.save()
+#         # self.object.groups.add(self.object.group)
 #         return super().form_valid(form)
 #
 #     def get_success_url(self):
-#         return reverse("stats")
+#         if str(self.object.group) == str('Юридичний клієнт'):
+#             return reverse("dossier_j-create", kwargs={'pk': self.object.username})
+#         elif str(self.object.group) == str('Фізичний клієнт'):
+#             return reverse("dossier_n-create", kwargs={'pk': self.object.username})
+#         elif str(self.object.group) == str('Адвокат'):
+#             return reverse("lawyers")
+#         else:
+#             return reverse("stats")
+
 
 @login_required()
 @requires_csrf_token
@@ -46,13 +55,12 @@ def register(request, pk, mail):
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
+                print(pk)
                 url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
                 return redirect(url)
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
                 url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
                 return redirect(url)
-            elif str(form.cleaned_data['group']) == str('Адвокат'):
-                return redirect("lawyers")
             else:
                 return redirect("stats")
     else:
@@ -557,9 +565,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse("register")
         return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
-        # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
 class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -700,7 +706,7 @@ class Appointment_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_NCreateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({'pk': self.kwargs['pk']})
         return kwargs
 
     def get_success_url(self):
@@ -750,7 +756,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_JCreateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
+        kwargs.update({'pk': self.kwargs['pk']})
         return kwargs
 
     def get_success_url(self):
