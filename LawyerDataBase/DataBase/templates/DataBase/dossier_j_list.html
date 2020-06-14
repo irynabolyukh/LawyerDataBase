@@ -164,3 +164,7 @@
     </table>
 </div>
 {% endblock %}
+{% block script %}
+    {% load static %}
+    <script type="text/javascript" src="{% static "docs/js/dossierFilter.js" %}"></script>
+{% endblock %}

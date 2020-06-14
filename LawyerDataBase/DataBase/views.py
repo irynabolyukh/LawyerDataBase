@@ -93,12 +93,12 @@ def lawyer_work_days(request):
         for day in workdays:
             response['days'].append(day.pk)
         try:
-            if request.POST['dosn']:
-                response['maxday'] = Dossier_N.objects.filter(code_dossier_n=request.POST['dossier']).date_expired
+            if str(request.POST['dosn']) == 'true':
+                response['maxday'] = str(Dossier_N.objects.get(code_dossier_n=request.POST['dossier']).date_expired)
             else:
-                response['maxday'] = Dossier_J.objects.filter(code_dossier_j=request.POST['dossier']).date_expired
-        except:
-            print("no argument dosn")
+                response['maxday'] = str(Dossier_J.objects.get(code_dossier_j=request.POST['dossier']).date_expired)
+        except :
+            pass
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)

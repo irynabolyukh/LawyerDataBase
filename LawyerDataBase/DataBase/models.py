@@ -50,7 +50,7 @@ class Services(models.Model):
     service_group = models.ForeignKey(ServiceGroup, on_delete=models.DO_NOTHING, related_name='group', default=None)
 
     def __str__(self):
-        return f'{self.service_code} : {self.name_service}'
+        return f'{self.name_service}'
 
     class Meta:
         db_table = 'Services'
@@ -71,7 +71,7 @@ class Lawyer(models.Model):
     work_days = models.ManyToManyField(Work_days)
 
     def __str__(self):
-        return f'{self.lawyer_code} : {self.first_name} {self.surname}'
+        return f'{self.first_name} {self.surname} {self.mid_name}, {self.specialization}'
 
     def getfullname(self):
         return f'{self.first_name} {self.surname} {self.mid_name}'
@@ -129,7 +129,7 @@ class Client_natural(Client):
     passport_num = models.CharField(max_length=10)
 
     def __str__(self):
-        return f'{self.num_client_n} : {self.first_name} {self.surname}'
+        return f'{self.first_name} {self.surname} {self.mid_name}'
 
     class Meta(Client.Meta):
         db_table = 'Client_natural'
@@ -160,7 +160,7 @@ class Client_juridical(Client):
     iban = models.CharField(max_length=29)
 
     def __str__(self):
-        return f'{self.num_client_j} : {self.first_name} {self.surname}'
+        return f'{self.first_name} {self.surname} {self.mid_name}'
 
     def getfullname(self):
         return f'{self.first_name} {self.surname} {self.mid_name}'

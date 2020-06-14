@@ -49,7 +49,13 @@ function lawyer_workdays_request(event){
 
     var dossier =$('#id_code_dossier_n').val()
     var dosN = true;
-    if (dossier.length === 0){
+    try {
+        if (dossier.length === 0) {
+            dossier = $('#id_code_dossier_j').val()
+            dosN = false;
+        }
+    }
+    catch (e){
         dossier = $('#id_code_dossier_j').val()
         dosN = false;
     }
@@ -62,6 +68,7 @@ function lawyer_workdays_request(event){
         disableTextInput: true,
         disableTimeRanges: blockedTime,
     }).on('change',checkTime);
+    console.log(dosN)
     $.ajax({
                 type: "POST",
                 async: true,
@@ -132,9 +139,16 @@ function setblockedTime(data){
 }
 
 function setWorkDays(data){
-    console.log(data)
-    lawyerWorkDays = data['days'];
-    $('#id_app_date').datepicker('maxDate',data['maxday'])
+    lawyerWorkDays  = data['days'];
+    try {
+        var maxdateSplit = data['maxday']
+        maxdateSplit = maxdateSplit.split('-')
+        var maxDate = new Date(maxdateSplit[0], maxdateSplit[1], maxdateSplit[2])
+        $('#id_app_date').datepicker('option', 'maxDate', maxDate)
+    }
+    catch (e) {
+
+    }
 }
 
 function blockdays(date){
