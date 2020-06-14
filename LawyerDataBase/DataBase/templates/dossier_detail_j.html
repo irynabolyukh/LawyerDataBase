@@ -164,7 +164,7 @@
         </tbody>
     </table>
     {% if request.user|has_group:"Юридичний клієнт"%}
-         {% if dossier.open %}
+         {% if dossier.status == 'open' %}
         <div>
             <a class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.num_client_j.num_client_j dossier_code=object.pk %}">Записатися на послугу</a>
         </div>
@@ -173,10 +173,10 @@
 
    {% if request.user|has_group:"Секретар"%}
                 <div>
-                {% if not dossier.paid %}
-                    {% if dossier.open %}
+                    {% if dossier.status == 'open' %}
                     <a class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.num_client_j.num_client_j dossier_code=object.pk %}">Записати на послугу</a>
                     {% endif %}
+                {% if not dossier.paid %}
                     <a class="btn btn-outline-info d-print-none" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
                 {% endif %}
                     <a class="btn btn-outline-danger d-print-none" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
