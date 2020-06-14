@@ -143,11 +143,11 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['closed_dossiers_j'] = Dossier_J.objects.exclude(status='open').count()
-        context['closed_dossiers_n'] = Dossier_N.objects.exclude(status='open').count()
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).exclude(status='open').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).exclude(status='open').count()
 
-        context['open_dossiers_n'] = Dossier_N.objects.filter(status='open').count()
-        context['open_dossiers_j'] = Dossier_J.objects.filter(status='open').count()
+        context['open_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(status='open').count()
+        context['open_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(status='open').count()
 
         context['value'] = str(nom_value() + extra_value())
 
@@ -198,7 +198,7 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        service = Services.objects.get(service_code=self.kwargs['pk'])
+        service = Services.objects.filter(active=True).get(service_code=self.kwargs['pk'])
         group = service.__getattribute__('service_group')
         context['group'] = ServiceGroup.objects.filter(name_group=group)
         context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
@@ -227,19 +227,19 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
         la_code = self.kwargs['pk']
         context['phones'] = LPhone.objects.filter(lawyer=la_code)
         today = date.today()
-        context['upcoming_app_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+        context['upcoming_app_n'] = Appointment_N.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['upcoming_app_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+        context['upcoming_app_j'] = Appointment_J.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_n'] = Appointment_N.objects.filter(lawyer_code=la_code) \
+        context['appointments_n'] = Appointment_N.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__lt=today).order_by('-app_date')
-        context['appointments_j'] = Appointment_J.objects.filter(lawyer_code=la_code) \
+        context['appointments_j'] = Appointment_J.objects.filter(active=True).filter(lawyer_code=la_code) \
             .filter(app_date__lt=today).order_by('-app_date')
-        context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
-        context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
+        context['dossier_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code)
+        context['dossier_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code)
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
 
         try:
