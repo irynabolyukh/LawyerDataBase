@@ -481,6 +481,51 @@ def lawyer_service_by_name(services):
 
     return res
 
+
+def appointments_J_by_services_dividing(services):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AJ.appoint_code_j '
+            'FROM "Appointment_J" AS AJ '
+            'WHERE NOT EXISTS '
+            '       ( SELECT * '
+            '         FROM "Appointment_J_service" AS AJS '
+            '         WHERE AJS.services_id = ANY (%s) '
+            '           AND AJ.appoint_code_j not in '
+            '               (select appointment_j_id '
+            '                   from "Appointment_J_service" '
+            '                   WHERE services_id = AJS.services_id)) ',
+            [services])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+
+        res.append({'appoint_code': record[0]})
+
+    return res
+
+def appointments_N_by_services_dividing(services):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT AN.appoint_code_n '
+            'FROM "Appointment_N" AS AN '
+            'WHERE NOT EXISTS '
+            '       ( SELECT * '
+            '         FROM "Appointment_J_service" AS ANS '
+            '         WHERE ANS.services_id = ANY (%s) '
+            '           AND AN.appoint_code_n not in '
+            '               (select appointment_n_id '
+            '                   from "Appointment_N_service" '
+            '                   WHERE services_id = ANS.services_id)) ',
+            [services])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+
+        res.append({'appoint_code': record[0]})
+
+    return res
+
 def appoint_N_nom_value(param): #count appointment nominal value if Dossier = closed
     with connection.cursor() as cursor:
         cursor.execute(

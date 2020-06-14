@@ -1,7 +1,98 @@
 {% extends "stat_generic.html" %}
+{% load user_tags %}
 {% block title %}Юридичні записи{% endblock %}
-
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
+{% endblock %}
 {% block content %}
+    {% if request.user|has_group:"Секретар"%}
+    <div class="container shadow p-3 mb-5 bg-white rounded">
+        <div class="justify-content-center text-center"><h2>Фільтри пошуку</h2></div>
+        <form method="get" action=".">
+        <div class="row">
+            <div class="container">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                            <label for="date_app_from_search" class="text-center">Дата Запису</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_app_from_search' type="search"
+                                           placeholder="З" name="date_app_from" value="{{ date_app_from }}" style="position: relative; z-index: 100000;">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_app_to_search' type="search"
+                                           placeholder="По" name="date_app_to" value="{{ date_app_to }}" style="position: relative; z-index: 100000;">
+
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                            <label for="time_app_from_search" class="text-center">Час Запису</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='time_app_from_search' type="search"
+                                           placeholder="З" name="time_app_from" value="{{ time_app_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='time_app_to_search' type="search"
+                                           placeholder="По" name="time_app_to" value="{{ time_app_to }}">
+
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="dossier_search">Досьє</label>
+                        <input class="form-control border" id='dossier_search' type="search"
+                               placeholder="Досьє клієнта..." name="dossier" value="{{ dossier }}">
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="la_code_search">Адвокат</label>
+                        <input class="form-control border" id='la_code_search' type="search"
+                               placeholder="Ідентифікатор адвоката..." name="la_code" value="{{ la_code }}">
+
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="client_code_search">Клієнт</label>
+                        <input class="form-control border" id='client_code_search' type="search"
+                               placeholder="Код клієнта..." name="client_code" value="{{ client_code }}">
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="services_search" class="col-form-label col-md-5">Послуги, які були обрані</label>
+
+                    <div class="input-group">
+                        <div class="col-md-6">
+                            <select id='services_search' name="services" multiple="multiple" class="long_input form-control border" data-selected-text-format="count">
+                                {% for service in services %}
+                                    {% if not service in selected_services %}
+                                <option value="{{ service.name_service }}">{{ service.name_service }}</option>
+                                    {% else %}
+                                <option value="{{ service.name_service }}" selected>{{ service.name_service }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group-append show height pl-3" style="height: 47px;z-index: 3"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
+                    </div>
+
+
+                    </div>
+                </div>
+
+                <div class="align-right float-right">
+                    <a class="btn btn-info align-right" href="{% url 'jappointments' %}">Очистити фільтри</a>
+                    <button type="submit" class="btn btn-primary align-right" >Пошук</button>
+                    </div>
+            </div>
+        </div>
+    </form>
+    </div>
+{% endif %}
 <div class="container-fluid">
      <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
         <h2 class="font-weight-bold">Юридичні записи</h2>
@@ -47,4 +138,18 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+{% block script %}
+    {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.min.js"></script>
+    <script type="text/javascript" src="{% static 'docs/js/appointmentFilter.js' %}"></script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                {% if selected_services %}
+                    var selected_services = {{ selected_services|safe }}
+                    $("#services_search").selectpicker('val', selected_services)
+                {% endif %}
+            })
+    </script>
 {% endblock %}

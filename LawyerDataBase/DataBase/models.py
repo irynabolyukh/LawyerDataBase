@@ -285,6 +285,7 @@ class Appointment_N(Appointment):
 
     class Meta(Appointment.Meta):
         db_table = 'Appointment_N'
+        ordering= ['-app_date']
 
 
 class Appointment_J(Appointment):
@@ -303,3 +304,4 @@ class Appointment_J(Appointment):
 
     class Meta(Appointment.Meta):
         db_table = 'Appointment_J'
+        ordering = ['-app_date']

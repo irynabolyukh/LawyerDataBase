@@ -18,6 +18,10 @@ ul{
     width:550px;
 }
 
+.z_index_10{
+    z-index: 10;
+}
+
 .big_checkbox{
     width:20px;
     height: 20px;

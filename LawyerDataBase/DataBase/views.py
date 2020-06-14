@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -70,12 +71,12 @@ def client_ajax(request):
         response = {}
         response['dossier'] = []
         if request.POST['dosJ'] == 'true':
-            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client']).filter(status='open')
+            dossiers = Dossier_J.objects.filter(num_client_j=request.POST['client']).filter(status='open').filter(active=True)
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_j,
                                             'issue': dossier.issue})
         else:
-            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client']).filter(status='open')
+            dossiers = Dossier_N.objects.filter(num_client_n=request.POST['client']).filter(status='open').filter(active=True)
             for dossier in dossiers:
                 response['dossier'].append({'code': dossier.code_dossier_n,
                                             'issue': dossier.issue})
@@ -889,7 +890,11 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         selected_services = self.request.GET.getlist('services', '')
         if selected_services is not '':
-            lawyers_services = lawyer_service_by_name(selected_services)
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(
+                    Services.objects.get(name_service__icontains=selected_service).service_code)
+            lawyers_services = lawyers_appointment(codeArraySelectedServices)
             all_lawyers = Lawyer.objects.all()
             for lawyer in lawyers_services:
                 all_lawyers = all_lawyers.exclude(lawyer_code=lawyer['lawyer_code'])
@@ -1018,7 +1023,7 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         date_expired_from = self.request.GET.get('date_expired_from', '')
         date_expired_to = self.request.GET.get('date_expired_to', '')
 
-        allDossiers = Dossier_J.objects.all(). \
+        allDossiers = Dossier_J.objects.all().filter(active=True). \
             filter(code_dossier_j__icontains=dossier_id). \
             filter(status__icontains=status). \
             filter(num_client_j__num_client_j__icontains=client)
@@ -1078,7 +1083,7 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         date_expired_from = self.request.GET.get('date_expired_from', '')
         date_expired_to = self.request.GET.get('date_expired_to', '')
 
-        allDossiers = Dossier_N.objects.all(). \
+        allDossiers = Dossier_N.objects.all().filter(active=True). \
             filter(code_dossier_n__icontains=dossier_id). \
             filter(status__icontains=status). \
             filter(num_client_n__num_client_n__icontains=client)
@@ -1124,6 +1129,62 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     ordering = ['-app_date']
     queryset = Appointment_N.objects.filter(active=True).order_by('app_date').order_by('app_time')
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier = self.request.GET.get('dossier', '')
+        la_code = self.request.GET.get('la_code', '')
+        client_code = self.request.GET.get('client_code', '')
+
+        date_app_from = self.request.GET.get('date_app_from', '')
+        date_app_to = self.request.GET.get('date_app_to', '')
+
+        time_app_from = self.request.GET.get('time_app_from', '')
+        time_app_to = self.request.GET.get('time_app_to', '')
+
+
+
+        data['object_list'] = Appointment_N.objects.all().filter(active=True). \
+            filter(code_dossier_n__code_dossier_n__icontains=dossier,
+                   lawyer_code__lawyer_code__icontains=la_code,
+                   num_client_n__num_client_n__icontains=client_code)
+
+        if date_app_from is not '':
+            data['object_list'] = data['object_list'].filter(app_date__gte=date_app_from)
+        if date_app_to is not '' :
+            data['object_list'] = data['object_list'].filter(app_date__lte=date_app_to)
+
+
+        if time_app_from is not '' or time_app_to is not '':
+            begin = datetime.strptime('10:00', '%H:%M').time()
+            end = datetime.strptime('19:00', '%H:%M').time()
+            if time_app_to is '':
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+            elif time_app_from is '':
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            else:
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+
+
+        selected_services = self.request.GET.getlist('services', '')
+        if selected_services is not '':
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(
+                    Services.objects.get(name_service__icontains=selected_service).service_code)
+            # get all appointments, which are in the list
+            appointments_divided = appointments_N_by_services_dividing(codeArraySelectedServices)
+            all_appointments = Appointment_N.objects.all()
+            # exclude "good" appointments from all appointments, get bad appointments
+            for appointment_divided in appointments_divided:
+                all_appointments = all_appointments.exclude(appoint_code_n=appointment_divided['appoint_code'])
+            #     exclude bad appointments from filtered appointments
+            for appointment in all_appointments:
+                data['object_list'] = data['object_list'].exclude(appoint_code_n=appointment.appoint_code_n)
+        data['services'] = Services.objects.all()
+        return data
+
 
 class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_jappointments'
@@ -1131,6 +1192,64 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     paginate_by = 25
     ordering = ['-app_date']
     queryset = Appointment_J.objects.filter(active=True).order_by('app_date').order_by('app_time')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        dossier = self.request.GET.get('dossier', '')
+        la_code = self.request.GET.get('la_code', '')
+        client_code = self.request.GET.get('client_code', '')
+
+        date_app_from = self.request.GET.get('date_app_from', '')
+        date_app_to = self.request.GET.get('date_app_to', '')
+
+        time_app_from = self.request.GET.get('time_app_from', '')
+        time_app_to = self.request.GET.get('time_app_to', '')
+
+
+
+        data['object_list'] = Appointment_J.objects.all().filter(active=True). \
+            filter(code_dossier_j__code_dossier_j__icontains=dossier,
+                   lawyer_code__lawyer_code__icontains=la_code,
+                   num_client_j__num_client_j__icontains=client_code)
+
+        # filter by date
+        if date_app_from is not '':
+            data['object_list'] = data['object_list'].filter(app_date__gte=date_app_from)
+        if date_app_to is not '' :
+            data['object_list'] = data['object_list'].filter(app_date__lte=date_app_to)
+
+        #     filter by time
+        if time_app_from is not '' or time_app_to is not '':
+            begin = datetime.strptime('10:00', '%H:%M').time()
+            end = datetime.strptime('19:00', '%H:%M').time()
+            if time_app_to is '':
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+            elif time_app_from is '':
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            else:
+                begin = datetime.strptime(time_app_from, '%H:%M').time()
+                end = datetime.strptime(time_app_to, '%H:%M').time()
+            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+
+
+        selected_services = self.request.GET.getlist('services', '')
+
+        if selected_services is not '':
+            codeArraySelectedServices = []
+            for selected_service in selected_services:
+                codeArraySelectedServices.append(Services.objects.get(name_service__icontains=selected_service).service_code)
+
+            # get all appointments, which are in the list
+            appointments_divided = appointments_J_by_services_dividing(codeArraySelectedServices)
+            all_appointments = Appointment_J.objects.all()
+            # exclude "good" appointments from all appointments, get bad appointments
+            for appointment_divided in appointments_divided:
+                all_appointments = all_appointments.exclude(appoint_code_j=appointment_divided['appoint_code'])
+            #     exclude bad appointments from filtered appointments
+            for appointment in all_appointments:
+                data['object_list'] = data['object_list'].exclude(appoint_code_j=appointment.appoint_code_j)
+        data['services'] = Services.objects.all()
+        return data
 
 
 @login_required()

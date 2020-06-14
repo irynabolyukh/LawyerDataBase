@@ -2,7 +2,7 @@
 {% load user_tags %}
 {% block title %}Адвокати{% endblock %}
 {% block stylesheet %}
-{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@0.6.8/dist/css/BsMultiSelect.min.css" type="text/css">#}
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
 {% endblock %}
 {% block content %}
@@ -53,7 +53,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="input-group-append show height pl-3" style="height: 38px;"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
+                        <div class="input-group-append show height pl-3" style="height: 47px;"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
                     </div>
 
 
@@ -110,9 +110,6 @@
 {#    <script src="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@0.6.8/dist/js/BsMultiSelect.min.js"></script>#}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
     <script type="text/javascript">
-{#        $(document).ready(function () {#}
-{#            $("select[multiple='multiple']").bsMultiSelect();#}
-{#            })#}
             $(document).ready(function () {
             $("select[multiple='multiple']").selectpicker({
                 title: "Оберіть послугу",
