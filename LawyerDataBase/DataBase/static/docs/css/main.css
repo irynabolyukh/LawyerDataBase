@@ -58,8 +58,74 @@ ul{
     font-family: Verdana, sans-serif;
 }
 
-@media print{
-    .no-print{
-        display: none;
-    }
+.errorlist{
+    color: red;
 }
+
+ a:link {
+        text-decoration: none;
+    }
+    a {
+        color: black;
+    }
+
+    #print-foot {
+         display: table-footer-group;
+    }
+
+    #print-foot {
+            display: block;
+            position: fixed;
+            bottom: 0pt;
+            right: 0pt;
+            font-size: 150%;
+        }
+
+        #print-foot:before {
+            counter-increment: page;
+            content: counter(page) "/";
+        }
+        #print-foot:after {
+        counter-increment: pages;
+        content: counter(pages);
+        }
+
+    #date, #print-foot {
+        visibility: hidden;
+    }
+
+    @media print {
+        #print-foot {
+            margin-top: 2%;
+            visibility: visible;
+        }
+        a {
+            text-decoration: none;
+            color: black;
+        }
+         a[href]:after {
+            content: none !important;
+         }
+
+        .d-print-none {
+            display: none !important
+        }
+
+        #date {
+            font-size: 15pt;
+            visibility: visible;
+            margin-bottom: 4%;
+        }
+
+        .statH {
+            font-size: 45pt;
+        }
+
+        .containerToPrint {
+            max-width: fit-content;
+        }
+
+        .tbl {
+            font-size: 17pt;
+        }
+    }

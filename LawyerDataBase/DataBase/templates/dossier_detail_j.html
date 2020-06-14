@@ -55,6 +55,7 @@
 {% endblock %}
 
 {% block content %}
+    <p id="date"></p>
 <div></div>
 <div style="margin-top: 3%" class="container-fluid margin-fix row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 70%;">
@@ -168,9 +169,10 @@
    {% if request.user|has_group:"Секретар"%}
                 <div>
                 {% if not dossier.paid %}
-                    <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
+                    <a class="btn btn-outline-info d-print-none" href="{% url 'dossier_j-update' pk=object.pk %}">Редагувати</a>
                 {% endif %}
-                    <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
+                    <a class="btn btn-outline-danger d-print-none" href="{% url 'dossier_j-delete' pk=object.pk %}">Видалити</a>
+                <a class="btn btn-outline-success d-print-none" onClick="window.print()">Друкувати</a>
                 </div>
     {% endif %}
 </div>
@@ -219,6 +221,7 @@
             window.history.back();
         }
     </script>
+    <div id="print-foot"></div>
 {% endblock %}
 
 {% block script %}
