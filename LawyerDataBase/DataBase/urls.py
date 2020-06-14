@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('register/', views.register, name='register'),
     path('register/<pk>/<mail>/', views.register, name='register'),
     path('statistics/', views.StatisticsView.as_view(), name='stats'),
     path('lawyers/', views.LawyerListView.as_view(), name='lawyers'),
@@ -35,8 +34,6 @@ urlpatterns = [
     path('service/create', views.ServicesCreateView.as_view(), name='service-create'),
     path('service/<pk>/update', views.ServicesUpdateView.as_view(), name='service-update'),
     path('service/<pk>/delete', views.ServicesDeleteView.as_view(), name='service-delete'),
-    path('dossier_N/create', views.Dossier_NCreateView.as_view(), name='dossier_n-create'),
-    path('dossier_J/create', views.Dossier_JCreateView.as_view(), name='dossier_j-create'),
     path('dossier_N/<pk>/create', views.Dossier_NCreateView.as_view(), name='dossier_n-create'),
     path('dossier_J/<pk>/create', views.Dossier_JCreateView.as_view(), name='dossier_j-create'),
     path('dossier_N/<pk>/update', views.Dossier_NUpdateView.as_view(), name='dossier_n-update'),
