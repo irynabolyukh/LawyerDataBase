@@ -69,7 +69,7 @@ class LawyerForm(ModelForm):
     specialization = forms.CharField(label='Спеціалізація')
     mail_info = forms.EmailField(label='E-mail')
     service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
-                                             queryset=Services.objects.all(),
+                                             queryset=Services.objects.filter(active=True),
                                              widget=CheckboxSelectMultiple)
     work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
                                              queryset=Work_days.objects.all(),
@@ -88,7 +88,7 @@ LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_
 class LawyerServiceForm(forms.Form):
     service_code = forms.CharField(label='Код послуги', disabled=True)
     lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
-                                             queryset=Lawyer.objects.all(),
+                                             queryset=Lawyer.objects.all().filter(active=True),
                                              widget=CheckboxSelectMultiple)
 
     def __init__(self, *args, **kwargs):
@@ -112,7 +112,7 @@ class ServicesForm(ModelForm):
     nominal_value = forms.DecimalField(label='Номінальна вартість', max_digits=6, decimal_places=2)
     bonus_value = forms.DecimalField(label='Бонусна вартість', max_digits=6, decimal_places=2)
     lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
-                                             queryset=Lawyer.objects.all(),
+                                             queryset=Lawyer.objects.all().filter(active=True),
                                              widget=CheckboxSelectMultiple)
     service_group = forms.ModelChoiceField(label='Група послуг', required=False, queryset=ServiceGroup.objects.all())
 
@@ -149,9 +149,9 @@ class Appointment_NForm(ModelForm):
     app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
     app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
     code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
 
     class Meta:
@@ -171,17 +171,17 @@ class Appointment_NForm(ModelForm):
             user_id = Client_natural.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_n'].initial=user_id.pk
             self.fields['num_client_n'].disabled = True
-            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(num_client_n=user_id).filter(status='open')
+            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=user_id).filter(status='open')
 
 
 class Appointment_JForm(ModelForm):
-    app_date = forms.DateField(label='Дата',widget=TextInput(attrs={'readonly':'readonly'}))
-    app_time = forms.TimeField(label='Час',widget=TimeInput(format='%H:%M'))
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly':'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
     comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
-    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all())
-    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all())
-    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(status='open'))
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(active=True).filter(status='open'))
 
     class Meta:
         model = Appointment_J
@@ -195,13 +195,13 @@ class Appointment_JForm(ModelForm):
             user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
             self.fields['num_client_j'].initial=user_id.pk
             self.fields['num_client_j'].disabled = True
-            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(num_client_j=user_id).filter(status='open')
+            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=user_id).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):
     code_dossier_j = forms.CharField(label='Код', max_length=8, min_length=8)
-    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
@@ -232,8 +232,8 @@ class Dossier_JForm(ModelForm):
 
 class Dossier_NForm(ModelForm):
     code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
-    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all())
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
     issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
@@ -332,7 +332,7 @@ class Appointment_JFormUpdate(ModelForm):
 
 
 class Dossier_JFormUpdate(ModelForm):
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(), required=False)
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
     paid = forms.BooleanField(label='Оплачено', required=False)
@@ -352,7 +352,7 @@ class Dossier_JFormUpdate(ModelForm):
 
 
 class Dossier_NFormUpdate(ModelForm):
-    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all(),
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True),
                                          required=False)
     status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
     date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
