@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -930,8 +932,62 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     queryset = Lawyer.objects.order_by('surname')
 
 
-class ServicesListView(ListView):
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        lawyer_id = self.request.GET.get('lawyer_id', '')
+        surname = self.request.GET.get('surname', '')
+        mail = self.request.GET.get('mail', '')
+        spec = self.request.GET.get('spec', '')
+
+
+        data['object_list'] = Lawyer.objects.filter(lawyer_code__icontains=lawyer_id).\
+                                            filter(mail_info__icontains=mail).\
+                                            filter(surname__icontains=surname).\
+                                            filter(specialization__icontains=spec)
+
+        selected_services = self.request.GET.getlist('services', '')
+        if selected_services is not '':
+            lawyers_services = lawyer_service_by_name(selected_services)
+            all_lawyers = Lawyer.objects.all()
+            for lawyer in lawyers_services:
+                all_lawyers = all_lawyers.exclude(lawyer_code=lawyer['lawyer_code'])
+            for lawyer in all_lawyers:
+                data['object_list'] = data['object_list'].exclude(lawyer_code=lawyer.lawyer_code)
+
+
+
+
+        data['spec'] = spec
+        data['lawyer_id'] = lawyer_id
+        data['mail'] = mail
+        data['surname'] = surname
+        data['selected_services'] = json.dumps(selected_services)
+        data['services'] = Services.objects.all()
+        return data
+
+
+class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    permission_required = 'DataBase.view_all_services'
     model = Services
+    paginate_by = 25
+    ordering = ['service_code']
+    queryset = Services.objects.order_by('service_code')
+
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        service_id = self.request.GET.get('service_id', '')
+        se_name = self.request.GET.get('se_name', '')
+        group_sel = self.request.GET.get('group', '')
+        data['object_list'] = Services.objects.filter(service_code__icontains=service_id).\
+                                                filter(service_group__name_group__icontains=group_sel).\
+                                                filter(name_service__icontains=se_name)
+
+        data['service_id'] = service_id
+        data['se_name'] = se_name
+        data['group_sel'] = group_sel
+        data['groups'] = ServiceGroup.objects.all()
+        return data
 
 
 class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -940,12 +996,62 @@ class Client_juridicalListView(LoginRequiredMixin, PermissionRequiredMixin, List
     paginate_by = 25
     queryset = Client_juridical.objects.order_by('surname')
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        edrp_id = self.request.GET.get('edrp_id', '')
+        comp_name = self.request.GET.get('comp_name', '')
+        mail = self.request.GET.get('mail', '')
+        surname = self.request.GET.get('surname', '')
+        city = self.request.GET.get('city', '')
+        phone_num = self.request.GET.get('phone', '')
+        data['object_list'] = Client_juridical.objects.filter(num_client_j__icontains=edrp_id).\
+                                                filter(surname__icontains=surname).\
+                                                filter(mail_info__icontains=mail).\
+                                                filter(name_of_company__icontains=comp_name).\
+                                                filter(adr_city__icontains=city)
+        if phone_num is not '':
+            phones = NPhone.objects.exclude(phone_num__icontains=phone_num)
+            for phone in phones:
+                data['object_list'] = data['object_list'].exclude(num_client_j=phone.client_juridical.num_client_j)
+        data['edrp_id'] = edrp_id
+        data['comp_name'] = comp_name
+        data['mail'] = mail
+        data['surname'] = surname
+        data['phone'] = phone_num
+        data['city'] = city
+        return data
+
 
 class Client_naturalListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'DataBase.view_all_nclients'
     model = Client_natural
     paginate_by = 25
     queryset = Client_natural.objects.order_by('surname')
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        ik_id = self.request.GET.get('ik_id', '')
+        passport_id = self.request.GET.get('passport_id', '')
+        surname = self.request.GET.get('surname', '')
+        mail = self.request.GET.get('mail', '')
+        phone_num = self.request.GET.get('phone', '')
+        city = self.request.GET.get('city', '')
+        data['object_list'] = Client_natural.objects.filter(num_client_n__icontains=ik_id).\
+                                                    filter(passport_num__icontains=passport_id).\
+                                                    filter(surname__icontains=surname).\
+                                                    filter(mail_info__icontains=mail).\
+                                                    filter(adr_city__icontains=city)
+        if phone_num is not '':
+            phones = NPhone.objects.exclude(phone_num__icontains=phone_num)
+            for phone in phones:
+                data['object_list'] = data['object_list'].exclude(num_client_n=phone.client_natural.num_client_n)
+        data['ik_id'] = ik_id
+        data['passport_id'] = passport_id
+        data['mail'] = mail
+        data['surname'] = surname
+        data['phone'] = phone_num
+        data['city'] = city
+        return data
 
 
 class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):

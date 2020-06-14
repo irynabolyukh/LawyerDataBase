@@ -47,13 +47,14 @@ class Services(models.Model):
     name_service = models.CharField(max_length=50)
     nominal_value = models.DecimalField(max_digits=6, decimal_places=2)
     bonus_value = models.DecimalField(max_digits=6, decimal_places=2)
-    service_group = models.ForeignKey(ServiceGroup, on_delete=models.DO_NOTHING, related_name='group')
+    service_group = models.ForeignKey(ServiceGroup, on_delete=models.DO_NOTHING, related_name='group', default=None)
 
     def __str__(self):
         return f'{self.service_code} : {self.name_service}'
 
     class Meta:
         db_table = 'Services'
+        ordering = ['service_code']
 
     def get_absolute_url(self):
         return reverse("service-detailed-view", kwargs={"pk": self.service_code})
@@ -125,6 +126,7 @@ class Client_natural(Client):
     birth_date = models.DateField()
     passport_date = models.DateField()
     passport_authority = models.CharField(max_length=6)
+    passport_num = models.CharField(max_length=10)
 
     def __str__(self):
         return f'{self.num_client_n} : {self.first_name} {self.surname}'
