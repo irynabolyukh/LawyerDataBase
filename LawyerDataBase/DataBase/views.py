@@ -1,3 +1,5 @@
+import json
+
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -893,18 +895,35 @@ class LawyerListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        lawyer = self.request.GET.get('lawyer_id', '')
+        lawyer_id = self.request.GET.get('lawyer_id', '')
         surname = self.request.GET.get('surname', '')
         mail = self.request.GET.get('mail', '')
         spec = self.request.GET.get('spec', '')
-        data['object_list'] = Lawyer.objects.filter(lawyer_code__icontains=lawyer).\
+
+
+        data['object_list'] = Lawyer.objects.filter(lawyer_code__icontains=lawyer_id).\
                                             filter(mail_info__icontains=mail).\
                                             filter(surname__icontains=surname).\
                                             filter(specialization__icontains=spec)
+
+        selected_services = self.request.GET.getlist('services', '')
+        if selected_services is not '':
+            lawyers_services = lawyer_service_by_name(selected_services)
+            all_lawyers = Lawyer.objects.all()
+            for lawyer in lawyers_services:
+                all_lawyers = all_lawyers.exclude(lawyer_code=lawyer['lawyer_code'])
+            for lawyer in all_lawyers:
+                data['object_list'] = data['object_list'].exclude(lawyer_code=lawyer.lawyer_code)
+
+
+
+
         data['spec'] = spec
-        data['lawyer_id'] = lawyer
+        data['lawyer_id'] = lawyer_id
         data['mail'] = mail
         data['surname'] = surname
+        data['selected_services'] = json.dumps(selected_services)
+        data['services'] = Services.objects.all()
         return data
 
 
@@ -920,13 +939,15 @@ class ServicesListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         data = super().get_context_data(**kwargs)
         service_id = self.request.GET.get('service_id', '')
         se_name = self.request.GET.get('se_name', '')
-        group = self.request.GET.get('group', '')
+        group_sel = self.request.GET.get('group', '')
         data['object_list'] = Services.objects.filter(service_code__icontains=service_id).\
-                                                filter(service_group__name_group__icontains=group).\
+                                                filter(service_group__name_group__icontains=group_sel).\
                                                 filter(name_service__icontains=se_name)
+
         data['service_id'] = service_id
         data['se_name'] = se_name
-        data['group'] = group
+        data['group_sel'] = group_sel
+        data['groups'] = ServiceGroup.objects.all()
         return data
 
 

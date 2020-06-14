@@ -459,6 +459,28 @@ def lawyers_appointment(services):
 
     return res
 
+def lawyer_service_by_name(services):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'SELECT la.lawyer_code '
+            'FROM "Lawyer" la '
+            'WHERE NOT EXISTS '
+            '   ( SELECT * '
+            '       FROM "Lawyer_service" ls INNER JOIN "Services" AS SE ON ls.services_id = SE.service_code'
+            '       WHERE SE.name_service = ANY (%s)  '
+            '       and la.lawyer_code not in '
+            '               (select lawyer_id '
+            '               from "Lawyer_service" '
+            '               WHERE services_id = ls.services_id))',
+            [services])
+        row = cursor.fetchall()
+    res = []
+    for record in row:
+
+        res.append({'lawyer_code': record[0]})
+
+    return res
+
 def appoint_N_nom_value(param): #count appointment nominal value if Dossier = closed
     with connection.cursor() as cursor:
         cursor.execute(

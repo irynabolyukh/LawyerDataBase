@@ -1,9 +1,11 @@
 {% extends "stat_generic.html" %}
 {% load user_tags %}
 {% block title %}Адвокати{% endblock %}
-
+{% block stylesheet %}
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@0.6.8/dist/css/BsMultiSelect.min.css" type="text/css">#}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
+{% endblock %}
 {% block content %}
-
 <div class="container">
 {% if request.user|has_group:"Секретар"%}
     <div class="container shadow p-3 mb-5 bg-white rounded">
@@ -34,6 +36,27 @@
                         <label for="spec_search">Спеціалізація</label>
                         <input class="form-control border" id='spec_search' type="search"
                                placeholder="Спеціалізація адвоката..." name="spec" value="{{ spec }}">
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="services_search" class="col-form-label col-md-5">Надає послуги</label>
+
+                    <div class="input-group">
+                        <div class="col-md-7">
+                            <select id='services_search' name="services" multiple="multiple" class="long_input form-control border" data-selected-text-format="count">
+                                {% for service in services %}
+                                    {% if not service in selected_services %}
+                                <option value="{{ service.name_service }}">{{ service.name_service }}</option>
+                                    {% else %}
+                                <option value="{{ service.name_service }}" selected>{{ service.name_service }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group-append show height" style="height: 50px;"><a class="btn btn-outline-dark" href="#" onclick="$('#services_search').selectpicker('deselectAll')">Скинути</a></div>
+                    </div>
+
 
                     </div>
                 </div>
@@ -81,4 +104,28 @@
         <h4 class="text-center"><b>Адвокатів не знайдено</b></h4>
 {% endif %}
 </div>
+{% endblock %}
+{% block script %}
+{#    <script src="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@0.6.8/dist/js/BsMultiSelect.min.js"></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript">
+{#        $(document).ready(function () {#}
+{#            $("select[multiple='multiple']").bsMultiSelect();#}
+{#            })#}
+            $(document).ready(function () {
+            $("select[multiple='multiple']").selectpicker({
+                title: "Оберіть послугу",
+                width: '395px',
+                liveSearch: true,
+                liveSearchPlaceholder: "Пошук по послугам...",
+                size: 6,
+            });
+                {% if selected_services %}
+                    var selected_services = {{ selected_services|safe }}
+                    $("select[multiple='multiple']").selectpicker('val', selected_services)
+                {% endif %}
+
+            })
+
+    </script>
 {% endblock %}

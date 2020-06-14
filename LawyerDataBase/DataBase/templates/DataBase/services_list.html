@@ -25,9 +25,18 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="group_search">Група</label>
-                            <input class="form-control border" id='group_search' type="search"
-                                   placeholder="Група послуги..." name="group" value="{{ group }}">
-
+                            <select id='group_search' class="form-control border" name="group">
+                            {% if not group == '' %}
+                            <option value="{{ group_sel }}" selected>{{ group_sel }}</option>
+                            {%else %}
+                            <option selected>Оберіть групу</option>
+                            {% endif %}
+                            {% for group in groups %}
+                                {% if not group.name_group == group_sel %}
+                            <option value="{{ group.name_group }}">{{ group.name_group }}</option>
+                                {% endif %}
+                            {% endfor %}
+                            </select>
                         </div>
 
                     </div>
