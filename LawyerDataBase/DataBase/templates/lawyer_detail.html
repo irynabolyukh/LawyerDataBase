@@ -40,9 +40,6 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-<!--        <div class="nav-item ">-->
-<!--            <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>-->
-<!--        </div>-->
         <div class="nav-item">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
@@ -55,7 +52,7 @@
 {% endblock %}
 {% block content %}
     <p id="date"></p>
-<div class="container">
+<div class="container-fluid">
     <div class="card shadow-lg p-4 mb-4 bg-white">
         <div class="row">
         <div class="col-sm">
@@ -134,7 +131,7 @@
     </div> {% endif %}
 {% if upcoming_app_j or upcoming_app_n %}
     <div class="row card tbl ">
-        <div class="container">
+        <div class="container-fluid">
             <h4>Майбутні</h4>
             <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">
@@ -196,7 +193,7 @@
 <br>
     {% if appointments_j or appointments_n %}
     <div class="row card mb-3">
-        <div class="container">
+        <div class="container-fluid">
             <h4>Минулі</h4>
             <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">

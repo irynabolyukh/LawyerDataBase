@@ -39,9 +39,6 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-<!--        <div class="nav-item ">-->
-<!--            <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>-->
-<!--        </div>-->
         <div class="nav-item">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
@@ -57,7 +54,7 @@
 {% endblock %}
 {% block content %}
 <div></div>
-<div class="container">
+<div class="container-fluid">
 <div style="margin-top: 3%" class="container-fluid row align-items-center justify-content-center">
     <div class="card row align-items-center justify-content-center shadow-lg p-4 mb-4 bg-white" style="width: 50%;">
         <h5> {{ client_juridical.first_name }} {{ client_juridical.surname }} {{ client_juridical.mid_name }}</h5>
@@ -97,7 +94,7 @@
 {% endif %}
 {% if not request.user|has_group:"Адвокат"%}
 <hr>
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
         {% if upcoming_app_j or appointments_j%}
      <h2 class="text-center">Записи</h2>
         {% endif %}
@@ -180,7 +177,7 @@
     {% endif %}
 
     {% if appointments_j %}
-    <div class="container">
+    <div class="container-fluid">
     <h5>Минулі</h5>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
@@ -257,7 +254,7 @@
     {% endif %}
     {% if dossiers %}
 
-    <div class="container mt-5">
+    <div class="container-fluid mt-5">
     <h2 class="text-center">Досьє</h2>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
@@ -315,7 +312,7 @@
         </div>
     {% endif %}
         {% if request.user|has_group:"Секретар"%}
-            <div class="container row align-items-center justify-content-center">
+            <div class="container-fluid row align-items-center justify-content-center">
                 <a style="margin: 1%;" class="btn  btn-block btn-outline-danger" href="{% url 'client_juridical-delete' pk=object.pk %}">Видалити клієнта</a></div>
          {% endif %}
 {% endif %}
