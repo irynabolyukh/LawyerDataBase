@@ -7,7 +7,7 @@ from django.forms import Textarea, TimeInput, TextInput, CheckboxSelectMultiple
 
 from django.utils.translation import ugettext_lazy as _
 
-
+# class CustomUserCreationForm(ModelForm):
 class CustomUserCreationForm(forms.Form):
     # username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150, required=False)
     # email = forms.EmailField(label='E-mail')
@@ -28,7 +28,7 @@ class CustomUserCreationForm(forms.Form):
         username = self.cleaned_data['username'].lower()
         r = User.objects.filter(username=username)
         if r.count():
-            raise ValidationError("Username already exists")
+             raise ValidationError("Username already exists")
         return username
 
     def clean_email(self):
@@ -43,7 +43,7 @@ class CustomUserCreationForm(forms.Form):
         password2 = self.cleaned_data.get('password2')
 
         if password1 and password2 and password1 != password2:
-            raise ValidationError("Password don't match")
+            raise ValidationError("Паролі не збігаються")
 
         return password2
 
@@ -51,7 +51,7 @@ class CustomUserCreationForm(forms.Form):
         user = User.objects.create_user(
             'username',
             'email',
-            self.cleaned_data['password1']
+             self.cleaned_data['password1']
         )
         user.groups.add(self.cleaned_data['group'])
         return user
@@ -59,6 +59,7 @@ class CustomUserCreationForm(forms.Form):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'group']
+
 
 
 class LawyerForm(ModelForm):
@@ -165,13 +166,113 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+        pk = kwargs.pop('pk')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="Фізичний клієнт").exists():
-            user_id = Client_natural.objects.filter(mail_info=user.email)[0]
-            self.fields['num_client_n'].initial=user_id.pk
-            self.fields['num_client_n'].disabled = True
-            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=user_id).filter(status='open')
+        self.fields['num_client_n'].initial = pk
+        self.fields['num_client_n'].disabled = True
+        # if user.groups.filter(name="Фізичний клієнт").exists():
+        #     user_id = Client_natural.objects.filter(mail_info=user.email)[0]
+        #     self.fields['num_client_n'].initial=user_id.pk
+        #     self.fields['num_client_n'].disabled = True
+        self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
+
+
+class Appoint_NForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_n', 'code_dossier_n', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('pk')
+        dossier_code = kwargs.pop('dossier_code')
+        super(Appoint_NForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_n'].initial = pk
+        self.fields['num_client_n'].disabled = True
+        self.fields['code_dossier_n'].initial = dossier_code
+        self.fields['code_dossier_n'].disabled = True
+
+
+class Appoint_JForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+    def __init__(self, *args, **kwargs):
+        pk = kwargs.pop('pk')
+        dossier_code = kwargs.pop('dossier_code')
+        super(Appoint_JForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_j'].initial = pk
+        self.fields['num_client_j'].disabled = True
+        self.fields['code_dossier_j'].initial = dossier_code
+        self.fields['code_dossier_j'].disabled = True
+
+
+class App_JForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_j = forms.ModelChoiceField(label='Досьє', queryset=Dossier_J.objects.all().filter(num_client_j=num_client_j).filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_j', 'code_dossier_j', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
+
+
+class App_NForm(ModelForm):
+    app_date = forms.DateField(label='Дата', widget=TextInput(attrs={'readonly': 'readonly'}))
+    app_time = forms.TimeField(label='Час', widget=TimeInput(format='%H:%M'))
+    comment = forms.CharField(label='Коментарій', required=False, widget=forms.Textarea)
+    service = forms.ModelMultipleChoiceField(label='Послуги', queryset=Services.objects.all().filter(active=True))
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True))
+    code_dossier_n = forms.ModelChoiceField(label='Досьє', queryset=Dossier_N.objects.all().filter(num_client_n=num_client_n).filter(status='open'))
+
+    class Meta:
+        model = Appointment_N
+        fields = ['num_client_n', 'code_dossier_n', 'service', 'lawyer_code', 'app_date', 'app_time', 'comment']
+        widgets = {
+
+            'app_time': TimeInput(format='%H:%M'),
+            'app_date': TextInput(attrs={'readonly': 'readonly'})
+
+        }
 
 
 class Appointment_JForm(ModelForm):
@@ -189,13 +290,15 @@ class Appointment_JForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+        pk = kwargs.pop('pk')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        if user.groups.filter(name="Юридичний клієнт").exists():
-            user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
-            self.fields['num_client_j'].initial=user_id.pk
-            self.fields['num_client_j'].disabled = True
-            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=user_id).filter(status='open')
+        self.fields['num_client_j'].initial = pk
+        self.fields['num_client_j'].disabled = True
+        # if user.groups.filter(name="Юридичний клієнт").exists():
+        #     user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
+        #     self.fields['num_client_j'].initial=user_id.pk
+        #     self.fields['num_client_j'].disabled = True
+        self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):

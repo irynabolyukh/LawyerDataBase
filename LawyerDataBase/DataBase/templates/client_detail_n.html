@@ -78,7 +78,7 @@
                     <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
                     <br><br>
                         <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_n-create' pk=object.pk %}">Нове Досьє</a>
-                        <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записати на послугу</a>
+                        <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.pk %}">Записати на послугу</a>
                         {% endif %}
                 </div>
         </div>
@@ -87,7 +87,7 @@
 <div class="container-fluid row align-items-center justify-content-center">
 {% if request.user|has_group:"Фізичний клієнт"%}
 <div class="container row align-items-center justify-content-center">
-        <a class="btn btn-outline-info" href="{% url 'appointment_n-create' %}">Записатися на послугу</a>
+        <a class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.pk %}">Записатися на послугу</a>
 </div>
 </div>
 {% endif %}
