@@ -333,6 +333,32 @@ class Dossier_JForm(ModelForm):
         exclude = ('active',)
 
 
+class Doss_JForm(ModelForm):
+    code_dossier_j = forms.CharField(label='Код', max_length=8, min_length=8)
+    num_client_j = forms.ModelChoiceField(label='Клієнт', queryset=Client_juridical.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
+    issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
+    status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
+    date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
+    date_expired = forms.DateField(label='Дата спливу', widget=TextInput(attrs={'autocomplete':'off'}))
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+    fee = forms.DecimalField(label='Гонорар', initial=0, widget=TextInput(attrs={'readonly ':'readonly'}))
+    paid = forms.BooleanField(label='Оплачено', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+        return paidcontext
+
+    class Meta:
+        model = Dossier_J
+        exclude = ('active',)
+
+
 class Dossier_NForm(ModelForm):
     code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
     num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
@@ -365,6 +391,38 @@ class Dossier_NForm(ModelForm):
         super(Dossier_NForm, self).__init__(*args, **kwargs)
         self.fields['num_client_n'].initial = user_id
         self.fields['num_client_n'].disabled = True
+
+    class Meta:
+        model = Dossier_N
+        exclude = ('active',)
+
+
+class Doss_NForm(ModelForm):
+    code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
+    num_client_n = forms.ModelChoiceField(label='Клієнт', queryset=Client_natural.objects.all().filter(active=True))
+    lawyer_code = forms.ModelChoiceField(label='Адвокат', queryset=Lawyer.objects.all().filter(active=True), required=False)
+    issue = forms.CharField(label='Суть справи', widget=forms.Textarea)
+    status = forms.ChoiceField(label='Статус', choices=Dossier.DOS_STATUS)
+    date_signed = forms.DateField(label='Дата підписання', widget=TextInput(attrs={'autocomplete':'off'}))
+    date_expired = forms.DateField(label='Дата спливу', widget=TextInput(attrs={'autocomplete':'off'}))
+    date_closed = forms.DateField(label='Дата закриття', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+    fee = forms.DecimalField(label='Гонорар', initial=0, widget=TextInput(attrs={'readonly ':'readonly'}))
+    paid = forms.BooleanField(label='Оплачено', required=False)
+    court_name = forms.CharField(max_length=100, label='Суд', required=False)
+    court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
+    court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+
+    def clean_paid(self):
+        paidcontext = self.cleaned_data['paid']
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+        return paidcontext
+
+    def clean(self):
+        cleaned_data = super(Dossier_NForm, self).clean()
+
+        print(cleaned_data)
+        return cleaned_data
 
     class Meta:
         model = Dossier_N
