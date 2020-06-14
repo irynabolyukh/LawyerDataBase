@@ -118,7 +118,7 @@ class ServicesForm(ModelForm):
 
     class Meta:
         model = Services
-        fields = '__all__'
+        exclude = ('active',)
 
 
 class ServicesUpdateForm(ModelForm):
@@ -227,7 +227,7 @@ class Dossier_JForm(ModelForm):
 
     class Meta:
         model = Dossier_J
-        fields = '__all__'
+        exclude = ('active',)
 
 
 class Dossier_NForm(ModelForm):
@@ -265,7 +265,7 @@ class Dossier_NForm(ModelForm):
 
     class Meta:
         model = Dossier_N
-        fields = '__all__'
+        exclude = ('active',)
 
 
 class Client_NForm(ModelForm):
@@ -282,10 +282,9 @@ class Client_NForm(ModelForm):
     passport_authority = forms.CharField(label='Орган паспорта', max_length=6, min_length=6)
     passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
 
-
     class Meta:
         model = Client_natural
-        fields = '__all__'
+        exclude = ('active',)
 
 
 class Client_JForm(ModelForm):
@@ -303,7 +302,7 @@ class Client_JForm(ModelForm):
 
     class Meta:
         model = Client_juridical
-        fields = '__all__'
+        exclude = ('active',)
 
 
 class Appointment_NFormUpdate(ModelForm):
@@ -371,3 +370,51 @@ class Dossier_NFormUpdate(ModelForm):
     class Meta:
         model = Dossier_N
         fields = ['date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+
+
+class Appoint_NFormDelete(ModelForm):
+    class Meta:
+        model = Appointment_N
+        fields = ['active']
+
+
+class Appoint_JFormDelete(ModelForm):
+    class Meta:
+        model = Appointment_J
+        fields = ['active']
+
+
+class Dossier_NFormDelete(ModelForm):
+    class Meta:
+        model = Dossier_N
+        fields = ['active']
+
+
+class Dossier_JFormDelete(ModelForm):
+    class Meta:
+        model = Dossier_J
+        fields = ['active']
+
+
+class Client_NFormDelete(ModelForm):
+    class Meta:
+        model = Client_natural
+        fields = ['active']
+
+
+class Client_JFormDelete(ModelForm):
+    class Meta:
+        model = Client_juridical
+        fields = ['active']
+
+
+class LawyerFormDelete(ModelForm):
+    class Meta:
+        model = Lawyer
+        fields = ['active']
+
+
+class ServiceFormDelete(ModelForm):
+    class Meta:
+        model = Services
+        fields = ['active']
