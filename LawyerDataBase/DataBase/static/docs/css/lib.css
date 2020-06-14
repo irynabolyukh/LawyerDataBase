@@ -3854,9 +3854,24 @@ html {
     }
 }
 
+.statH {
+    margin-bottom: 5% !important;
+}
+
+#date {
+    visibility: hidden;
+}
+
 @media print {
     .d-print-none {
         display: none !important
+    }
+    #date {
+        visibility: visible;
+    }
+
+    .statH {
+        font-size: 45pt;
     }
 
     .d-print-inline {

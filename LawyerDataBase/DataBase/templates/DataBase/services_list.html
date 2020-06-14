@@ -49,12 +49,21 @@
         </form>
     </div>
     {% endif %}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
         <h2 class="font-weight-bold">Послуги</h2>
        {% if request.user|has_group:"Секретар"%}
-         <a class="btn btn-outline-success btn-block m-2" href="{% url 'service_group-create' %}">Додати нову групу послуг</a>
-         <a class="btn btn-outline-success btn-block m-2" href="{% url 'service-create' %}">Додати нову послугу</a>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm">
+                    <a class="btn btn-outline-success btn-block d-print-none m-2" href="{% url 'service-create' %}">Додати нову послугу</a>
+                </div>
+                <div class="col-sm">
+                    <a class="btn btn-outline-success btn-block d-print-none m-2" href="{% url 'service_group-create' %}">Додати нову групу послуг</a>
+                </div>
+             </div>
+        </div>
          {% endif %}
     </div>
 {% if object_list %}
@@ -83,8 +92,8 @@
             <td>{{ service.bonus_value }}</td>
             {% if request.user|has_group:"Секретар"%}
             <td>
-                <a class="btn btn-outline-info" href="{% url 'service-update' pk=service.pk  %}">Редагувати</a>
-                <a class="btn btn-outline-danger" href="{% url 'service-delete' pk=service.pk  %}">Видалити</a>
+                <a class="btn btn-outline-info d-print-none" href="{% url 'service-update' pk=service.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger d-print-none" href="{% url 'service-delete' pk=service.pk  %}">Видалити</a>
             </td>
             {% endif %}
         </tr>

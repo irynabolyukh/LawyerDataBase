@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
 {% endblock %}
 {% block content %}
-<div class="container">
 {% if request.user|has_group:"Секретар"%}
     <div class="container shadow p-3 mb-5 bg-white rounded">
         <div class="justify-content-center text-center"><h2>Фільтри пошуку</h2></div>
@@ -70,9 +69,11 @@
     </form>
     </div>
 {% endif %}
+<div class="container-fluid">
+
      <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
         <h2 class="font-weight-bold">Адвокати</h2>
-              <a class="btn btn-outline-success btn-block m-2" href="{% url 'lawyer-create' %}">Зареєструвати адвоката</a>
+              <a class=" d-print-none btn btn-outline-success btn-block m-2" href="{% url 'lawyer-create' %}">Зареєструвати адвоката</a>
      </div>
     {% if object_list %}
     <table class="table table-striped table-hover table_border">
@@ -93,8 +94,8 @@
             <td>{{ lawyer.specialization }}</td>
             <td><a href=mailto:lawyer.mail_info>{{ lawyer.mail_info }}</a></td>
             <td>
-                <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Редагувати</a>
-                <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Видалити</a>
+                <a class="btn btn-outline-info d-print-none" href="{% url 'lawyer-update' pk=lawyer.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-danger d-print-none" href="{% url 'lawyer-delete' pk=lawyer.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

@@ -2,10 +2,10 @@
 {% block title %}Юридичні записи{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
      <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
         <h2 class="font-weight-bold">Юридичні записи</h2>
-         <a class="btn btn-outline-success btn-block m-2" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
+         <a class="btn btn-outline-success btn-block m-2 d-print-none" href="{% url 'appointment_j-create' %}">Записати на послугу</a>
      </div>
     <table class="table table-striped table_border table-hover">
         <thead class="thead-dark">
@@ -38,9 +38,9 @@
             <td><a href="{{ appointment.num_client_j.get_absolute_url }}">{{ appointment.num_client_j.getfullname }}</a></td>
             <td>
                 {% if appointment.is_open %}
-                <a class="btn btn-outline-info" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-info d-print-none" href="{% url 'appointment_j-update' pk=appointment.pk  %}">Редагувати</a>
                 {% endif %}
-                <a class="btn btn-outline-danger" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
+                <a class="btn btn-outline-danger d-print-none" href="{% url 'appointment_j-delete' pk=appointment.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

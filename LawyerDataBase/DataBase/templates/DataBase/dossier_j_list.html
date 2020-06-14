@@ -2,10 +2,9 @@
 {% block title %}Юридичні досьє{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container-fluid">
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
      <h2 class="font-weight-bold">Юридичні досьє</h2>
-             <a class="btn btn-outline-success btn-block m-2" href="{% url 'dossier_j-create' %}">Нове Досьє</a>
      </div>
     <table class="table table-striped table_border table-hover">
         <thead class="thead-dark">
@@ -48,9 +47,9 @@
             <td><a href="{{ dossier.num_client_j.get_absolute_url }}">{{ dossier.num_client_j.getfullname }}</a></td>
             <td>
                 {% if not dossier.paid %}
-                <a class="btn btn-outline-info" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-info d-print-none" href="{% url 'dossier_j-update' pk=dossier.pk  %}">Редагувати</a>
                 {% endif %}
-                <a class="btn btn-outline-danger" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>
+                <a class="btn btn-outline-danger d-print-none" href="{% url 'dossier_j-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

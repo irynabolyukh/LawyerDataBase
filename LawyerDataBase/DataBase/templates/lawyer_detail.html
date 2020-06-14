@@ -40,9 +40,6 @@
                 <a class="nav-link dropdown-item" href="{% url 'nappointments' %}">Фізичні записи</a>
             </div>
         </div>
-<!--        <div class="nav-item ">-->
-<!--            <a  class="navbar-brand" href="{% url 'register' %}"> Додати користувача</a>-->
-<!--        </div>-->
         <div class="nav-item">
             <a class="navbar-brand" href="{% url 'stats' %}">Статистика</a>
         </div>
@@ -54,7 +51,8 @@
 {% endif %}
 {% endblock %}
 {% block content %}
-<div class="container">
+    <p id="date"></p>
+<div class="container-fluid">
     <div class="card shadow-lg p-4 mb-4 bg-white">
         <div class="row">
         <div class="col-sm">
@@ -99,16 +97,17 @@
             <div><br><br></div>
 
                 <div>
-                    <a class="btn btn-outline-info" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
+                    <a class="btn btn-outline-info d-print-none" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
                     {% if request.user|has_group:"Секретар"%}
-                    <a class="btn btn-outline-danger" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
+                    <a class="btn btn-outline-danger d-print-none" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
                     {% endif %}
+                    <a class="btn btn-outline-success d-print-none" onClick="window.print()">Друкувати</a>
                 </div>
 
         </div>
         </div>
     </div>
-<div class="container">
+<div class="container containerToPrint">
     <div class="card">
     <div class="row">
     <div class="col-sm">
@@ -131,8 +130,8 @@
     <h2 class="text-center">Записи</h2>
     </div> {% endif %}
 {% if upcoming_app_j or upcoming_app_n %}
-    <div class="row card">
-        <div class="container">
+    <div class="row card tbl ">
+        <div class="container-fluid">
             <h4>Майбутні</h4>
             <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">
@@ -194,7 +193,7 @@
 <br>
     {% if appointments_j or appointments_n %}
     <div class="row card mb-3">
-        <div class="container">
+        <div class="container-fluid">
             <h4>Минулі</h4>
             <table class="table table-striped table_border table-hover">
                 <thead class="thead-dark">
@@ -255,6 +254,7 @@
     </div>
 </div>
     {% endif %}
+    <div id="print-foot"></div>
 {% endblock %}
 
 {% block script %}

@@ -10,8 +10,8 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class CustomUserCreationForm(forms.Form):
-    username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150)
-    email = forms.EmailField(label='E-mail')
+    # username = forms.CharField(label='Ім`я користувача', min_length=4, max_length=150, required=False)
+    # email = forms.EmailField(label='E-mail')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Підтвердіть пароль', widget=forms.PasswordInput)
     group = forms.ModelChoiceField(label='Група', queryset=Group.objects.all(), required=True)
@@ -39,15 +39,18 @@ class CustomUserCreationForm(forms.Form):
 
         return password2
 
-
     def save(self, commit=True):
         user = User.objects.create_user(
-            self.cleaned_data['username'],
-            self.cleaned_data['email'],
+            'username',
+            'email',
             self.cleaned_data['password1']
         )
         user.groups.add(self.cleaned_data['group'])
         return user
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'group']
 
 
 class LawyerForm(ModelForm):
@@ -128,6 +131,7 @@ class ServicesUpdateForm(ModelForm):
             raise ValidationError(_('Бонусна вартість не може бути меншою за номінальну'), code='invalid')
         return bonus_value
 
+
 NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
 JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
@@ -207,6 +211,12 @@ class Dossier_JForm(ModelForm):
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
         return paidcontext
 
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_JForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_j'].initial = user_id
+        self.fields['num_client_j'].disabled = True
+
     class Meta:
         model = Dossier_J
         fields = '__all__'
@@ -238,6 +248,12 @@ class Dossier_NForm(ModelForm):
 
         print(cleaned_data)
         return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('pk')
+        super(Dossier_NForm, self).__init__(*args, **kwargs)
+        self.fields['num_client_n'].initial = user_id
+        self.fields['num_client_n'].disabled = True
 
     class Meta:
         model = Dossier_N

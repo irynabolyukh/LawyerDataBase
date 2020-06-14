@@ -66,10 +66,10 @@
         </form>
     </div>
     {% endif %}
-<div class="container">
+<div class="container-fluid">
+
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
      <h2 class="font-weight-bold">Фізичні досьє</h2>
-             <a class="btn btn-outline-success btn-block m-2" href="{% url 'dossier_n-create' %}">Нове досьє</a>
      </div>
     <table class="table table-striped table-hover table_border">
         <thead class="thead-dark">
@@ -112,9 +112,9 @@
             <td><a href="{{ dossier.num_client_n.get_absolute_url }}">{{ dossier.num_client_n.getfullname }}</a></td>
             <td>
                 {% if not dossier.paid %}
-                <a class="btn btn-outline-info" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Редагувати</a>
+                <a class="btn btn-outline-info d-print-none" href="{% url 'dossier_n-update' pk=dossier.pk  %}">Редагувати</a>
                 {% endif %}
-                <a class="btn btn-outline-danger" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Видалити</a>
+                <a class="btn btn-outline-danger d-print-none" href="{% url 'dossier_n-delete' pk=dossier.pk  %}">Видалити</a>
             </td>
         </tr>
         {% endfor %}

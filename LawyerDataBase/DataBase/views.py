@@ -13,20 +13,34 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, F
 
+
 @login_required()
 @requires_csrf_token
-def register(request):
+def register(request, pk, mail):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            page = form.save(commit=False)
+            page.username = pk
+            page.email = mail
+            page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                return redirect('dossier_j-create')
+                print(pk)
+                url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
+                return redirect(url)
+                # return redirect('dossier_j-create')
+                # return redirect("stats")
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
-                return redirect('dossier_n-create')
+                # client = Client_natural.objects.get(num_client_n=pk)
+                # client_code = client.__getattribute__('num_client_n')
+                url = "http://127.0.0.1:8000/database/dossier_N/" + pk + "/create"
+                return redirect(url)
+                # return redirect("stats")
+                # return redirect('dossier_n-create')
+                #return reverse("dossier_n-create", kwargs={'pk': Client_natural.objects.get(num_client_n=pk).pk})
             else:
-                return redirect('stats')
+                return redirect("stats")
     else:
         form = CustomUserCreationForm()
 
@@ -68,6 +82,7 @@ def lawyer_service_code(request):
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
 
+
 @login_required()
 @requires_csrf_token
 def lawyer_work_days(request):
@@ -88,8 +103,8 @@ def dayblockedtime(request):
     if request.method == 'POST':
         response = {}
         date_lawyer = date(int(request.POST['date[year]']),
-                      int(request.POST['date[month]']),
-                      int(request.POST['date[day]']))
+                           int(request.POST['date[month]']),
+                           int(request.POST['date[day]']))
         response['time'] = blocked_time_lawyer(request.POST['lawyer'], date_lawyer)
         return JsonResponse(response)
     else:
@@ -156,9 +171,6 @@ def getStats(request):
         for service in response['service_count']:
             response['value'] += service['sum']
 
-
-
-
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
@@ -211,8 +223,10 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(status__istartswith='closed').count()
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
+            status__istartswith='closed').count()
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
+            status__istartswith='closed').count()
 
         try:
             context['nominal_value'] = lawyer_nom_value(la_code)[1]
@@ -315,7 +329,6 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         else:
             return True
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
@@ -325,8 +338,8 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']).\
-                            order_by('-app_date', '-app_time')
+        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']). \
+            order_by('-app_date', '-app_time')
         context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
         return context
 
@@ -394,7 +407,8 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False,
+                                             labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["lphone"] = phoneFormSet(self.request.POST)
         else:
@@ -413,8 +427,7 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
-        # return reverse("register", kwargs={self.object.mail_info})
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("lawyer-detailed-view", kwargs={'pk': self.object.pk})
 
 
@@ -524,7 +537,8 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False,
+                                             labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["nphone"] = phoneFormSet(self.request.POST)
         else:
@@ -543,7 +557,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-n", kwargs={'pk': self.object.pk})
 
 
@@ -607,7 +621,7 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return kwargs
 
     def get_success_url(self):
-        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
+        return reverse("service-detailed-view", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -618,7 +632,9 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        PhoneFormSet = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], can_delete=False, labels={'phone_num': ('Телефон')})
+        PhoneFormSet = inlineformset_factory(
+            Client_juridical, JPhone, max_num=2, fields=['phone_num'],
+            can_delete=False, labels={'phone_num': ('Телефон')})
         if self.request.POST:
             data["jphone"] = PhoneFormSet(self.request.POST)
         else:
@@ -637,7 +653,7 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("register")
+        return reverse("register", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
         # return reverse("client-detailed-view-j", kwargs={'pk': self.object.pk})
 
 
@@ -801,6 +817,11 @@ class Dossier_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     form_class = Dossier_NForm
     template_name = 'create_dossier_n.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_NCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
@@ -846,6 +867,11 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
     form_class = Dossier_JForm
     template_name = 'create_dossier_j.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_JCreateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
@@ -855,7 +881,6 @@ class Dossier_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVie
         return super().form_valid(form)
 
     def get_success_url(self):
-        # return reverse("register")
         return reverse("dossier-detailed-j", kwargs={'pk': self.object.pk})
 
 
@@ -1047,4 +1072,3 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     paginate_by = 25
     ordering = ['-app_date']
     queryset = Appointment_J.objects.order_by('app_date').order_by('app_time')
-

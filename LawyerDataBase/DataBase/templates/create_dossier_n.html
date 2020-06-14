@@ -2,7 +2,7 @@
 {% block title %}Нове досьє{% endblock %}
 
 {% block navbar %}
-    <a class="navbar-brand" href="{% url 'ndossiers' %}">🢀Усі фізичні досьє</a>
+<!--    <a class="navbar-brand" onclick="goBack()" href="#">🢀До профілю клієнта</a>-->
 {% endblock %}
 
 {% block content %}
@@ -26,5 +26,9 @@
 
     <script src="{% static 'docs/js/highlightRequired.js' %}"></script>
     <script src="{% static 'docs/js/dossierCreate.js' %}"></script>
-
+<script>
+        function goBack() {
+            window.history.back();
+        }
+</script>
 {% endblock %}
