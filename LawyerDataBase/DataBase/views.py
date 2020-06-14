@@ -27,9 +27,11 @@ def register(request, pk, mail):
                 # return redirect('dossier_j-create')
                 return redirect("stats")
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
+                client = Client_natural.objects.get(num_client_n=pk)
+                client_code = client.__getattribute__('num_client_n')
                 return redirect("stats")
                 # return redirect('dossier_n-create')
-                # return reverse("dossier_n-create", kwargs={'pk': pk})
+                #return reverse("dossier_n-create", kwargs={'pk': Client_natural.objects.get(num_client_n=pk).pk})
             else:
                 return redirect("stats")
     else:
