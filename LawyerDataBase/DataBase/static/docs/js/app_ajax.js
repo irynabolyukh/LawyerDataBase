@@ -45,7 +45,15 @@ function main() {
 
 
 function lawyer_workdays_request(event){
-    lawyer = $('#id_lawyer_code').val()
+    var lawyer = $('#id_lawyer_code').val()
+
+    var dossier =$('#id_code_dossier_n').val()
+    var dosN = true;
+    if (dossier.length === 0){
+        dossier = $('#id_code_dossier_j').val()
+        dosN = false;
+    }
+
     $('#id_app_time').timepicker({
         timeFormat: 'H:i',
         minTime: '10:00',
@@ -61,6 +69,9 @@ function lawyer_workdays_request(event){
                 data: {
                     csrfmiddlewaretoken: getCookie('csrftoken'),
                     lawyer: lawyer,
+                    dossier: dossier,
+                    dosn : dosN
+
                 },
                 success: setWorkDays,
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -121,8 +132,9 @@ function setblockedTime(data){
 }
 
 function setWorkDays(data){
+    console.log(data)
     lawyerWorkDays = data['days'];
-
+    $('#id_app_date').datepicker('maxDate',data['maxday'])
 }
 
 function blockdays(date){

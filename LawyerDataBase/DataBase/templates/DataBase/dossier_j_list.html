@@ -1,7 +1,114 @@
 {% extends "stat_generic.html" %}
+{% load user_tags %}
 {% block title %}Юридичні досьє{% endblock %}
 
 {% block content %}
+    {% if request.user|has_group:"Секретар"%}
+    <div class="container shadow p-3 mb-5 bg-white rounded">
+        <div class="justify-content-center text-center"><h2>Фільтри пошуку</h2></div>
+        <form method="get" action=".">
+            <div class="row">
+                <div class="container">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="dossier_id_search">Ідентифікатор досьє</label>
+                            <input class="form-control border" id='dossier_id_search' type="search"
+                                   placeholder="Ідентифікатор досьє..." name="dossier_id" value="{{ dossier_id }}">
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="status_search">Статус</label>
+                            <input class="form-control border" id='status_search' type="search"
+                                   placeholder="Статус" name="status" value="{{ status }}">
+
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="client_search">Клієнт</label>
+                            <input class="form-control border" id='client_search' type="search"
+                                   placeholder="Клієнт..." name="client" value="{{ client }}">
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="form-group col-md-6">
+                            <label for="date_signed_from_search" class="cik">Дата Підписання</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_signed_from_search' type="search"
+                                           placeholder="З" name="date_signed_from" value="{{ date_signed_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_signed_to_search' type="search"
+                                           placeholder="По" name="date_signed_to" value="{{ date_signed_to }}">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="date_closed_from_search" class="text-center">Дата Закриття</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_closed_from_search' type="search"
+                                           placeholder="З" name="date_closed_from" value="{{ date_closed_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_closed_to_search' type="search"
+                                           placeholder="По" name="date_closed_to" value="{{ date_closed_to }}">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-md-6">
+                            <label for="date_expired_from_search" class="text-center">Дата Спливу</label>
+                            <div class="input-group">
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_expired_from_search' type="search"
+                                           placeholder="З" name="date_expired_from" value="{{ date_expired_from }}">
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input class="form-control border" id='date_expired_to_search' type="search"
+                                           placeholder="По" name="date_expired_to" value="{{ date_expired_to }}">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="paid_select">Сплачено</label>
+                                <select id='paid_select' name="paid" class="form-control">
+                                    <option selected>Будь-які</option>
+                                    <option value="true" >Оплачено</option>
+                                    <option value="false" >Не Оплачено</option>
+                                </select>
+
+                            </div>
+                         <div class="form-group col-md-4">
+                                <label for="open-select">Відкриті</label>
+                                <select id='open-select' name="open" class="form-control">
+                                    <option selected>Будь-які</option>
+                                    <option value="true" >Відкриті</option>
+                                    <option value="false" >Закриті</option>
+                                </select>
+
+                            </div>
+                    </div>
+                    <div class="align-right float-right">
+                        <a class="btn btn-info align-right" href="{% url 'ndossiers' %}">Очистити фільтри</a>
+                        <button type="submit" class="btn btn-primary align-right" >Пошук</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% endif %}
 <div class="container-fluid">
     <div class="row align-items-center justify-content-center shadow-sm p-2 mb-2 bg-white">
      <h2 class="font-weight-bold">Юридичні досьє</h2>
