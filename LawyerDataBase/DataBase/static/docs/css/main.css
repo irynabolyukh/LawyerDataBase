@@ -133,10 +133,8 @@ ul{
 }
 
     @media print {
-        /*#print-foot {*/
-        /*    margin-top: 2%;*/
-        /*    visibility: visible;*/
-        /*}*/
+        table{word-break: break-word;}
+        tr{page-break-inside: avoid !important;}
         a {
             text-decoration: none;
             color: black;
@@ -173,6 +171,6 @@ ul{
         }
 
         .tbl {
-            font-size: 16.5pt;
+            font-size: 17pt;
         }
     }
