@@ -151,21 +151,28 @@ function updateInfo(data) {
         for (var service of data['service_count']) {
             servicesBody.append(
                 `<tr class="border_top">
-                        <th rowspan="2" class="vertical_align border_top">
-                            <a href="/database/service/${service.service_code}/">${service.name_service}</a></th>
-                        <th>${service.nominal_value}</th>
-                        <th>${service.bonus_value}</th>
-                        <th>${service.count}</th>
-                        <th>${service.sum} грн</th>
+                        <td rowspan="2" class="vertical_align border_top">
+                            <a href="/database/service/${service.service_code}/">${service.name_service}</a></td>
+                        <td>${service.nominal_value}</td>
+                        <td>${service.bonus_value}</td>
+                        <td>${service.count}</td>
+                        <td>${service.sum} грн</td>
                     </tr>
                     <tr>
-                        <th></th>
-                        <th>За весь час</th>
-                        <th>${service.fulltimeCount}</th>
-                        <th>${service.fulltimeSum} грн</th>
+                        <td></td>
+                        <td>За весь час</td>
+                        <td>${service.fulltimeCount}</td>
+                        <td>${service.fulltimeSum} грн</td>
                     </tr>
                     <tr></tr>`)
         }
+        servicesBody.append(` <tr class="border_top">
+                    <td></td>
+                    <td></td>
+                    <td><b>Загалом</b></td>
+                    <td><b>${data['full_count']}</b></td>
+                    <td><b>${data['value']} грн</b></td>
+                </tr>`)
         serviceContainer.append(` </tbody></table>`)
     }
     else{
@@ -192,12 +199,12 @@ function updateInfo(data) {
             lawyerBody
                 .append(
                     `<tr class="border_top">
-                        <th><a href="/database/lawyer/${lawyer.lawyer_code}">
-                            ${lawyer.first_name} ${lawyer.surname} ${lawyer.mid_name}</a></th>
-                        <th>${lawyer.lawyer_code}</th>
-                        <th>${lawyer.spec}</th>
-                        <th>${lawyer.count}</th>
-                        <th>${lawyer.sum} грн</th>
+                        <td><a href="/database/lawyer/${lawyer.lawyer_code}">
+                            ${lawyer.first_name} ${lawyer.surname} ${lawyer.mid_name}</a></td>
+                        <td>${lawyer.lawyer_code}</td>
+                        <td>${lawyer.spec}</td>
+                        <td>${lawyer.count}</td>
+                        <td>${lawyer.sum} грн</td>
                     </tr>
                     `)
             try {

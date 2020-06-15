@@ -85,6 +85,13 @@
                         <td>{{service.sum}} грн</td>
                     </tr>
                 {% endfor %}
+                <tr class="border_top">
+                    <td></td>
+                    <td></td>
+                    <td><b>Загалом</b></td>
+                    <td><b>{{ full_count }}</b></td>
+                    <td><b>{{ value }} грн</b></td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -138,6 +145,7 @@
                     <tr><td></td><td></td><td></td><td></td><td></td></tr>
                     {% endif %}
                 {% endfor %}
+
                 </tbody>
             </table>
         </div>
@@ -152,5 +160,5 @@
 {% endblock %}
 {% block script %}
         {% load static %}
-        <script src="{% static 'docs/js/statistics.1.js' %}"></script>
+        <script src="{% static 'docs/js/statistics.js' %}"></script>
 {% endblock %}
