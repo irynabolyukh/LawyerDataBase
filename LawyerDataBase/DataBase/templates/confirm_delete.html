@@ -4,9 +4,14 @@
     <div class="modal-dialog  shadow-sm p-2 mb-2 bg-danger">
         <div class="modal-content">
             <div class="modal-header">
+                {% if not error %}
                 <h3 class="modal-title">Підтвердити видалення</h3>
+                {% else %}
+                    <h3 class="modal-title"><b>Сталася помилка</b></h3>
+                {% endif %}
             </div>
             <div class="modal-body">
+                {% if not error %}
                 <form action="" method="post">
                     {% csrf_token %}
                     <h4>
@@ -14,7 +19,11 @@
                     </h4>
                     <input  class="btn btn-danger" type="submit" value="Так, видалити." />
                 </form>
+                {% else %}
+                    <h6>{{ error }}</h6>
+                {% endif %}
             </div>
+
             <div class="modal-footer">
                 <input  class="btn btn-outline-secondary" type="submit" value="Відмінити" onclick="goBack()" />
             </div>
