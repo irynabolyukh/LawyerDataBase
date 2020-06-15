@@ -27,7 +27,7 @@
     <form method="POST" class="post-form" >
         {% csrf_token %}
          <table>
-             {{ form.as_table }}
+             {% include "table_form.html" with form=form %}
         </table>
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти</button>
     </form>

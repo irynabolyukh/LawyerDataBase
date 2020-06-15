@@ -439,7 +439,7 @@ def lawyers_appointment(services):
         cursor.execute(
             'SELECT la.lawyer_code, la.first_name, la.surname, la.mid_name, la.specialization '
             'FROM "Lawyer" la '
-            'WHERE NOT EXISTS '
+            'WHERE la.active = TRUE AND NOT EXISTS '
             '   ( SELECT * FROM "Lawyer_service" ls '
             '       WHERE services_id = ANY (%s)  '
             '       and la.lawyer_code not in '

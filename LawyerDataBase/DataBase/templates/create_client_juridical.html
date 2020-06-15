@@ -12,8 +12,8 @@
     <form method="POST" class="post-form">
         {% csrf_token %}
         <table>
-         {{ form.as_table }}
-         {{ jphone.as_table }}
+         {% include "table_form.html" with form=form %}
+            {% include "phone_table_form.html" with Formset=jphone %}
         </table>
         <button type="submit" class="btn btn-outline-success btn-block" >Зберегти</button>
     </form>
