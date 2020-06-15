@@ -56,7 +56,7 @@ def register(request, pk, mail):
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
-                print(pk)
+
                 url = "http://127.0.0.1:8000/database/dossier_J/" + pk + "/create"
                 return redirect(url)
             elif str(form.cleaned_data['group']) == str('Фізичний клієнт'):
@@ -163,6 +163,8 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        checked = self.request.GET.get('lawyer_service', '')
+        context['checked'] = checked
         context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).exclude(status='open').count()
         context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).exclude(status='open').count()
 
@@ -172,7 +174,11 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['value'] = str(nom_value() + extra_value())
 
         context['service_count'] = service_counter()
-        context['lawyer_counter'] = lawyer_counter()
+
+        if str(checked) == 'on':
+            context['lawyer_counter'] = lawyer_counter(True)
+        else:
+            context['lawyer_counter'] = lawyer_counter(False)
 
         context['won_dossiers'] = won_dossiers()
 
@@ -199,7 +205,13 @@ def getStats(request):
         response['open'] = int(response['open_n']) + int(response['open_j'])
         response['all_won_dossiers'] = date_won_dossiers(dStart, dEnd)
         response['service_count'] = date_service_counter(dStart, dEnd)
-        response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd)
+        checked = request.POST.get('checked','')
+        if str(checked) == 'on':
+            response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd, True)
+            response['checked'] = True
+        else:
+            response['lawyer_counter'] = date_lawyer_counter(dStart, dEnd, False)
+            response['checked'] = False
         response['value'] = 0
         for service in response['service_count']:
             response['value'] += service['sum']
@@ -337,7 +349,6 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         dossier = Dossier_N.objects.get(code_dossier_n=self.kwargs['pk'])
         # dossier.fee = fee_dossier_n(dossier.code_dossier_n)
         dossier.count_fee()
-        print()
         client_code = dossier.__getattribute__('num_client_n_id')
         law_code = dossier.__getattribute__('lawyer_code_id')
         dossier.save()

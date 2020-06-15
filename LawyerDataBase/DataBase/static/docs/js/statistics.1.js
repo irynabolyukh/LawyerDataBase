@@ -78,6 +78,9 @@ function getStats(date) {
 
     date2 = date2_elem.datepicker( "getDate" );
 
+    checked = $('#lawyers_service_search_id').val()
+
+
     if (date1 !== null && date2 !== null) {
 
 
@@ -97,7 +100,9 @@ function getStats(date) {
                     day: date2.getDate(),
                     month: String(parseInt(date2.getMonth()) + 1),
                     year: date2.getFullYear(),
-                }
+                },
+                checked: checked
+
 
             },
             success: updateInfo,
@@ -128,11 +133,6 @@ function updateInfo(data) {
     $('#open_dossier')[0].innerHTML = data['open'];
     $('#total_value')[0].innerHTML = data['value'];
 
-
-
-
-
-
     var serviceContainer = $('#services_container')
     serviceContainer.empty()
 
@@ -153,7 +153,7 @@ function updateInfo(data) {
         for (var service of data['service_count']) {
             servicesBody.append(
                 `<tr class="border_top">
-                        <th rowspan="2" class="vertical_align">
+                        <th rowspan="2" class="vertical_align border_top">
                             <a href="/database/service/${service.service_code}/">${service.name_service}</a></th>
                         <th>${service.nominal_value}</th>
                         <th>${service.bonus_value}</th>
@@ -192,7 +192,7 @@ function updateInfo(data) {
         for (var lawyer of data['lawyer_counter']) {
             lawyerBody
                 .append(
-                    `<tr>
+                    `<tr class="border_top">
                         <th><a href="/database/lawyer/${lawyer.lawyer_code}">
                             ${lawyer.first_name} ${lawyer.surname} ${lawyer.mid_name}</a></th>
                         <th>${lawyer.lawyer_code}</th>
@@ -201,6 +201,35 @@ function updateInfo(data) {
                         <th>${lawyer.sum} грн</th>
                     </tr>
                     `)
+            try {
+                if (data['checked']) {
+                    lawyerBody
+                .append(
+                    `<tr>
+                        <td></td>
+                        <td></td>
+                        <th>Назва послуги</th>
+                        <th>Кількість записів</th>
+                        <td></td>
+                     </tr>
+                    `)
+                    for (var service_la of lawyer.services){
+                        lawyerBody
+                        .append(
+                            `<tr>
+                                <td></td>
+                                <td></td>
+                                <td>${ service_la.name }</td>
+                                <td>${ service_la.count }</td>
+                                <td></td>
+                            </tr>
+                            `)
+                    }
+                }
+            }
+            catch (e) {
+                console.log(e)
+            }
         }
         lawyerContainer.append(` </tbody></table>`)
     }
