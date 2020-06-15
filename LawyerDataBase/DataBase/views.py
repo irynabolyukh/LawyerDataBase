@@ -52,7 +52,7 @@ def register(request, pk, mail):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.username = pk
+            page.username = mail
             page.email = mail
             page.save()
             if str(form.cleaned_data['group']) == str('Юридичний клієнт'):
@@ -482,7 +482,7 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_lawyer'
     model = Lawyer
     template_name = 'update_lawyer.html'
-    form_class = LawyerForm
+    form_class = LawyerUpdateForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -600,7 +600,7 @@ class Client_naturalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upda
     permission_required = 'DataBase.change_client_natural'
     model = Client_natural
     template_name = 'update_client_natural.html'
-    form_class = Client_NForm
+    form_class = Client_NUpdateForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -689,7 +689,7 @@ class Client_juridicalUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Up
     permission_required = 'DataBase.change_client_juridical'
     model = Client_juridical
     template_name = 'update_client_juridical.html'
-    form_class = Client_JForm
+    form_class = Client_JUpdateForm
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
