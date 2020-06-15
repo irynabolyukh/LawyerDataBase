@@ -525,7 +525,7 @@ class Client_NForm(ModelForm):
     mail_info = forms.EmailField(label='E-mail', max_length=30)
     birth_date = forms.DateField(label='Дата народження', widget=TextInput(attrs={'autocomplete':'off'}))
     passport_date = forms.DateField(label='Дата паспорта', widget=TextInput(attrs={'autocomplete':'off'}))
-    passport_authority = forms.CharField(label='Орган паспорта', max_length=6, min_length=6)
+    passport_authority = forms.CharField(label='Орган паспорта', max_length=4, min_length=4)
     passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
 
     class Meta:
