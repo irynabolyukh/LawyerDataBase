@@ -82,7 +82,9 @@
                     <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
                     <br><br>
                     <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'dossier_j-create'  pk=object.pk %}">Нове Досьє</a>
+                {% if object.has_active_dossiers %}
                     <a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.pk %}">Записати на послугу</a>
+                {% endif %}
                 {% endif %}
             </div>
         </div>
