@@ -133,14 +133,8 @@ ul{
 }
 
     @media print {
-        /*#print-foot {*/
-        /*    margin-top: 2%;*/
-        /*    visibility: visible;*/
-        /*}*/
-
-        thead {
-            display: table-row-group;
-        }
+        table{word-break: break-word;}
+        tr{page-break-inside: avoid !important;}
         a {
             text-decoration: none;
             color: black;
