@@ -856,7 +856,6 @@ class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_NUpdateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
         return kwargs
 
     def form_valid(self, form):

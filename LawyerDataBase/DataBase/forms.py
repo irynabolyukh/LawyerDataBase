@@ -176,11 +176,12 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
+        pk = kwargs.get('pk','')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_n'].initial = pk
-        self.fields['num_client_n'].disabled = True
-        self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
+        if pk is not '':
+            self.fields['num_client_n'].initial = pk
+            self.fields['num_client_n'].disabled = True
+            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
 class Appoint_NForm(ModelForm):
