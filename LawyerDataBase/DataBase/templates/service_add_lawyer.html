@@ -4,14 +4,18 @@
 {% block navbar %}
     <a class="navbar-brand container-fluid" href="{% url 'services' %}">🢀Усі послуги</a>
 {% endblock %}
-
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
+{% endblock %}
 {% block content %}
     <h1 class="row align-items-center justify-content-center">Змінити адвокатів</h1>
     <div class="row align-items-center justify-content-center">
     <div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
         {% csrf_token %}
+        <table>
         {% include "table_form.html" with form=form %}
+        </table>
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти</button>
     </form>
         </div></div>
@@ -19,5 +23,6 @@
 
 {% block script %}
     {% load static %}
-    <script src="{% static 'docs/js/checkedMultiBox.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="{% static 'docs/js/servicesFormSelectMultiple.js' %}"></script>
 {% endblock %}

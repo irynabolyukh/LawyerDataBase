@@ -41,6 +41,26 @@ function main() {
         time_blocked_request()
     }
 
+     $("#id_service").selectpicker({
+                title: "Оберіть послугу",
+                width: '395px',
+                selectedTextFormat: 'count',
+                liveSearch: true,
+                liveSearchPlaceholder: "Пошук по послугам...",
+                size: 6,
+                noneResultsText: 'Не знайдено варіантів {0}',
+                noneSelectedText : 'Нічого не обрано',
+                countSelectedText: function (a,amount) {
+                    if (a>4)
+                        return `Обрано ${a} варіантів`
+                    if (a===1)
+                        return `Обрано ${a} варіант`
+                    if (a>1)
+                        return `Обрано ${a} варіанти`
+
+                }
+            });
+
 }
 
 
