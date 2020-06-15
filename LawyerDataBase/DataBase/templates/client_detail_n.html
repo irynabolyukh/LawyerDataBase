@@ -73,9 +73,7 @@
                 <div  class="container row align-items-center justify-content-center">
                     {% if request.user|has_group:"Фізичний клієнт"%}
                     <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
-                        {% if object.has_active_dossiers %}
-                    <br><a style="margin: 1%;" class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.num_client_n %}">Записатися на послугу
-                            {% endif %}
+
                     {% endif %}
                      {% if request.user|has_group:"Секретар"%}
                     <br><br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_natural-update' pk=object.pk %}">Редагувати</a>
