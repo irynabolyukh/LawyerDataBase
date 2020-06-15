@@ -164,6 +164,13 @@
             </td>
             {% endif %}
         </tr>
+        <tr>
+            <th>Номери адвоката:</th>
+            <td>{% for phone in lphones %}
+                <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+            {% endfor %}
+            </td>
+        </tr>
         {% endif %} {% endif %}
         </tbody>
     </table>
@@ -200,6 +207,9 @@
             <th>Час</th>
             <th>Коментар</th>
             <th>Адвокат</th>
+             {% if not request.user|has_group:"Адвокат"%}
+            <th>Телефони</th>
+            {% endif %}
             <th>Послуги</th>
         </tr>
         </thead>
@@ -220,7 +230,15 @@
             {% if request.user|has_group:"Адвокат"%}
             <td>  {{appointment.lawyer_code}}</td>
             {% endif %}
-        <td> {% for service in appointment.service.all %}<p>{{ service.name_service }}</p>{% endfor %}</td>
+             {% if not request.user|has_group:"Адвокат"%}
+            <td>
+                {% for phone in all_lphones %}
+                    {% if phone.lawyer_id == appointment.lawyer_code.lawyer_code %}
+                        <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                    {% endif %}
+                {% endfor %}
+            </td>{% endif %}
+            <td> {% for service in appointment.service.all %}<p>{{ service.name_service }}</p>{% endfor %}</td>
         </tr>
         {% endfor %}
         </tbody>
