@@ -220,7 +220,7 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         service = Services.objects.filter(active=True).get(service_code=self.kwargs['pk'])
         group = service.__getattribute__('service_group')
         context['group'] = ServiceGroup.objects.filter(name_group=group)
-        context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
+        context['lawyers'] = Lawyer.objects.filter(active=True).filter(service=self.kwargs['pk'])
         return context
 
 
@@ -305,7 +305,7 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         dossier.fee = fee_dossier_j(dossier.code_dossier_j)
         client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
-        context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
+        context['appointments'] = Appointment_J.objects.filter(active=True).filter(code_dossier_j=self.kwargs['pk'])
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         return context
 
@@ -340,7 +340,7 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         print()
         client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()
-        context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
+        context['appointments'] = Appointment_N.objects.filter(active=True).filter(code_dossier_n=self.kwargs['pk'])
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         return context
 
@@ -366,14 +366,14 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         today = date.today()
-        context['upcoming_app_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+        context['upcoming_app_n'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+        context['appointments_n'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']). \
+        context['appointments'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']). \
             order_by('-app_date', '-app_time')
-        context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
+        context['dossiers'] = Dossier_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk'])
         return context
 
 
@@ -398,13 +398,13 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         today = date.today()
-        context['upcoming_app_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+        context['upcoming_app_j'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk']) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+        context['appointments_j'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
-        context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
-        context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
+        context['appointments'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk'])
+        context['dossiers'] = Dossier_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk'])
         return context
 
 
