@@ -22,7 +22,7 @@
 
 {% block script %}
 {% load static %}
-    <script src="{% static 'docs/js/dossier.js' %}"></script>
+    <script src="{% static 'docs/js/dossier.1.js' %}"></script>
     <script>
         $(document).ready(function () {
             var signedOn = '{{ opened|safe }}'.split('-');
@@ -33,9 +33,8 @@
                     $('#id_date_closed').datepicker('option', 'minDate', courtDate)
             }
             catch (e) {
-
+                $('#id_date_closed').datepicker('option','minDate', signedOnDate)
             }
-            $('#id_date_closed').datepicker('option','minDate', signedOnDate)
             $('#id_court_date').datepicker('option','minDate', signedOnDate)
         })
     </script>
