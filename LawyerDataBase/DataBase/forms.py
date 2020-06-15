@@ -327,6 +327,14 @@ class Dossier_JForm(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_j')
+        futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -390,6 +398,14 @@ class Doss_JForm(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_j')
+        futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -447,6 +463,14 @@ class Dossier_NForm(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_n')
+        futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -510,6 +534,14 @@ class Doss_NForm(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_n')
+        futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -648,6 +680,13 @@ class Dossier_JFormUpdate(ModelForm):
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+    code_dossier_j = forms.CharField(label='Код', max_length=8, min_length=8)
+
+    def __init__(self, *args, **kwargs):
+        code = kwargs.pop('pk')
+        super(Dossier_JFormUpdate, self).__init__(*args, **kwargs)
+        self.fields['code_dossier_j'].initial = code
+        self.fields['code_dossier_j'].disabled = True
 
     def clean(self):
         cleaned_data = super(Dossier_JFormUpdate, self).clean()
@@ -658,6 +697,14 @@ class Dossier_JFormUpdate(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_j')
+        futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -688,7 +735,7 @@ class Dossier_JFormUpdate(ModelForm):
 
     class Meta:
         model = Dossier_J
-        fields = ['date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+        fields = ['code_dossier_j', 'date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
 
 
 class Dossier_NFormUpdate(ModelForm):
@@ -700,6 +747,13 @@ class Dossier_NFormUpdate(ModelForm):
     court_name = forms.CharField(max_length=100, label='Суд', required=False)
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
+    code_dossier_n = forms.CharField(label='Код', max_length=8, min_length=8)
+
+    def __init__(self, *args, **kwargs):
+        code = kwargs.pop('pk')
+        super(Dossier_NFormUpdate, self).__init__(*args, **kwargs)
+        self.fields['code_dossier_n'].initial = code
+        self.fields['code_dossier_n'].disabled = True
 
     def clean(self):
         cleaned_data = super(Dossier_NFormUpdate, self).clean()
@@ -710,6 +764,14 @@ class Dossier_NFormUpdate(ModelForm):
         c_adr = cleaned_data.get('court_adr')
         c_date = cleaned_data.get('court_date')
         lawyer = cleaned_data.get('lawyer_code')
+        today = date.today()
+        dossier_code = cleaned_data.get('code_dossier_n')
+        futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=dossier_code, app_date__gt=today)
+
+        if date_closed:
+            if futureAppointments:
+                raise ValidationError(_('Справа не може бути закритою, оскільки існують'
+                                        ' записи, що ще не відбулися'), code='invalid')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -740,7 +802,7 @@ class Dossier_NFormUpdate(ModelForm):
 
     class Meta:
         model = Dossier_N
-        fields = ['date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
+        fields = ['code_dossier_n', 'date_closed', 'status', 'paid', 'court_name', 'court_adr', 'court_date', 'lawyer_code']
 
 
 class Appoint_NFormDelete(ModelForm):

@@ -100,8 +100,8 @@
                     <a class="btn btn-outline-info d-print-none" href="{% url 'lawyer-update' pk=object.pk %}">Редагувати</a>
                     {% if request.user|has_group:"Секретар"%}
                     <a class="btn btn-outline-danger d-print-none" href="{% url 'lawyer-delete' pk=object.pk %}">Видалити</a>
-                    {% endif %}
                     <a class="btn btn-outline-success d-print-none" onClick="window.print()">Друкувати</a>
+                    {% endif %}
                 </div>
 
         </div>
