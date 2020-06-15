@@ -961,6 +961,11 @@ class Dossier_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     form_class = Dossier_NFormUpdate
     template_name = 'update_dossier_n.html'
 
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_NUpdateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
@@ -1019,6 +1024,11 @@ class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
     model = Dossier_J
     form_class = Dossier_JFormUpdate
     template_name = 'update_dossier_j.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(Dossier_JUpdateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
