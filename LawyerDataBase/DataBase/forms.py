@@ -323,6 +323,10 @@ class Dossier_JForm(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -344,9 +348,10 @@ class Dossier_JForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -381,6 +386,10 @@ class Doss_JForm(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -402,9 +411,10 @@ class Doss_JForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -433,6 +443,10 @@ class Dossier_NForm(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -454,9 +468,10 @@ class Dossier_NForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -491,6 +506,10 @@ class Doss_NForm(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -512,9 +531,10 @@ class Doss_NForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -634,6 +654,10 @@ class Dossier_JFormUpdate(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -655,9 +679,10 @@ class Dossier_JFormUpdate(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -681,6 +706,10 @@ class Dossier_NFormUpdate(ModelForm):
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
         paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
 
         if paidcontext and str(self.cleaned_data['status']) == 'open':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
@@ -702,9 +731,10 @@ class Dossier_NFormUpdate(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
