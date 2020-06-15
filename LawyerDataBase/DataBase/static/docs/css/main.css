@@ -126,6 +126,11 @@ ul{
     /*#date, #print-foot {*/
     /*    visibility: hidden;*/
     /*}*/
+  #dates {
+    padding: 2%;
+    border: 2px solid black;
+    border-radius: 5px;
+}
 
     @media print {
         /*#print-foot {*/
@@ -138,6 +143,13 @@ ul{
         }
          a[href]:after {
             content: none !important;
+         }
+         .printed_word {
+             font-size: 25pt;
+         }
+         #dates{
+             border: 0;
+             margin-bottom: 3%;
          }
 
         .d-print-none {

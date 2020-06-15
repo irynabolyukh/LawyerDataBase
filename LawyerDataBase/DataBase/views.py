@@ -301,9 +301,12 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
         dossier.count_fee()
         client_code = dossier.__getattribute__('num_client_j_id')
+        law_code = dossier.__getattribute__('lawyer_code_id')
         dossier.save()
         context['appointments'] = Appointment_J.objects.filter(active=True).filter(code_dossier_j=self.kwargs['pk'])
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
+        context['lphones'] = LPhone.objects.filter(lawyer_id=law_code)
+        context['all_lphones'] = LPhone.objects.all()
         return context
 
 
@@ -336,9 +339,12 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         dossier.count_fee()
         print()
         client_code = dossier.__getattribute__('num_client_n_id')
+        law_code = dossier.__getattribute__('lawyer_code_id')
         dossier.save()
         context['appointments'] = Appointment_N.objects.filter(active=True).filter(code_dossier_n=self.kwargs['pk'])
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
+        context['lphones'] = LPhone.objects.filter(lawyer_id=law_code)
+        context['all_lphones'] = LPhone.objects.all()
         return context
 
 
