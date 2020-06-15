@@ -73,6 +73,9 @@
 
             <div class="container row align-items-center justify-content-center">
                 {% if request.user|has_group:"Юридичний клієнт"%}
+                    {% if object.has_active_dossiers %}
+                    <br><a class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.pk %}">Записатися на послугу</a>
+                    {% endif %}
                     <br><a style="margin: 1%;" class="btn btn-outline-info btn-block" href="{% url 'client_juridical-update' pk=object.pk %}">Редагувати профіль</a>
                 {% endif %}
                 {% if request.user|has_group:"Секретар"%}
@@ -88,8 +91,10 @@
 <div class="container-fluid margin-fix row align-items-center justify-content-center">
 {% if request.user|has_group:"Юридичний клієнт"%}
 <div class="container row align-items-center justify-content-center">
+        {% if object.has_active_dossiers %}
         <a class="btn btn-outline-info" href="{% url 'appointment_j-create' pk=object.pk %}">Записатися на послугу</a>
-</div>
+        {% endif %}
+    </div>
 </div>
 {% endif %}
 {% if not request.user|has_group:"Адвокат"%}
@@ -274,6 +279,7 @@
         </thead>
         <tbody>
         {% for dossier in dossiers.all %}
+            {% if dossier.active %}
         <tr>
             <td><a href="{% url 'dossier-detailed-j' dossier.code_dossier_j %}">{{ dossier.code_dossier_j }}</a></td>
             <td>{{ dossier.issue }}</td>
@@ -306,6 +312,7 @@
             </td>
             {% endif %}
         </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>

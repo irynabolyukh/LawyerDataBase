@@ -3,7 +3,7 @@ $(document).ready(main());
 function main(){
     today = Date.now()
     $("#id_service").selectpicker({
-                title: "Оберіть послугу",
+                title: "Оберіть послуги",
                 width: '395px',
                 selectedTextFormat: 'count',
                 liveSearch: true,

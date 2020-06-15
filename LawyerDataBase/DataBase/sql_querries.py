@@ -423,7 +423,7 @@ def date_lawyer_counter(date1, date2, count_services=False):
             '           ON ANS.appointment_n_id = AN.appoint_code_n) INNER JOIN "Services" AS SE '
             '           ON SE.service_code = ANS.services_id) INNER JOIN "Dossier_N" as DN '
             '           on DN.code_dossier_n = AN.code_dossier_n_id '
-            '       WHERE app_date > %s::date and app_date < %s::date AND LA.active = TRUE ) '
+            '       WHERE app_date > %s::date and app_date < %s::date AND LA.active = TRUE AND SE.active = TRUE) '
             '   UNION ALL '
             '       ( SELECT lawyer_code, first_name, surname, mid_name, specialization, status, '
             '               bonus_value, nominal_value, paid '
@@ -432,7 +432,7 @@ def date_lawyer_counter(date1, date2, count_services=False):
             '           ON AJS.appointment_j_id = AJ.appoint_code_j) INNER JOIN "Services" AS SE '
             '           ON SE.service_code = AJS.services_id) INNER JOIN "Dossier_J" as DJ '
             '           on DJ.code_dossier_j = AJ.code_dossier_j_id '
-            '       WHERE app_date > %s::date and app_date < %s::date AND LA.active = TRUE ) ) AS res '
+            '       WHERE app_date > %s::date and app_date < %s::date AND LA.active = TRUE AND SE.active = TRUE ) ) AS res '
             'GROUP BY res.lawyer_code, res.first_name, res.surname, res.mid_name, res.specialization,  '
             'res.status,  res.bonus_value,  res.nominal_value, res.paid  ;',
             [f'{date1.year}-{date1.month}-{date1.day}',
