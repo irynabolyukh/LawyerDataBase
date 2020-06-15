@@ -1,0 +1,47 @@
+{{ Formset.management_form }}
+{% for form in Formset %}
+    {% if form.non_field_errors %}
+        <ul>
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% for hidden_field in form.hidden_fields %}
+        {% if hidden_field.errors %}
+          <ul>
+            {% for error in hidden_field.errors %}
+              <li>(Hidden field {{ hidden_field.name }}) {{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {{ hidden_field }}
+    {% endfor %}
+
+
+    {% for field in form %}
+        {% for error in form.username.errors %}
+        <tr><td>{{ error }}</td></tr>
+        {% endfor %}
+        {% if not field.is_hidden %}
+        <tr >
+            <th >{{ field.label_tag }}</th>
+            <td {% if field.errors %}class="wrong_cell"{% endif %}>{{ field }}
+            </td>
+        </tr>
+        {% endif %}
+    {% if field.errors %}
+        <tr>
+            <td class="pt-2" colspan="2">
+                <div class="alert alert-danger">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+       {% endif %}
+
+    {% endfor %}
+{% endfor %}
