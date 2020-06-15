@@ -90,7 +90,9 @@
 <div class="container-fluid row align-items-center justify-content-center">
 {% if request.user|has_group:"Фізичний клієнт"%}
 <div class="container row align-items-center justify-content-center">
+         {% if object.has_active_dossiers %}
         <a class="btn btn-outline-info" href="{% url 'appointment_n-create' pk=object.pk %}">Записатися на послугу</a>
+        {% endif %}
 </div>
 </div>
 {% endif %}
