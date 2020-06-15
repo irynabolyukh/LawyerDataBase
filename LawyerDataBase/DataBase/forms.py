@@ -80,6 +80,20 @@ class LawyerForm(ModelForm):
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 
 
+class LawyerUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я')
+    surname = forms.CharField(label='Прізвище')
+    mid_name = forms.CharField(label='По батькові')
+    specialization = forms.CharField(label='Спеціалізація')
+    service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
+                                             queryset=Services.objects.filter(active=True))
+    work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
+                                             queryset=Work_days.objects.all())
+
+    class Meta:
+        model = Lawyer
+        fields = ['first_name', 'surname', 'mid_name', 'specialization', 'service', 'work_days']
+
 
 LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
@@ -166,10 +180,6 @@ class Appointment_NForm(ModelForm):
         super(Appointment_NForm, self).__init__(*args, **kwargs)
         self.fields['num_client_n'].initial = pk
         self.fields['num_client_n'].disabled = True
-        # if user.groups.filter(name="Фізичний клієнт").exists():
-        #     user_id = Client_natural.objects.filter(mail_info=user.email)[0]
-        #     self.fields['num_client_n'].initial=user_id.pk
-        #     self.fields['num_client_n'].disabled = True
         self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
@@ -290,10 +300,6 @@ class Appointment_JForm(ModelForm):
         super(Appointment_JForm, self).__init__(*args, **kwargs)
         self.fields['num_client_j'].initial = pk
         self.fields['num_client_j'].disabled = True
-        # if user.groups.filter(name="Юридичний клієнт").exists():
-        #     user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
-        #     self.fields['num_client_j'].initial=user_id.pk
-        #     self.fields['num_client_j'].disabled = True
         self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
@@ -312,16 +318,29 @@ class Dossier_JForm(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Dossier_JForm, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -329,20 +348,12 @@ class Dossier_JForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
-
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('pk')
@@ -370,16 +381,29 @@ class Doss_JForm(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Doss_JForm, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -387,19 +411,12 @@ class Doss_JForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
 
     class Meta:
         model = Dossier_J
@@ -421,16 +438,29 @@ class Dossier_NForm(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Dossier_NForm, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -438,19 +468,12 @@ class Dossier_NForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('pk')
@@ -478,16 +501,29 @@ class Doss_NForm(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Doss_NForm, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -495,19 +531,12 @@ class Doss_NForm(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
 
     class Meta:
         model = Dossier_N
@@ -525,7 +554,7 @@ class Client_NForm(ModelForm):
     mail_info = forms.EmailField(label='E-mail', max_length=30)
     birth_date = forms.DateField(label='Дата народження', widget=TextInput(attrs={'autocomplete':'off'}))
     passport_date = forms.DateField(label='Дата паспорта', widget=TextInput(attrs={'autocomplete':'off'}))
-    passport_authority = forms.CharField(label='Орган паспорта', max_length=6, min_length=6)
+    passport_authority = forms.CharField(label='Орган паспорта', max_length=4, min_length=4)
     passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
 
     class Meta:
@@ -549,6 +578,40 @@ class Client_JForm(ModelForm):
     class Meta:
         model = Client_juridical
         exclude = ('active',)
+
+
+class Client_NUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
+    adr_build = forms.CharField(label='Будинок', max_length=5)
+    passport_date = forms.DateField(label='Дата паспорта', widget=TextInput(attrs={'autocomplete': 'off'}))
+    passport_authority = forms.CharField(label='Орган паспорта', max_length=4, min_length=4)
+    passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
+
+    class Meta:
+        model = Client_natural
+        fields = ['first_name', 'surname', 'mid_name', 'adr_city', 'adr_street',
+                   'adr_build', 'passport_date', 'passport_num', 'passport_authority']
+
+
+class Client_JUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
+    adr_build = forms.CharField(label='Будинок', max_length=5)
+    client_position = forms.CharField(label='Посада', max_length=50)
+    name_of_company = forms.CharField(label='Компанія', max_length=100)
+    iban = forms.CharField(label='IBAN', max_length=29, min_length=29)
+
+    class Meta:
+        model = Client_juridical
+        fields = ('first_name', 'surname', 'mid_name', 'adr_city',
+                   'adr_street', 'adr_build', 'client_position', 'name_of_company', 'iban')
 
 
 class Appointment_NFormUpdate(ModelForm):
@@ -586,16 +649,29 @@ class Dossier_JFormUpdate(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Dossier_JFormUpdate, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -603,21 +679,12 @@ class Dossier_JFormUpdate(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
-                raise ValidationError({'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
-                                      code='invalid')
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
         return cleaned_data
-
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
-
-
 
     class Meta:
         model = Dossier_J
@@ -634,16 +701,29 @@ class Dossier_NFormUpdate(ModelForm):
     court_adr = forms.CharField(max_length=300, label='Адрес', required=False)
     court_date = forms.DateTimeField(label='Дата засідання', required=False, widget=TextInput(attrs={'autocomplete':'off'}))
 
-    def clean_paid(self):
-        paidcontext = self.cleaned_data['paid']
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
-            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
-        return paidcontext
-
     def clean(self):
         cleaned_data = super(Dossier_NFormUpdate, self).clean()
         status = cleaned_data.get('status')
         date_closed = cleaned_data.get('date_closed')
+        paidcontext = self.cleaned_data['paid']
+        c_name = cleaned_data.get('court_name')
+        c_adr = cleaned_data.get('court_adr')
+        c_date = cleaned_data.get('court_date')
+        lawyer = cleaned_data.get('lawyer_code')
+
+        if paidcontext and str(self.cleaned_data['status']) == 'open':
+            raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
+
+        if date_closed is None:
+            if not str(status) == 'open':
+                raise ValidationError({'date_closed': 'Справа не може бути закритою без дати закриття'},
+                                      code='invalid')
+
+        status = self.cleaned_data['status']
+        if str(status) != 'open':
+            date_closed = self.cleaned_data['date_closed']
+            if date_closed is None:
+                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
 
         if date_closed is not None:
             if str(status) == 'open':
@@ -651,20 +731,12 @@ class Dossier_NFormUpdate(ModelForm):
                                       code='invalid')
 
         if str(status) == 'closed-won':
-            if cleaned_data.get("court_date") is None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
                 raise ValidationError(
-                    {'status': 'Справа не може мати статус "закрита-виграна", якщо немає дати засідання'},
+                    {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
+                               ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
-
-    def clean_status(self):
-        status = self.cleaned_data['status']
-        if str(status) != 'open':
-            date_closed = self.cleaned_data['date_closed']
-            if date_closed is None:
-                raise ValidationError(_('Справа не може бути закритою, коли вона не має дати закриття'), code='invalid')
-        return status
-
 
     class Meta:
         model = Dossier_N
