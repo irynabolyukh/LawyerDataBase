@@ -87,6 +87,12 @@ ul{
     color: red;
 }
 
+    @page  {
+        size: a4; !important;
+    }
+
+
+
  a:link {
         text-decoration: none;
     }
@@ -94,36 +100,36 @@ ul{
         color: black;
     }
 
-    #print-foot {
-         display: table-footer-group;
-    }
+    /*#print-foot {*/
+    /*     display: table-footer-group;*/
+    /*}*/
 
-    #print-foot {
-            display: block;
-            position: fixed;
-            bottom: 0pt;
-            right: 0pt;
-            font-size: 150%;
-        }
+    /*#print-foot {*/
+    /*        display: block;*/
+    /*        position: fixed;*/
+    /*        bottom: 0pt;*/
+    /*        right: 0pt;*/
+    /*        font-size: 150%;*/
+    /*    }*/
 
-        #print-foot:before {
-            counter-increment: page;
-            content: counter(page) "/";
-        }
-        #print-foot:after {
-        counter-increment: pages;
-        content: counter(pages);
-        }
+    /*    #print-foot:before {*/
+    /*        counter-increment: page;*/
+    /*        content: counter(page) "/";*/
+    /*    }*/
+    /*    #print-foot:after {*/
+    /*    counter-increment: pages;*/
+    /*    content: counter(pages);*/
+    /*    }*/
 
-    #date, #print-foot {
-        visibility: hidden;
-    }
+    /*#date, #print-foot {*/
+    /*    visibility: hidden;*/
+    /*}*/
 
     @media print {
-        #print-foot {
-            margin-top: 2%;
-            visibility: visible;
-        }
+        /*#print-foot {*/
+        /*    margin-top: 2%;*/
+        /*    visibility: visible;*/
+        /*}*/
         a {
             text-decoration: none;
             color: black;
@@ -143,14 +149,16 @@ ul{
         }
 
         .statH {
-            font-size: 45pt;
+            font-size: 40pt;
         }
 
         .containerToPrint {
-            max-width: fit-content;
+            margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
         }
 
         .tbl {
-            font-size: 17pt;
+            font-size: 16.5pt;
         }
     }
