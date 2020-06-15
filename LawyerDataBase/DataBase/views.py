@@ -1344,7 +1344,7 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
             else:
                 begin = datetime.strptime(time_app_from, '%H:%M').time()
                 end = datetime.strptime(time_app_to, '%H:%M').time()
-            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+            data['object_list'] = data['object_list'].filter(app_time__range=(begin,end))
 
 
         selected_services = self.request.GET.getlist('services', '')
@@ -1421,7 +1421,7 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
             else:
                 begin = datetime.strptime(time_app_from, '%H:%M').time()
                 end = datetime.strptime(time_app_to, '%H:%M').time()
-            data['object_list'] = data['object_list'].filter(app_time__in=(begin,end))
+            data['object_list'] = data['object_list'].filter(app_time__range=(begin,end))
 
 
         selected_services = self.request.GET.getlist('services', '')
