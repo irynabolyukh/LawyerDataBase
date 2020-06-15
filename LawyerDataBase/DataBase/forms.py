@@ -95,7 +95,7 @@ class LawyerUpdateForm(ModelForm):
         fields = ['first_name', 'surname', 'mid_name', 'specialization', 'service', 'work_days']
 
 
-LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
+LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')}, min_num=1)
 
 
 class LawyerServiceForm(forms.Form):
@@ -151,9 +151,9 @@ class ServicesUpdateForm(ModelForm):
         return bonus_value
 
 
-NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
+NPhoneFormset = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')}, min_num=1)
 
-JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
+JPhoneFormset = inlineformset_factory(Client_juridical, JPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')}, min_num=1)
 
 
 class Appointment_NForm(ModelForm):

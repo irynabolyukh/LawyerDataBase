@@ -174,6 +174,7 @@ class StatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['value'] = str(nom_value() + extra_value())
 
         context['service_count'] = service_counter()
+        context['full_count'] = Appointment_N.objects.count() + Appointment_J.objects.count()
 
         if str(checked) == 'on':
             context['lawyer_counter'] = lawyer_counter(True)
@@ -215,7 +216,8 @@ def getStats(request):
         response['value'] = 0
         for service in response['service_count']:
             response['value'] += service['sum']
-
+        response['full_count'] = Appointment_N.objects.filter(app_date__gte=dStart, app_date__lte=dEnd).count() \
+                                + Appointment_J.objects.filter(app_date__gte=dStart, app_date__lte=dEnd).count()
         return JsonResponse(response)
     else:
         return JsonResponse({'message': 'Bad request'}, status=400)
@@ -443,6 +445,7 @@ def index(request):
 
 def visitCard(request):
     context = {}
+    context['service_group'] = ServiceGroup.objects.all()
     return render(request, 'visitCard.html', context)
 
 
@@ -455,7 +458,7 @@ class LawyerCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], can_delete=False,
-                                             labels={'phone_num': ('Телефон')})
+                                             labels={'phone_num': ('Телефон')}, min_num=1)
         if self.request.POST:
             data["lphone"] = phoneFormSet(self.request.POST)
         else:
@@ -487,7 +490,7 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'],
-                                             labels={'phone_num': 'Телефон'})
+                                             labels={'phone_num': 'Телефон'}, min_num=1)
 
         if self.request.POST:
             data["lphone"] = phoneFormSet(self.request.POST, instance=self.object)
@@ -574,7 +577,7 @@ class Client_naturalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         phoneFormSet = inlineformset_factory(Client_natural, NPhone, max_num=2, fields=['phone_num'], can_delete=False,
-                                             labels={'phone_num': ('Телефон')})
+                                             labels={'phone_num': ('Телефон')}, min_num=1)
         if self.request.POST:
             data["nphone"] = phoneFormSet(self.request.POST)
         else:
@@ -662,7 +665,7 @@ class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cr
         data = super().get_context_data(**kwargs)
         PhoneFormSet = inlineformset_factory(
             Client_juridical, JPhone, max_num=2, fields=['phone_num'],
-            can_delete=False, labels={'phone_num': ('Телефон')})
+            can_delete=False, labels={'phone_num': ('Телефон')}, min_num=1)
         if self.request.POST:
             data["jphone"] = PhoneFormSet(self.request.POST)
         else:

@@ -246,6 +246,9 @@ def add_service_counter_to_lawyers(res):
     return res
 
 
+
+
+
 def date_closed_dossier_j(date1, date2):
     with connection.cursor() as cursor:
         cursor.execute(

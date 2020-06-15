@@ -87,67 +87,7 @@
         <div class="container">
             <div class="services-carousel">
                 <div class="owl-carousel">
-                                            <div>
-    <a >
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-1.png');"></span>
-        <span class="title">Комплексне юридичне обслуговування</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-2.png');"></span>
-        <span class="title">Нерухомість на вторинному ринку</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-3.png');"></span>
-        <span class="title">Сімейне право</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-4.png');"></span>
-        <span class="title">Спадкове право</span>
-    </a>
-</div>                                            <div>
-    <a >
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-5.png');"></span>
-        <span class="title">Цивільне право</span>
-    </a>
-</div>                                            <div>
-    <a >
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-6.png');"></span>
-        <span class="title">Земельні питання</span>
-    </a>
-</div>                                            <div>
-    <a >
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-7.png');"></span>
-        <span class="title">Господарське право</span>
-    </a>
-</div>                                            <div>
-    <a >
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-8.png');"></span>
-        <span class="title">Адміністративне право</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-9.png');"></span>
-        <span class="title">Виконавче провадження</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-10.png');"></span>
-        <span class="title">Кримінальне право</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-11.png');"></span>
-        <span class="title">Будівельне право</span>
-    </a>
-</div>                                            <div>
-    <a>
-        <span class="icon" style="background-image: url('../static/docs/img/ico-service-12.png');"></span>
-        <span class="title">Pro bono</span>
-    </a>
-</div>
+
                 </div>
             </div>
         </div>
@@ -162,7 +102,7 @@
                 <span class="icon"><i class="fa fa-angle-up" aria-hidden="true"></i></span>
             </div>
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="site-name">
                         Адвокатське бюро
 <!--                        <span></span>-->
@@ -187,43 +127,46 @@
                             <br /> 10:00 - 19:00
                         </li>
                     </ul>
-                    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d186.06299482434486!2d30.51982119898265!3d50.464063885845974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce40609bc5e3%3A0xb49cb632a93ca77d!2sFaculty%20of%20Computer%20Sciences!5e0!3m2!1sen!2sua!4v1591381915361!5m2!1sen!2sua" class="btn btn-border popup-gmaps">Подивитися на карті</a>
+{#                    <a href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d186.06299482434486!2d30.51982119898265!3d50.464063885845974!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d4ce40609bc5e3%3A0xb49cb632a93ca77d!2sFaculty%20of%20Computer%20Sciences!5e0!3m2!1sen!2sua!4v1591381915361!5m2!1sen!2sua" class="btn btn-border popup-gmaps">Подивитися на карті</a>#}
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                                         <div class="caption">Наші послуги</div>
                     <ul class="menu">
-                        <li><a>Комплексне юридичне обслуговування</a></li>
-                        <li><a>Нерухомість на вторинному ринку</a></li>
-                        <li><a>Сімейне право</a></li>
-                        <li><a>Спадкове право</a></li>
-                        <li><a>Цивільне право</a></li>
-                        <li><a>Земельні питання</a></li>
-                        <li><a>Господарське право</a></li>
-                        <li><a>Адміністративне право</a></li>
-                        <li><a>Виконавче провадження</a></li>
-                        <li><a>Кримінальне право</a></li>
-                        <li><a>Будівельне право</a></li>
-                        <li><a>Pro bono</a></li>
+                        {% for group in service_group %}
+                            <li>{{ group.name_group }}</li>
+{#                        <li><a>Комплексне юридичне обслуговування</a></li>#}
+{#                        <li><a>Нерухомість на вторинному ринку</a></li>#}
+{#                        <li><a>Сімейне право</a></li>#}
+{#                        <li><a>Спадкове право</a></li>#}
+{#                        <li><a>Цивільне право</a></li>#}
+{#                        <li><a>Земельні питання</a></li>#}
+{#                        <li><a>Господарське право</a></li>#}
+{#                        <li><a>Адміністративне право</a></li>#}
+{#                        <li><a>Виконавче провадження</a></li>#}
+{#                        <li><a>Кримінальне право</a></li>#}
+{#                        <li><a>Будівельне право</a></li>#}
+{#                        <li><a>Pro bono</a></li>#}
+                        {% endfor %}
                     </ul>
                     <div class="caption"></div>
                     <div class="caption"><a style="color: white" target="_blank" href="{% url 'services' %}">Детальніше про послуги та ціни</a></div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-4">
-                    <div class="caption">Напишіть нам</div>
-                   <div role="form" class="wpcf7" id="wpcf7-f117-o1" lang="ru-RU" dir="ltr">
-<div class="screen-reader-response"></div>
-<form class="wpcf7-form">
-<div class="form">
-<div class="form-item"><span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="E-mail" /></span></div>
-<div class="form-item"><span class="wpcf7-form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false" placeholder="Повідомлення"></textarea></span></div>
-<div class="form-item">
-<div><div></div>
-</div>
-</div>
-<p><input type="submit" value="Відправити" class="btn btn-gold"/>
-</p>
-</div>
-<div></div></form></div>                </div>
+{#                <div class="col-12 col-sm-12 col-md-12 col-lg-4">#}
+{#                    <div class="caption">Напишіть нам</div>#}
+{#                   <div role="form" class="wpcf7" id="wpcf7-f117-o1" lang="ru-RU" dir="ltr">#}
+{#<div class="screen-reader-response"></div>#}
+{#<form class="wpcf7-form">#}
+{#<div class="form">#}
+{#<div class="form-item"><span class="wpcf7-form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email" aria-required="true" aria-invalid="false" placeholder="E-mail" /></span></div>#}
+{#<div class="form-item"><span class="wpcf7-form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" aria-invalid="false" placeholder="Повідомлення"></textarea></span></div>#}
+{#<div class="form-item">#}
+{#<div><div></div>#}
+{#</div>#}
+{#</div>#}
+{#<p><input type="submit" value="Відправити" class="btn btn-gold"/>#}
+{#</p>#}
+{#</div>#}
+{#<div></div></form></div>                </div>#}
             </div>
         </div>
     </div>
