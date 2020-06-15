@@ -1465,14 +1465,19 @@ def ndossierDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            today = date.today()
-            futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=pk, app_date__gt=today)
-            if not futureAppointments:
+            dossier = Dossier_N.objects.filter(active=True).get(code_dossier_n=pk)
+            paid = dossier.__getattribute__('paid')
+            appointments = Appointment_N.objects.filter(active=True, code_dossier_n=pk)
+            if paid:
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому",
-                                                               'redirect':reverse('ndossiers')})
+                if not appointments:
+                    page.active = False
+                    page.save()
+                else:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє - не оплачене!",
+                                                               'redirect': reverse('ndossiers')})
             return redirect("ndossiers")
     else:
         form = Dossier_NFormDelete()
@@ -1523,14 +1528,19 @@ def jdossierDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            today = date.today()
-            futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=pk, app_date__gt=today)
-            if not futureAppointments:
+            dossier = Dossier_J.objects.filter(active=True).get(code_dossier_j=pk)
+            paid = dossier.__getattribute__('paid')
+            appointments = Appointment_J.objects.filter(active=True, code_dossier_j=pk)
+            if paid:
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє має записи у майбутньому",
-                                                               'redirect':reverse('jdossiers')})
+                if not appointments:
+                    page.active = False
+                    page.save()
+                else:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє - не оплачене!",
+                                                                   'redirect': reverse('jdossiers')})
             return redirect("jdossiers")
     else:
         form = Dossier_JFormDelete()
