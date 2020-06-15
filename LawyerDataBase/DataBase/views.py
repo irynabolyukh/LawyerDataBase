@@ -1459,7 +1459,7 @@ def ndossierDelete(request, pk):
         if form.is_valid():
             page = form.save(commit=False)
             today = date.today()
-            futureAppointments = Appointment_N.objects.filter(code_dossier_n=pk, app_date__gt=today)
+            futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=pk, app_date__gt=today)
             if not futureAppointments:
                 page.active = False
                 page.save()
@@ -1481,8 +1481,22 @@ def lawyerDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureJAppointments = Appointment_J.objects.filter(active=True, lawyer_code=pk, app_date__gt=today)
+            futureNAppointments = Appointment_N.objects.filter(active=True, lawyer_code=pk, app_date__gt=today)
+            unclosedJDossiers = Dossier_J.objects.filter(active=True, lawyer_code=pk, status='open')
+            unclosedNDossiers = Dossier_N.objects.filter(active=True, lawyer_code=pk, status='open')
+            if not futureJAppointments and not futureNAppointments and not unclosedJDossiers and not unclosedNDossiers:
+                page.active = False
+                page.save()
+            else:
+                if futureJAppointments and futureNAppointments and not unclosedJDossiers and not unclosedNDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має записи в майбутньому"})
+                elif not futureJAppointments and not futureNAppointments and unclosedJDossiers and unclosedNDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має незакриті справи"})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Адвокат має незакриті справи та записи в майбутньому"})
             return redirect("lawyers")
     else:
         form = LawyerFormDelete()
@@ -1499,8 +1513,13 @@ def jdossierDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=pk, app_date__gt=today)
+            if not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє має записи у майбутньому"})
             return redirect("jdossiers")
     else:
         form = Dossier_JFormDelete()
@@ -1517,8 +1536,15 @@ def serviceDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureJAppointments = Appointment_J.objects.filter(active=True, service=pk, app_date__gt=today)
+            futureNAppointments = Appointment_N.objects.filter(active=True, service=pk, app_date__gt=today)
+            if not futureJAppointments and not futureNAppointments:
+                page.active = False
+                page.save()
+            else:
+                return render(request, 'confirm_delete.html', {'form': form, 'error': "Послуга має записи у майбутньому"})
+
             return redirect("services")
     else:
         form = ServiceFormDelete()
@@ -1571,8 +1597,22 @@ def jclientDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_J.objects.filter(active=True, num_client_j=pk, app_date__gt=today)
+            unpaidDossiers = Dossier_J.objects.filter(active=True, num_client_j=pk, paid=False)
+            if not unpaidDossiers and not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                if futureAppointments and not unpaidDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому"})
+                elif not futureAppointments and unpaidDossiers:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє"})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому"})
+
             return redirect("jcustomers")
     else:
         form = Client_JFormDelete()
@@ -1589,8 +1629,22 @@ def nclientDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_N.objects.filter(active=True, num_client_n=pk, app_date__gt=today)
+            unpaidDossiers = Dossier_N.objects.filter(active=True, num_client_n=pk, paid=False)
+            if not unpaidDossiers and not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                if futureAppointments and not unpaidDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому"})
+                elif not futureAppointments and unpaidDossiers:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє"})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому"})
+
             return redirect("ncustomers")
     else:
         form = Client_NFormDelete()
