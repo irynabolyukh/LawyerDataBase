@@ -299,10 +299,7 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         dossier = Dossier_J.objects.get(code_dossier_j=self.kwargs['pk'])
-        today = date.today()
-        if (dossier.date_expired < today):
-            print("expired")
-        dossier.fee = fee_dossier_j(dossier.code_dossier_j)
+        dossier.count_fee()
         client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
         context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
@@ -1303,7 +1300,7 @@ class Appointment_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Appointment_N
     paginate_by = 25
     ordering = ['-app_date']
-    queryset = Appointment_N.objects.filter(active=True).order_by('app_date').order_by('app_time')
+    queryset = Appointment_N.objects.filter(active=True).order_by('app_date', 'app_time')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -1379,7 +1376,7 @@ class Appointment_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListVie
     model = Appointment_J
     paginate_by = 25
     ordering = ['-app_date']
-    queryset = Appointment_J.objects.filter(active=True).order_by('app_date').order_by('app_time')
+    queryset = Appointment_J.objects.filter(active=True).order_by('app_date', 'app_time')
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
