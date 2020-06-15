@@ -1,6 +1,8 @@
 {% extends "base_generic.html" %}
 {% block title %}Профіль адвоката{% endblock %}
-
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
+{% endblock %}
 {% block navbar %}
     {% load user_tags %}
  {% if request.user|has_group:"Секретар"%}
@@ -29,9 +31,18 @@
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти зміни</button>
     </form>
 </div></div>
-<script>
+
+{% endblock %}
+
+{% block script %}
+    {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <script>
         function goBack() {
             window.history.back();
         }
     </script>
+
+    <script type="text/javascript" src="{% static 'docs/js/lawyerFormSelectMultiple.js' %}"></script>
+    <script type="text/javascript" src="{% static 'docs/js/highlightRequired.js' %}"></script>
 {% endblock %}

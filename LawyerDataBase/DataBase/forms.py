@@ -70,11 +70,9 @@ class LawyerForm(ModelForm):
     specialization = forms.CharField(label='Спеціалізація')
     mail_info = forms.EmailField(label='E-mail')
     service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
-                                             queryset=Services.objects.filter(active=True),
-                                             widget=CheckboxSelectMultiple)
+                                             queryset=Services.objects.filter(active=True))
     work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
-                                             queryset=Work_days.objects.all(),
-                                             widget=CheckboxSelectMultiple)
+                                             queryset=Work_days.objects.all())
 
     class Meta:
         model = Lawyer
