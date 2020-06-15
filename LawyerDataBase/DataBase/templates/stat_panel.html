@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <p id="date"></p>
+{#    <p id="date"></p>#}
 
     <div class="container-fluid" id="container-stat">
     <div class="col-md-12 col-sm-8">
@@ -22,10 +22,10 @@
         <div style="margin-top: 2%;" class="col-md-4 offset-md-2" id="dates">
             <div class="container align_right">
 
-                    <p><label for="date1">З </label>
-                    <input id="date1" name="date1" type="text" autocomplete="off" size="15">
-                    <p><label for="date2">По</label>
-                    <input id="date2" name="date2" type="text" autocomplete="off" size="15">
+                    <p class="d-print-none"><label for="date1">З </label>
+                    <input class="d-print-none" id="date1" name="date1" type="text" autocomplete="off" size="15">
+                    <p class="d-print-none"><label for="date2">По</label>
+                    <input class="d-print-none" id="date2" name="date2" type="text" autocomplete="off" size="15">
                 </div>
             <div id="reload" class="float-right">
                 <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
@@ -112,7 +112,7 @@
 </div>
 </div>
     </div>
-    <div id="print-foot"></div>
+{#    <div id="print-foot"></div>#}
 {% endblock %}
 {% block script %}
         {% load static %}
