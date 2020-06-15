@@ -1478,7 +1478,6 @@ def lawyerDelete(request, pk):
     obj = get_object_or_404(Lawyer, lawyer_code=pk)
     if request.method == 'POST':
         form = LawyerFormDelete(request.POST, instance=obj)
-
         if form.is_valid():
             page = form.save(commit=False)
             page.active = False
@@ -1517,8 +1516,18 @@ def serviceDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+
+            today = date.today()
+            futureAppointmentsN = Appointment_N.objects.filter(service__service_code=pk, app_date__gt=today)
+            futureAppointmentsJ = Appointment_J.objects.filter(service__service_code=pk, app_date__gt=today)
+
+            if not futureAppointmentsN and not futureAppointmentsJ:
+                page.active = False
+                page.save()
+            else:
+                return render(request, 'confirm_delete.html', {'form': form,
+                                                               'error': "Послуга має записи у майбутньому",
+                                                               'redirect':reverse('services')})
             return redirect("services")
     else:
         form = ServiceFormDelete()

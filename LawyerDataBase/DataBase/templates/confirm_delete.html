@@ -25,7 +25,11 @@
             </div>
 
             <div class="modal-footer">
+                {% if not error %}
                 <input  class="btn btn-outline-secondary" type="submit" value="Відмінити" onclick="goBack()" />
+                {% else %}
+                    <a  class="btn btn-outline-secondary" href="{{ redirect }}" >Відмінити</a>
+                {% endif %}
             </div>
         </div>
     </div>
