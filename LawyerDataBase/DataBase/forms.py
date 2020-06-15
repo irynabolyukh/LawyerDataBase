@@ -176,7 +176,7 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.get('pk','')
+        pk = kwargs.pop('pk','')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
         if pk is not '':
             self.fields['num_client_n'].initial = pk
