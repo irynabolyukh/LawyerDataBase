@@ -472,10 +472,13 @@ class LawyerUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        phoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'],
+                                             labels={'phone_num': 'Телефон'})
+
         if self.request.POST:
-            data["lphone"] = LPhoneFormSet(self.request.POST, instance=self.object)
+            data["lphone"] = phoneFormSet(self.request.POST, instance=self.object)
         else:
-            data["lphone"] = LPhoneFormSet(instance=self.object)
+            data["lphone"] = phoneFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):

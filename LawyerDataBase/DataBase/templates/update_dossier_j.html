@@ -12,10 +12,9 @@
 <div class="shadow-lg p-4 mb-4 bg-white">
     <form method="POST" class="post-form">
         {% csrf_token %}
-         <table>
+
              {% include "table_form.html" with form=form %}
 
-        </table>
         <button type="submit" class="btn btn-outline-success btn-block">Зберегти зміни</button>
     </form>
 </div></div>
