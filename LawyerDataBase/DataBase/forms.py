@@ -297,11 +297,12 @@ class Appointment_JForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
+        pk = kwargs.get('pk','')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_j'].initial = pk
-        self.fields['num_client_j'].disabled = True
-        self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
+        if pk is not '':
+            self.fields['num_client_j'].initial = pk
+            self.fields['num_client_j'].disabled = True
+            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):

@@ -847,11 +847,12 @@ class App_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    form_class = Appointment_NFormUpdate
+    form_class = Appointment_NForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['selected_services'] = Appointment_N.objects.filter(appoint_code_n=self.kwargs['pk']).values('service')
         return data
 
     def get_form_kwargs(self):
@@ -896,11 +897,12 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    form_class = Appointment_JFormUpdate
+    form_class = Appointment_JForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['selected_services'] = Appointment_J.objects.filter(appoint_code_j=self.kwargs['pk']).values('service')
         return data
 
     def form_valid(self, form):
