@@ -635,7 +635,7 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return kwargs
 
     def get_success_url(self):
-        return reverse("service-detailed-view", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
+        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -1068,11 +1068,10 @@ class ServicesListView(ListView):
         service_id = self.request.GET.get('service_id', '')
         se_name = self.request.GET.get('se_name', '')
         group_sel = self.request.GET.get('group', '')
-        data['object_list'] = Services.objects.filter(active=True).filter(service_code__icontains=service_id).\
-                                                filter(service_group__name_group__icontains=group_sel).\
-                                                filter(name_service__icontains=se_name)
-
-
+        data['object_list'] = Services.objects.filter(active=True,
+                                                      service_code__icontains=service_id,
+                                                      service_group__name_group__icontains=group_sel,
+                                                      name_service__icontains=se_name)
         data['service_id'] = service_id
         data['se_name'] = se_name
         data['group_sel'] = group_sel
