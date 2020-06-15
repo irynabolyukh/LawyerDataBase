@@ -92,13 +92,15 @@ ul{
     }
 
 
-
- a:link {
+@media print {
+     a:link {
         text-decoration: none;
     }
     a {
         color: black;
     }
+}
+
 
     /*#print-foot {*/
     /*     display: table-footer-group;*/

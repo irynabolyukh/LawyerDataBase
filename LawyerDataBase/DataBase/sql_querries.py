@@ -173,6 +173,7 @@ def lawyer_counter():
             '           ON ANS.appointment_n_id = AN.appoint_code_n) INNER JOIN "Services" AS SE '
             '           ON SE.service_code = ANS.services_id) INNER JOIN "Dossier_N" as DN '
             '           on DN.code_dossier_n = AN.code_dossier_n_id '
+            '       WHERE LA.active = TRUE'
             '       ) '
             '   UNION ALL '
             '       ( SELECT lawyer_code, first_name, surname, mid_name, specialization, status, bonus_value,'
@@ -182,6 +183,7 @@ def lawyer_counter():
             '           ON AJS.appointment_j_id = AJ.appoint_code_j) INNER JOIN "Services" AS SE '
             '           ON SE.service_code = AJS.services_id) INNER JOIN "Dossier_J" as DJ '
             '           on DJ.code_dossier_j = AJ.code_dossier_j_id '
+            '           WHERE LA.active = TRUE'
             '       ) ) AS res '
             'GROUP BY res.lawyer_code, res.first_name, res.surname, res.mid_name, res.specialization,  '
             'res.status,  res.bonus_value,  res.nominal_value, res.paid ;')
@@ -209,9 +211,35 @@ def lawyer_counter():
                         'count': record[4],
                         'mid_name': record[3],
                         'spec': record[5],
-                        'sum': sum})
+                        'sum': sum,
+                        'services': []})
+    add_service_counter_to_lawyers(res)
+    print(res)
     return res
 
+def add_service_counter_to_lawyers(res):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            'Select lawyer_code, name_service, COUNT(*) '
+            'FROM ((SELECT lawyer_code, name_service '
+            '       FROM ((("Appointment_N" AS AN INNER JOIN "Lawyer" AS LA ON AN.lawyer_code_id = LA.lawyer_code) '
+            '               INNER JOIN "Appointment_N_service" AS ANS ON ANS.appointment_n_id =  AN.appoint_code_n) '
+            '               INNER JOIN "Services" AS SE ON SE.service_code = ANS.services_id) '
+            '       WHERE LA.active = TRUE) '
+            '   UNION ALL '
+            '       (SELECT lawyer_code, name_service '
+            '        FROM((("Appointment_J" AS AJ INNER JOIN "Lawyer" AS LA ON AJ.lawyer_code_id = LA.lawyer_code) '
+            '               INNER JOIN "Appointment_J_service" AS AJS ON AJS.appointment_j_id =  AJ.appoint_code_j) '
+            '               INNER JOIN "Services" AS SE ON SE.service_code = AJS.services_id) '
+        '           WHERE LA.active = TRUE )) as RES '
+            'GROUP BY lawyer_code, name_service')
+        row = cursor.fetchall()
+    for record in row:
+        for lawyer in res:
+            if str(lawyer['lawyer_code']) == record[0]:
+                lawyer['services'].append({'name':record[1],'count': record[2]})
+
+    return res
 
 def date_closed_dossier_j(date1, date2):
     with connection.cursor() as cursor:

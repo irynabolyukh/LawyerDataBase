@@ -45,7 +45,7 @@ function addDatePicker() {
         dayNamesMin: dayNamesShort,
         monthNames : MonthNames,
         monthNamesShort:monthNamesShort,
-    });
+    }).on('change',setDateTo);
     $('#date2').datepicker({
         dateFormat: "dd/mm/yy",
         changeMonth: true,
@@ -55,8 +55,18 @@ function addDatePicker() {
         dayNamesMin: dayNamesShort,
         monthNames : MonthNames,
         monthNamesShort:monthNamesShort,
-    });
+    }).on('change',setDateFrom);
 
+}
+
+function setDateFrom() {
+    var dateTo = $('#date2').datepicker('getDate');
+    $('#date1').datepicker('option','maxDate', dateTo)
+}
+
+function setDateTo() {
+    var dateFrom = $('#date1').datepicker('getDate');
+    $('#date2').datepicker('option','minDate', dateFrom)
 }
 
 function getStats(date) {
@@ -152,7 +162,7 @@ function updateInfo(data) {
                     </tr>
                     <tr>
                         <th></th>
-                        <th class="lnr-text-align-right">За весь час</th>
+                        <th>За весь час</th>
                         <th>${service.fulltimeCount}</th>
                         <th>${service.fulltimeSum} грн</th>
                     </tr>`)

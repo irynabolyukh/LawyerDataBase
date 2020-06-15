@@ -288,6 +288,7 @@ class Appointment_N(Appointment):
         ordering= ['-app_date']
 
 
+
 class Appointment_J(Appointment):
     appoint_code_j = models.AutoField(primary_key=True)
     lawyer_code = models.ForeignKey(Lawyer, on_delete=models.DO_NOTHING)

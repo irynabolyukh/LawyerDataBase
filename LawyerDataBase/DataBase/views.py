@@ -256,9 +256,9 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
 
         try:
@@ -1470,7 +1470,8 @@ def ndossierDelete(request, pk):
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому"})
+                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому",
+                                                               'redirect':reverse('ndossiers')})
             return redirect("ndossiers")
     else:
         form = Dossier_NFormDelete()
@@ -1484,7 +1485,6 @@ def lawyerDelete(request, pk):
     obj = get_object_or_404(Lawyer, lawyer_code=pk)
     if request.method == 'POST':
         form = LawyerFormDelete(request.POST, instance=obj)
-
         if form.is_valid():
             page = form.save(commit=False)
             today = date.today()
@@ -1497,12 +1497,15 @@ def lawyerDelete(request, pk):
                 page.save()
             else:
                 if futureJAppointments and futureNAppointments and not unclosedJDossiers and not unclosedNDossiers:
-                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має записи в майбутньому"})
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має записи в майбутньому",
+                                                               'redirect':reverse('lawyers')})
                 elif not futureJAppointments and not futureNAppointments and unclosedJDossiers and unclosedNDossiers:
-                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має незакриті справи"})
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має незакриті справи",
+                                                               'redirect':reverse('lawyers')})
                 else:
                     return render(request, 'confirm_delete.html',
-                                  {'form': form, 'error': "Адвокат має незакриті справи та записи в майбутньому"})
+                                  {'form': form, 'error': "Адвокат має незакриті справи та записи в майбутньому",
+                                                               'redirect':reverse('lawyers')})
             return redirect("lawyers")
     else:
         form = LawyerFormDelete()
@@ -1525,7 +1528,8 @@ def jdossierDelete(request, pk):
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє має записи у майбутньому"})
+                return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє має записи у майбутньому",
+                                                               'redirect':reverse('jdossiers')})
             return redirect("jdossiers")
     else:
         form = Dossier_JFormDelete()
@@ -1543,13 +1547,16 @@ def serviceDelete(request, pk):
         if form.is_valid():
             page = form.save(commit=False)
             today = date.today()
-            futureJAppointments = Appointment_J.objects.filter(active=True, service=pk, app_date__gt=today)
-            futureNAppointments = Appointment_N.objects.filter(active=True, service=pk, app_date__gt=today)
-            if not futureJAppointments and not futureNAppointments:
+            futureAppointmentsN = Appointment_N.objects.filter(service__service_code=pk, app_date__gt=today)
+            futureAppointmentsJ = Appointment_J.objects.filter(service__service_code=pk, app_date__gt=today)
+
+            if not futureAppointmentsN and not futureAppointmentsJ:
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error': "Послуга має записи у майбутньому"})
+                return render(request, 'confirm_delete.html', {'form': form,
+                                                               'error': "Послуга має записи у майбутньому",
+                                                               'redirect':reverse('services')})
 
             return redirect("services")
     else:
@@ -1609,15 +1616,19 @@ def jclientDelete(request, pk):
             if not unpaidDossiers and not futureAppointments:
                 page.active = False
                 page.save()
+                Dossier_J.objects.filter(active=True, num_client_j=pk).update(active=False)
             else:
                 if futureAppointments and not unpaidDossiers:
-                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому"})
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
+                                                               'redirect':reverse('jcustomers')})
                 elif not futureAppointments and unpaidDossiers:
                     return render(request, 'confirm_delete.html',
-                                  {'form': form, 'error': "Клієнт має неоплачені досьє"})
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє",
+                                                               'redirect':reverse('jcustomers')})
                 else:
                     return render(request, 'confirm_delete.html',
-                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому"})
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому",
+                                                               'redirect':reverse('jcustomers')})
 
             return redirect("jcustomers")
     else:
@@ -1641,15 +1652,19 @@ def nclientDelete(request, pk):
             if not unpaidDossiers and not futureAppointments:
                 page.active = False
                 page.save()
+                Dossier_N.objects.filter(active=True,num_client_n=pk).update(active=False)
             else:
                 if futureAppointments and not unpaidDossiers:
-                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому"})
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
+                                                               'redirect':reverse('ncustomers')})
                 elif not futureAppointments and unpaidDossiers:
                     return render(request, 'confirm_delete.html',
-                                  {'form': form, 'error': "Клієнт має неоплачені досьє"})
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє",
+                                                               'redirect':reverse('ncustomers')})
                 else:
                     return render(request, 'confirm_delete.html',
-                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому"})
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому",
+                                                               'redirect':reverse('ncustomers')})
 
             return redirect("ncustomers")
     else:
