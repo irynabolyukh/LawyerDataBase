@@ -7,7 +7,28 @@ var monthNamesShort = ['Січ',"Лют","Бер","Квіт","Трав",
     "Чер","Лип","Сер","Вер","Жов","Лист","Груд"]
 
 function main() {
-    addDatePicker()
+    $('#date1').datepicker({
+        dateFormat: "dd/mm/yy",
+        changeMonth: true,
+        changeYear: true,
+        onSelect: getStats,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
+    }).on('change',setDateTo);
+
+    $('#date2').datepicker({
+        dateFormat: "dd/mm/yy",
+        changeMonth: true,
+        changeYear: true,
+        onSelect: getStats,
+        dayNames: dayNames,
+        dayNamesMin: dayNamesShort,
+        monthNames : MonthNames,
+        monthNamesShort:monthNamesShort,
+    }).on('change',setDateFrom);
+
     window.addEventListener("beforeprint", handlePrint);
     window.addEventListener("afterprint", afterPrint);
 }
@@ -35,29 +56,6 @@ function handlePrint(){
     }
 }
 
-function addDatePicker() {
-    $('#date1').datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        onSelect: getStats,
-        dayNames: dayNames,
-        dayNamesMin: dayNamesShort,
-        monthNames : MonthNames,
-        monthNamesShort:monthNamesShort,
-    }).on('change',setDateTo);
-    $('#date2').datepicker({
-        dateFormat: "dd/mm/yy",
-        changeMonth: true,
-        changeYear: true,
-        onSelect: getStats,
-        dayNames: dayNames,
-        dayNamesMin: dayNamesShort,
-        monthNames : MonthNames,
-        monthNamesShort:monthNamesShort,
-    }).on('change',setDateFrom);
-
-}
 
 function setDateFrom() {
     var dateTo = $('#date2').datepicker('getDate');
@@ -165,7 +163,8 @@ function updateInfo(data) {
                         <th>За весь час</th>
                         <th>${service.fulltimeCount}</th>
                         <th>${service.fulltimeSum} грн</th>
-                    </tr>`)
+                    </tr>
+                    <tr></tr>`)
         }
         serviceContainer.append(` </tbody></table>`)
     }

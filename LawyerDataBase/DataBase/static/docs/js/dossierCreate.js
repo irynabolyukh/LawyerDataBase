@@ -40,8 +40,8 @@ function main() {
 function setDateSigned(event){
     var date_signed = $('#id_date_signed').datepicker('getDate');
     var date_expired = new Date(date_signed.getFullYear(),
-             date_signed.getMonth(),
-             date_signed.getDate() + 7)
+             date_signed.getMonth()+1,
+             date_signed.getDate())
     $('#id_date_expired').datepicker('option','minDate', date_expired)
     $('#id_date_closed').datepicker('option','minDate', date_signed)
 }
