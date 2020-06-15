@@ -708,9 +708,14 @@ class Dossier_JFormUpdate(ModelForm):
                 raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату відкриття'},
                                       code='invalid')
 
-        if c_date:
+        if c_date and date_closed:
             if date_closed < c_date.date():
                 raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату засідання'},
+                                      code='invalid')
+
+        if c_date:
+            if open_date > c_date.date():
+                raise ValidationError({'court_date': 'Дата засідання не може бути раніше дати відкриття'},
                                       code='invalid')
 
         if date_closed:
@@ -787,9 +792,14 @@ class Dossier_NFormUpdate(ModelForm):
                 raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату відкриття'},
                                           code='invalid')
 
-        if c_date:
+        if c_date and date_closed:
             if date_closed < c_date.date():
                 raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату засідання'},
+                                          code='invalid')
+
+        if c_date:
+            if open_date > c_date.date():
+                raise ValidationError({'court_date': 'Дата засідання не може бути раніше дати відкриття'},
                                           code='invalid')
 
         if date_closed:
