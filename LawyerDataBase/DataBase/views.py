@@ -1183,10 +1183,12 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         date_expired_from = self.request.GET.get('date_expired_from', '')
         date_expired_to = self.request.GET.get('date_expired_to', '')
 
-        allDossiers = Dossier_J.objects.all().filter(active=True). \
+        allDossiers = Dossier_J.objects.filter(active=True). \
             filter(code_dossier_j__icontains=dossier_id). \
-            filter(status__icontains=status). \
             filter(num_client_j__num_client_j__icontains=client)
+
+        if status is not '':
+            allDossiers = allDossiers.filter(status=status)
         if date_signed_from is not '':
             allDossiers = allDossiers.filter(date_signed__gte=date_signed_from)
         if date_signed_to is not '':
@@ -1200,17 +1202,10 @@ class Dossier_JListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if date_expired_to is not '':
             allDossiers = allDossiers.filter(date_expired__lte=date_expired_to)
 
-        open = self.request.GET.get('open', '')
-        openDossiers = Dossier_J.objects.all()
-        if str(open) == "true":
-            openDossiers = Dossier_J.objects.filter(date_closed__isnull=True)
-        elif str(open) == "false":
-            openDossiers = Dossier_J.objects.filter(date_closed__isnull=False)
-
-        allDossiers = allDossiers.intersection(openDossiers)
 
         paidDossiers = Dossier_J.objects.all()
         paid = self.request.GET.get('paid', '')
+
         if str(paid) == "true":
             paidDossiers = Dossier_J.objects.filter(paid=True)
         elif str(paid) == "false":
@@ -1259,8 +1254,11 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         allDossiers = Dossier_N.objects.all().filter(active=True). \
             filter(code_dossier_n__icontains=dossier_id). \
-            filter(status__icontains=status). \
             filter(num_client_n__num_client_n__icontains=client)
+
+        if status is not '':
+            allDossiers = allDossiers.filter(status=status)
+
         if date_signed_from is not '':
             allDossiers = allDossiers.filter(date_signed__gte=date_signed_from)
         if date_signed_to is not '':
@@ -1274,14 +1272,6 @@ class Dossier_NListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if date_expired_to is not '':
             allDossiers = allDossiers.filter(date_expired__lte=date_expired_to)
 
-        open = self.request.GET.get('open', '')
-        openDossiers = Dossier_N.objects.all()
-        if str(open) == "true":
-            openDossiers = Dossier_N.objects.filter(date_closed__isnull=True)
-        elif str(open) == "false":
-            openDossiers = Dossier_N.objects.filter(date_closed__isnull=False)
-
-        allDossiers = allDossiers.intersection(openDossiers)
 
 
         paidDossiers = Dossier_N.objects.all()

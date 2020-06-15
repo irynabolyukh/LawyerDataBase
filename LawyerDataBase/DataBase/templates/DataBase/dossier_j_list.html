@@ -16,35 +16,7 @@
                                    placeholder="Ідентифікатор досьє..." name="dossier_id" value="{{ dossier_id }}">
 
                         </div>
-                        <div class="form-group col-md-4">
-                            <label for="status_search">Статус</label>
-                            <select id='status_search' name="status" class="form-control border">
-                                    {% if status == 'open' %}
-                                        <option >Оберіть статус</option>
-                                        <option value="open" selected>Відкриті</option>
-                                        <option value="closed" >Закриті</option>
-                                        <option value="closed-won" >Виграні</option>
-                                    {% elif status == 'closed' %}
-                                        <option >Оберіть статус</option>
-                                        <option value="open" >Відкриті</option>
-                                        <option value="closed" selected>Закриті</option>
-                                        <option value="closed-won" >Виграні</option>
-                                    {% elif status == 'closed-won' %}
-                                        <option >Оберіть статус</option>
-                                        <option value="open" >Відкриті</option>
-                                        <option value="closed" >Закриті</option>
-                                        <option value="closed-won" selected>Виграні</option>
-                                    {% else %}
-                                        <option selected>Оберіть статус</option>
-                                        <option value="open" >Відкриті</option>
-                                        <option value="closed" >Закриті</option>
-                                        <option value="closed-won" >Виграні</option>
-                                    {% endif %}
 
-                                </select>
-
-
-                        </div>
                         <div class="form-group col-md-4">
                             <label for="client_search">Клієнт</label>
                             <input class="form-control border" id='client_search' type="search"
@@ -125,25 +97,34 @@
 
                             </div>
                          <div class="form-group col-md-4">
-                                <label for="open-select">Відкриті</label>
-                                <select id='open-select' name="open" class="form-control">
-                                    {% if open == 'true' %}
-                                        <option >Будь-які</option>
-                                        <option value="true" selected>Відкриті</option>
-                                        <option value="false" >Закриті</option>
-                                    {% elif open == 'false' %}
-                                        <option >Будь-які</option>
-                                        <option value="true" >Відкриті</option>
-                                        <option value="false" selected>Закриті</option>
+                            <label for="status_search">Статус</label>
+                            <select id='status_search' name="status" class="form-control border">
+                                    {% if status == 'open' %}
+                                        <option value="">Оберіть статус</option>
+                                        <option value="open" selected>Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
+                                    {% elif status == 'closed' %}
+                                        <option value="">Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" selected>Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
+                                    {% elif status == 'closed-won' %}
+                                        <option value="">Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" selected>Виграні</option>
                                     {% else %}
-                                        <option selected>Будь-які</option>
-                                        <option value="true" >Відкриті</option>
-                                        <option value="false" >Закриті</option>
+                                        <option selected value="">Оберіть статус</option>
+                                        <option value="open" >Відкриті</option>
+                                        <option value="closed" >Закриті</option>
+                                        <option value="closed-won" >Виграні</option>
                                     {% endif %}
 
                                 </select>
 
-                            </div>
+
+                        </div>
                     </div>
                     <div class="align-right float-right">
                         <a class="btn btn-info align-right" href="{% url 'jdossiers' %}">Очистити фільтри</a>
