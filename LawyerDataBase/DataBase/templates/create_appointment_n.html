@@ -5,6 +5,7 @@
     {% load static %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.css">
     <link rel="stylesheet" href="{% static 'docs/css/app_css.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
 {% endblock %}
 {% block navbar %}
 {% if request.user|has_group:"Секретар"%}
@@ -36,13 +37,13 @@
 
 {% block script %}
 {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.10/jquery.timepicker.min.js"></script>
-
     <script src="{% static 'docs/js/highlightRequired.js' %}"></script>
- <script>
+    <script>
         function goBack() {
             window.history.back();
         }
     </script>
-    <script src="{% static 'docs/js/app_ajax.js' %}"></script>
+    <script src="{% static 'docs/js/app_ajax.1.js' %}"></script>
 {% endblock %}
