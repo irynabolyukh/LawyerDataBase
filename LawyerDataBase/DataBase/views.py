@@ -1458,8 +1458,13 @@ def ndossierDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_N.objects.filter(code_dossier_n=pk, app_date__gt=today)
+            if not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому"})
             return redirect("ndossiers")
     else:
         form = Dossier_NFormDelete()
