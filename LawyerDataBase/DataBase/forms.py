@@ -355,7 +355,7 @@ class Dossier_JForm(ModelForm):
                 raise ValidationError(_('Справа не може бути закритою, оскільки існують'
                                         ' записи, що ще не відбулися'), code='invalid')
 
-        if paidcontext and str(self.cleaned_data['status']) == 'open':
+        if paidcontext and str(self.cleaned_data['status']) == 'openпш':
             raise ValidationError(_('Справа не може бути оплачена, коли вона відкрита'), code='invalid')
 
         if date_closed is None:
