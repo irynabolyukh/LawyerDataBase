@@ -847,7 +847,7 @@ class App_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    form_class = Appointment_NForm
+    form_class = Appointment_NFormUpdate
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -896,7 +896,7 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    form_class = Appointment_JForm
+    form_class = Appointment_JFormUpdate
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -906,11 +906,6 @@ class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
     def form_valid(self, form):
         self.object = form.save()
         return super().form_valid(form)
-
-    def get_form_kwargs(self):
-        kwargs = super(Appointment_JUpdateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
-        return kwargs
 
     def get_success_url(self):
         return reverse("client-detailed-view-j", kwargs={'pk': self.object.num_client_j.pk})
