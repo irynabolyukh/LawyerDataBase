@@ -80,6 +80,20 @@ class LawyerForm(ModelForm):
                   'mid_name', 'specialization', 'mail_info', 'service', 'work_days']
 
 
+class LawyerUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я')
+    surname = forms.CharField(label='Прізвище')
+    mid_name = forms.CharField(label='По батькові')
+    specialization = forms.CharField(label='Спеціалізація')
+    service = forms.ModelMultipleChoiceField(label='Послуги', required=False,
+                                             queryset=Services.objects.filter(active=True))
+    work_days = forms.ModelMultipleChoiceField(label='Робочі дні', required=False,
+                                             queryset=Work_days.objects.all())
+
+    class Meta:
+        model = Lawyer
+        fields = ['first_name', 'surname', 'mid_name', 'specialization', 'service', 'work_days']
+
 
 LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_num'], labels={'phone_num': ('Телефон')})
 
@@ -166,10 +180,6 @@ class Appointment_NForm(ModelForm):
         super(Appointment_NForm, self).__init__(*args, **kwargs)
         self.fields['num_client_n'].initial = pk
         self.fields['num_client_n'].disabled = True
-        # if user.groups.filter(name="Фізичний клієнт").exists():
-        #     user_id = Client_natural.objects.filter(mail_info=user.email)[0]
-        #     self.fields['num_client_n'].initial=user_id.pk
-        #     self.fields['num_client_n'].disabled = True
         self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
@@ -290,10 +300,6 @@ class Appointment_JForm(ModelForm):
         super(Appointment_JForm, self).__init__(*args, **kwargs)
         self.fields['num_client_j'].initial = pk
         self.fields['num_client_j'].disabled = True
-        # if user.groups.filter(name="Юридичний клієнт").exists():
-        #     user_id = Client_juridical.objects.filter(mail_info=user.email)[0]
-        #     self.fields['num_client_j'].initial=user_id.pk
-        #     self.fields['num_client_j'].disabled = True
         self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
@@ -552,6 +558,40 @@ class Client_JForm(ModelForm):
     class Meta:
         model = Client_juridical
         exclude = ('active',)
+
+
+class Client_NUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
+    adr_build = forms.CharField(label='Будинок', max_length=5)
+    passport_date = forms.DateField(label='Дата паспорта', widget=TextInput(attrs={'autocomplete': 'off'}))
+    passport_authority = forms.CharField(label='Орган паспорта', max_length=4, min_length=4)
+    passport_num = forms.CharField(label='Номер паспорта', max_length=9, min_length=8)
+
+    class Meta:
+        model = Client_natural
+        fields = ['first_name', 'surname', 'mid_name', 'adr_city', 'adr_street',
+                   'adr_build', 'passport_date', 'passport_num', 'passport_authority']
+
+
+class Client_JUpdateForm(ModelForm):
+    first_name = forms.CharField(label='Ім`я', max_length=50)
+    surname = forms.CharField(label='Прізвище', max_length=50)
+    mid_name = forms.CharField(label='По батькові', max_length=50)
+    adr_city = forms.CharField(label='Місто', max_length=100)
+    adr_street = forms.CharField(label='Вулиця', max_length=200)
+    adr_build = forms.CharField(label='Будинок', max_length=5)
+    client_position = forms.CharField(label='Посада', max_length=50)
+    name_of_company = forms.CharField(label='Компанія', max_length=100)
+    iban = forms.CharField(label='IBAN', max_length=29, min_length=29)
+
+    class Meta:
+        model = Client_juridical
+        fields = ('first_name', 'surname', 'mid_name', 'adr_city',
+                   'adr_street', 'adr_build', 'client_position', 'name_of_company', 'iban')
 
 
 class Appointment_NFormUpdate(ModelForm):
