@@ -9,8 +9,27 @@
     <div class="col-md-12 col-sm-8">
             <h1 class="statH text-center" style="margin-bottom: 5%">Статистика Адвокатського Бюро</h1>
         <div class="container containerToPrint">
-    <div class="row">
-        <div class="col-md-6 text_styles">
+    <div style="    padding: 0;
+    flex-direction: column;
+    display: flex;" class="row text-center">
+        <div style="margin: auto;" class="" id="dates">
+            <div class="container align_right">
+
+                    <p class="d-print-none"><label for="date1">З </label>
+                    <input class="d-print-none" id="date1" name="date1" type="text" autocomplete="off" size="15">
+                    <p class="d-print-none"><label for="date2">По</label>
+                    <input class="d-print-none" id="date2" name="date2" type="text" autocomplete="off" size="15">
+                </div>
+            <div class="container">
+                <button class="fa fa-print d-print-none" onClick="window.print()"></button>
+                    <div id="reload" class="float-right">
+                <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+        <div class=" card text-center text_styles">
             <div><b>Відкрито справ: </b><div id="open_dossier" class="inline_div">{{ counter_dossiers_open }}</div></div>
             <div class="tabulated secondary_text"><b>Юридичних: </b><div id="open_dossier_j" class="inline_div">{{ open_dossiers_j}}</div></div>
             <div class="tabulated secondary_text"><b>Фізичних: </b><div id="open_dossier_n" class="inline_div">{{ open_dossiers_n}}</div></div>
@@ -19,24 +38,7 @@
             <div class="tabulated secondary_text"><b>Виграно: </b><div id="won_dossiers" class="inline_div">{{ won_dossiers }}</div></div>
             <div><b>Загальна сума :</b> <div id="total_value" class="inline_div">{{ value }} грн</div></div>
         </div>
-        <div style="margin-top: 2%;" class="col-md-4 offset-md-2" id="dates">
-            <div class="container align_right">
-
-                    <p class="d-print-none"><label for="date1">З </label>
-                    <input class="d-print-none" id="date1" name="date1" type="text" autocomplete="off" size="15">
-                    <p class="d-print-none"><label for="date2">По</label>
-                    <input class="d-print-none" id="date2" name="date2" type="text" autocomplete="off" size="15">
-                </div>
-            <div id="reload" class="float-right">
-                <button onClick="window.location.reload();" class="d-print-none">За весь час</button>
-            </div>
-            <div style="margin-right: 10%" class="d-print-none float-right">
-                <button class="fa fa-print" onClick="window.print()"></button>
-            </div>
-        </div>
-    </div>
-    <hr>
-
+        <hr>
     <div class="row tbl">
         <div class="col-12">
             <h2 class="mb-5" id="given_services">Надані послуги</h2>
