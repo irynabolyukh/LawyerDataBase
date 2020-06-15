@@ -220,7 +220,7 @@ class ServiceDetailView(LoginRequiredMixin, PermissionRequiredMixin, generic.Det
         service = Services.objects.filter(active=True).get(service_code=self.kwargs['pk'])
         group = service.__getattribute__('service_group')
         context['group'] = ServiceGroup.objects.filter(name_group=group)
-        context['lawyers'] = Lawyer.objects.filter(service=self.kwargs['pk'])
+        context['lawyers'] = Lawyer.objects.filter(active=True).filter(service=self.kwargs['pk'])
         return context
 
 
@@ -302,7 +302,7 @@ class DossierDetailJView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         dossier.count_fee()
         client_code = dossier.__getattribute__('num_client_j_id')
         dossier.save()
-        context['appointments'] = Appointment_J.objects.filter(code_dossier_j=self.kwargs['pk'])
+        context['appointments'] = Appointment_J.objects.filter(active=True).filter(code_dossier_j=self.kwargs['pk'])
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
         return context
 
@@ -337,7 +337,7 @@ class DossierDetailNView(LoginRequiredMixin, PermissionRequiredMixin, UserPasses
         print()
         client_code = dossier.__getattribute__('num_client_n_id')
         dossier.save()
-        context['appointments'] = Appointment_N.objects.filter(code_dossier_n=self.kwargs['pk'])
+        context['appointments'] = Appointment_N.objects.filter(active=True).filter(code_dossier_n=self.kwargs['pk'])
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
         return context
 
@@ -363,14 +363,14 @@ class ClientNDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         today = date.today()
-        context['upcoming_app_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+        context['upcoming_app_n'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_n'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']) \
+        context['appointments_n'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = NPhone.objects.filter(client_natural_id=client_code)
-        context['appointments'] = Appointment_N.objects.filter(num_client_n=self.kwargs['pk']). \
+        context['appointments'] = Appointment_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk']). \
             order_by('-app_date', '-app_time')
-        context['dossiers'] = Dossier_N.objects.filter(num_client_n=self.kwargs['pk'])
+        context['dossiers'] = Dossier_N.objects.filter(active=True).filter(num_client_n=self.kwargs['pk'])
         return context
 
 
@@ -395,13 +395,13 @@ class ClientJDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesT
         context = super().get_context_data(**kwargs)
         client_code = self.kwargs['pk']
         today = date.today()
-        context['upcoming_app_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+        context['upcoming_app_j'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk']) \
             .filter(app_date__gte=today).order_by('app_date')
-        context['appointments_j'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk']) \
+        context['appointments_j'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk']) \
             .filter(app_date__lt=today).order_by('-app_date')
         context['phones'] = JPhone.objects.filter(client_juridical_id=client_code)
-        context['appointments'] = Appointment_J.objects.filter(num_client_j=self.kwargs['pk'])
-        context['dossiers'] = Dossier_J.objects.filter(num_client_j=self.kwargs['pk'])
+        context['appointments'] = Appointment_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk'])
+        context['dossiers'] = Dossier_J.objects.filter(active=True).filter(num_client_j=self.kwargs['pk'])
         return context
 
 
@@ -1459,12 +1459,13 @@ def ndossierDelete(request, pk):
         if form.is_valid():
             page = form.save(commit=False)
             today = date.today()
-            futureAppointments = Appointment_N.objects.filter(code_dossier_n=pk, app_date__gt=today)
+            futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=pk, app_date__gt=today)
             if not futureAppointments:
                 page.active = False
                 page.save()
             else:
-                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому"})
+                return render(request, 'confirm_delete.html', {'form': form, 'error':"Досьє має записи у майбутньому",
+                                                               'redirect':reverse('ndossiers')})
             return redirect("ndossiers")
     else:
         form = Dossier_NFormDelete()
@@ -1480,8 +1481,25 @@ def lawyerDelete(request, pk):
         form = LawyerFormDelete(request.POST, instance=obj)
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureJAppointments = Appointment_J.objects.filter(active=True, lawyer_code=pk, app_date__gt=today)
+            futureNAppointments = Appointment_N.objects.filter(active=True, lawyer_code=pk, app_date__gt=today)
+            unclosedJDossiers = Dossier_J.objects.filter(active=True, lawyer_code=pk, status='open')
+            unclosedNDossiers = Dossier_N.objects.filter(active=True, lawyer_code=pk, status='open')
+            if not futureJAppointments and not futureNAppointments and not unclosedJDossiers and not unclosedNDossiers:
+                page.active = False
+                page.save()
+            else:
+                if futureJAppointments and futureNAppointments and not unclosedJDossiers and not unclosedNDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має записи в майбутньому",
+                                                               'redirect':reverse('lawyers')})
+                elif not futureJAppointments and not futureNAppointments and unclosedJDossiers and unclosedNDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Адвокат має незакриті справи",
+                                                               'redirect':reverse('lawyers')})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Адвокат має незакриті справи та записи в майбутньому",
+                                                               'redirect':reverse('lawyers')})
             return redirect("lawyers")
     else:
         form = LawyerFormDelete()
@@ -1498,8 +1516,14 @@ def jdossierDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=pk, app_date__gt=today)
+            if not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                return render(request, 'confirm_delete.html', {'form': form, 'error': "Досьє має записи у майбутньому",
+                                                               'redirect':reverse('jdossiers')})
             return redirect("jdossiers")
     else:
         form = Dossier_JFormDelete()
@@ -1516,7 +1540,6 @@ def serviceDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-
             today = date.today()
             futureAppointmentsN = Appointment_N.objects.filter(service__service_code=pk, app_date__gt=today)
             futureAppointmentsJ = Appointment_J.objects.filter(service__service_code=pk, app_date__gt=today)
@@ -1528,6 +1551,7 @@ def serviceDelete(request, pk):
                 return render(request, 'confirm_delete.html', {'form': form,
                                                                'error': "Послуга має записи у майбутньому",
                                                                'redirect':reverse('services')})
+
             return redirect("services")
     else:
         form = ServiceFormDelete()
@@ -1580,8 +1604,25 @@ def jclientDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_J.objects.filter(active=True, num_client_j=pk, app_date__gt=today)
+            unpaidDossiers = Dossier_J.objects.filter(active=True, num_client_j=pk, paid=False)
+            if not unpaidDossiers and not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                if futureAppointments and not unpaidDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
+                                                               'redirect':reverse('jcustomers')})
+                elif not futureAppointments and unpaidDossiers:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє",
+                                                               'redirect':reverse('jcustomers')})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому",
+                                                               'redirect':reverse('jcustomers')})
+
             return redirect("jcustomers")
     else:
         form = Client_JFormDelete()
@@ -1598,8 +1639,25 @@ def nclientDelete(request, pk):
 
         if form.is_valid():
             page = form.save(commit=False)
-            page.active = False
-            page.save()
+            today = date.today()
+            futureAppointments = Appointment_N.objects.filter(active=True, num_client_n=pk, app_date__gt=today)
+            unpaidDossiers = Dossier_N.objects.filter(active=True, num_client_n=pk, paid=False)
+            if not unpaidDossiers and not futureAppointments:
+                page.active = False
+                page.save()
+            else:
+                if futureAppointments and not unpaidDossiers:
+                    return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
+                                                               'redirect':reverse('ncustomers')})
+                elif not futureAppointments and unpaidDossiers:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє",
+                                                               'redirect':reverse('ncustomers')})
+                else:
+                    return render(request, 'confirm_delete.html',
+                                  {'form': form, 'error': "Клієнт має неоплачені досьє та записи в майбутньому",
+                                                               'redirect':reverse('ncustomers')})
+
             return redirect("ncustomers")
     else:
         form = Client_NFormDelete()

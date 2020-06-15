@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends "stat_generic.html" %}
 {% block content %}
     <div class="row align-items-center justify-content-center">
     <div class="modal-dialog  shadow-sm p-2 mb-2 bg-danger">
@@ -28,7 +28,7 @@
                 {% if not error %}
                 <input  class="btn btn-outline-secondary" type="submit" value="Відмінити" onclick="goBack()" />
                 {% else %}
-                    <a  class="btn btn-outline-secondary" href="{{ redirect }}" >Відмінити</a>
+                    <a  class="btn btn-outline-secondary" href="{{ redirect }}" >Повернутися</a>
                 {% endif %}
             </div>
         </div>
