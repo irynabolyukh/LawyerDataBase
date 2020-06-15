@@ -256,9 +256,9 @@ class LawyerDetailView(LoginRequiredMixin, PermissionRequiredMixin, UserPassesTe
             .filter(app_date__lt=today).order_by('-app_date')
         context['dossier_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code)
         context['dossier_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code)
-        context['closed_dossiers_n'] = Dossier_N.objects.filter(active=True).filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_n'] = Dossier_N.objects.filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
-        context['closed_dossiers_j'] = Dossier_J.objects.filter(active=True).filter(lawyer_code=la_code).filter(
+        context['closed_dossiers_j'] = Dossier_J.objects.filter(lawyer_code=la_code).filter(
             status__istartswith='closed').count()
 
         try:

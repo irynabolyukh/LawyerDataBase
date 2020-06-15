@@ -55,18 +55,18 @@
                 <tbody id="services_body">
                 {% for service in service_count %}
                     <tr class="border_top">
-                        <th rowspan="2" class="vertical_align">
-                            <a href="{% url 'service-detailed-view' service.service_code %}">{{ service.name_service }}</a></th>
-                        <th>{{ service.nominal_value }}</th>
-                        <th>{{service.bonus_value}}</th>
-                        <th>{{service.count}}</th>
-                        <th>{{service.sum}} грн</th>
+                        <td rowspan="2" class="vertical_align">
+                            <a href="{% url 'service-detailed-view' service.service_code %}">{{ service.name_service }}</a></td>
+                        <td>{{ service.nominal_value }}</td>
+                        <td>{{service.bonus_value}}</td>
+                        <td>{{service.count}}</td>
+                        <td>{{service.sum}} грн</td>
                     </tr>
                     <tr>
-                        <th></th>
-                        <th>За весь час</th>
-                        <th>{{service.count}}</th>
-                        <th>{{service.sum}} грн</th>
+                        <td></td>
+                        <td>За весь час</td>
+                        <td>{{service.count}}</td>
+                        <td>{{service.sum}} грн</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -94,13 +94,22 @@
                 <tbody id="lawyers_body">
                 {% for lawyer in lawyer_counter %}
                     <tr>
-                        <th><a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
-                            {{ lawyer.first_name }} {{ lawyer.mid_name }} {{ lawyer.surname }}</a></th>
-                        <th>{{ lawyer.lawyer_code }}</th>
-                        <th>{{ lawyer.spec }}</th>
-                        <th>{{ lawyer.count}}</th>
-                        <th>{{ lawyer.sum }}</th>
+                        <td><a href="{% url 'lawyer-detailed-view' lawyer.lawyer_code %}">
+                            {{ lawyer.first_name }} {{ lawyer.mid_name }} {{ lawyer.surname }}</a></td>
+                        <td>{{ lawyer.lawyer_code }}</td>
+                        <td>{{ lawyer.spec }}</td>
+                        <td>{{ lawyer.count}}</td>
+                        <td>{{ lawyer.sum }}</td>
                     </tr>
+                    {% for service in lawyer.services %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>{{ service.name }}</td>
+                        <td>{{ service.count }}</td>
+                        <td></td>
+                    </tr>
+                    {% endfor %}
                 {% endfor %}
                 </tbody>
             </table>
