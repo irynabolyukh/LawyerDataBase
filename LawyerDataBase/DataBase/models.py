@@ -143,6 +143,12 @@ class Client_natural(Client):
     def get_absolute_url(self):
         return reverse("client-detailed-view-n", kwargs={"pk": self.num_client_n})
 
+    def has_active_dossiers(self):
+
+        if Dossier_N.objects.filter(num_client_n=self.num_client_n, active=True, status='open'):
+            return True
+        return False
+
 
 class NPhone(models.Model):
     phone_regex = validators.RegexValidator(regex=r'^\d{10}$$', message="Телефон має складатись з 10 цифр")
@@ -170,6 +176,12 @@ class Client_juridical(Client):
 
     class Meta(Client.Meta):
         db_table = 'Client_juridical'
+
+    def has_active_dossiers(self):
+
+        if Dossier_J.objects.filter(num_client_j=self.num_client_j, active=True, status='open'):
+            return True
+        return False
 
     def get_absolute_url(self):
         return reverse("client-detailed-view-j", kwargs={"pk": self.num_client_j})
