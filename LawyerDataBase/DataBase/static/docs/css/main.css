@@ -124,18 +124,31 @@ ul{
     /*#date, #print-foot {*/
     /*    visibility: hidden;*/
     /*}*/
+  #dates {
+    padding: 2%;
+    border: 2px solid black;
+    border-radius: 5px;
+}
 
     @media print {
         /*#print-foot {*/
         /*    margin-top: 2%;*/
         /*    visibility: visible;*/
         /*}*/
+        #dates{
+            border: 0;
+        }
         a {
             text-decoration: none;
             color: black;
         }
          a[href]:after {
             content: none !important;
+         }
+         #dates{
+             font-size: 35px;
+             margin-bottom: 3%;
+             text-decoration: underline;
          }
 
         .d-print-none {
