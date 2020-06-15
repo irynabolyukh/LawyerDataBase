@@ -155,7 +155,7 @@
             {% endif %}
              {% if request.user|has_group:"Юридичний клієнт"%}
             <td>
-                    {{ dossier.lawyer_code.getfullname }}
+                {{ dossier.lawyer_code.getfullname }}
             </td>
             {% endif %}
         </tr>
@@ -207,14 +207,14 @@
             <td>{{appointment.comment}}</td>
             {% if request.user|has_group:"Секретар"%}
             <td><a href="{% url 'lawyer-detailed-view'  appointment.lawyer_code.lawyer_code %}">
-                    {{appointment.lawyer_code.getfullname}}
+                    {{appointment.lawyer_code}}
                 </a></td>
             {% endif %}
             {% if request.user|has_group:"Юридичний клієнт"%}
-            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            <td>  {{appointment.lawyer_code}}</td>
             {% endif %}
             {% if request.user|has_group:"Адвокат"%}
-            <td>  {{appointment.lawyer_code.getfullname}}</td>
+            <td>  {{appointment.lawyer_code}}</td>
             {% endif %}
             <td> {% for service in appointment.service.all %}<p>{{ service.name_service }}</p>{% endfor %}</td>
         </tr>
