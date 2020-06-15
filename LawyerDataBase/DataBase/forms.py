@@ -176,9 +176,9 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.get('pk','')
+        pk = kwargs.pop('pk','')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        if pk is not '':
+        if pk != '':
             self.fields['num_client_n'].initial = pk
             self.fields['num_client_n'].disabled = True
             self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
@@ -204,13 +204,14 @@ class Appoint_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
-        dossier_code = kwargs.pop('dossier_code')
+        pk = kwargs.pop('pk', '')
+        dossier_code = kwargs.pop('dossier_code', '')
         super(Appoint_NForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_n'].initial = pk
-        self.fields['num_client_n'].disabled = True
-        self.fields['code_dossier_n'].initial = dossier_code
-        self.fields['code_dossier_n'].disabled = True
+        if pk != '' and dossier_code != '':
+            self.fields['num_client_n'].initial = pk
+            self.fields['num_client_n'].disabled = True
+            self.fields['code_dossier_n'].initial = dossier_code
+            self.fields['code_dossier_n'].disabled = True
 
 
 class Appoint_JForm(ModelForm):
@@ -233,13 +234,14 @@ class Appoint_JForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
-        dossier_code = kwargs.pop('dossier_code')
+        pk = kwargs.pop('pk','')
+        dossier_code = kwargs.pop('dossier_code','')
         super(Appoint_JForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_j'].initial = pk
-        self.fields['num_client_j'].disabled = True
-        self.fields['code_dossier_j'].initial = dossier_code
-        self.fields['code_dossier_j'].disabled = True
+        if pk !='' and dossier_code != '':
+            self.fields['num_client_j'].initial = pk
+            self.fields['num_client_j'].disabled = True
+            self.fields['code_dossier_j'].initial = dossier_code
+            self.fields['code_dossier_j'].disabled = True
 
 
 class App_JForm(ModelForm):
@@ -297,9 +299,9 @@ class Appointment_JForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.get('pk','')
+        pk = kwargs.pop('pk','')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        if pk is not '':
+        if pk != '':
             self.fields['num_client_j'].initial = pk
             self.fields['num_client_j'].disabled = True
             self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')

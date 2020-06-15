@@ -847,7 +847,7 @@ class App_NCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_n'
     model = Appointment_N
-    form_class = Appointment_NForm
+    form_class = Appoint_NForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
@@ -857,6 +857,8 @@ class Appointment_NUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Updat
 
     def get_form_kwargs(self):
         kwargs = super(Appointment_NUpdateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        kwargs.update({'dossier_code': Appointment_N.objects.get(appoint_code_n=self.kwargs['pk']).code_dossier_n})
         return kwargs
 
     def form_valid(self, form):
@@ -897,13 +899,19 @@ class Appointment_JCreateView(LoginRequiredMixin, PermissionRequiredMixin, Creat
 class Appointment_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = 'DataBase.change_appointment_j'
     model = Appointment_J
-    form_class = Appointment_JForm
+    form_class = Appoint_JForm
     template_name = 'update_appointment.html'
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data['selected_services'] = Appointment_J.objects.filter(appoint_code_j=self.kwargs['pk']).values('service')
         return data
+
+    def get_form_kwargs(self):
+        kwargs = super(Appointment_JUpdateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})
+        kwargs.update({'dossier_code':Appointment_J.objects.get(appoint_code_j=self.kwargs['pk']).code_dossier_j})
+        return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
