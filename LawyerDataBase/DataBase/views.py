@@ -1610,6 +1610,7 @@ def jclientDelete(request, pk):
             if not unpaidDossiers and not futureAppointments:
                 page.active = False
                 page.save()
+                Dossier_J.objects.filter(active=True, num_client_j=pk).update(active=False)
             else:
                 if futureAppointments and not unpaidDossiers:
                     return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
@@ -1645,6 +1646,7 @@ def nclientDelete(request, pk):
             if not unpaidDossiers and not futureAppointments:
                 page.active = False
                 page.save()
+                Dossier_N.objects.filter(active=True,num_client_n=pk).update(active=False)
             else:
                 if futureAppointments and not unpaidDossiers:
                     return render(request, 'confirm_delete.html', {'form': form, 'error': "Клієнт має записи в майбутньому",
