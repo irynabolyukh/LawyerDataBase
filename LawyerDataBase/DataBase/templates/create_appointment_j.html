@@ -46,5 +46,15 @@
             window.history.back();
         }
     </script>
+ {% if selected_services %}
+    <script>
+        $(document).ready(function () {
+
+                    var selected_services = {{ selected_services|safe }}
+                    $("#services_search").selectpicker('val', selected_services)
+
+        })
+    </script>
+    {% endif %}
     <script src="{% static 'docs/js/app_ajax.1.js' %}"></script>
 {% endblock %}

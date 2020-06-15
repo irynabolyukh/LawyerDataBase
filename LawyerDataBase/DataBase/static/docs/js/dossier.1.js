@@ -19,7 +19,7 @@ function main(){
         dayNamesMin: dayNamesShort,
         monthNames : MonthNames,
         monthNamesShort:monthNamesShort,
-    })
+    }).on('change',setClosedDate);
     $('#id_date_closed').datepicker({
             dateFormat: "yy-mm-dd",
             changeMonth: true,
@@ -31,4 +31,10 @@ function main(){
         monthNames : MonthNames,
         monthNamesShort:monthNamesShort,
         })
+
+}
+
+function setClosedDate(){
+    var courtDate = $('#id_court_date').datepicker('getDate')
+    $('#id_date_closed').datepicker('option','minDate', courtDate)
 }

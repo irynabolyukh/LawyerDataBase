@@ -176,11 +176,12 @@ class Appointment_NForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
+        pk = kwargs.get('pk','')
         super(Appointment_NForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_n'].initial = pk
-        self.fields['num_client_n'].disabled = True
-        self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
+        if pk is not '':
+            self.fields['num_client_n'].initial = pk
+            self.fields['num_client_n'].disabled = True
+            self.fields['code_dossier_n'].queryset = Dossier_N.objects.filter(active=True).filter(num_client_n=pk).filter(status='open')
 
 
 class Appoint_NForm(ModelForm):
@@ -296,11 +297,12 @@ class Appointment_JForm(ModelForm):
 
 
     def __init__(self, *args, **kwargs):
-        pk = kwargs.pop('pk')
+        pk = kwargs.get('pk','')
         super(Appointment_JForm, self).__init__(*args, **kwargs)
-        self.fields['num_client_j'].initial = pk
-        self.fields['num_client_j'].disabled = True
-        self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
+        if pk is not '':
+            self.fields['num_client_j'].initial = pk
+            self.fields['num_client_j'].disabled = True
+            self.fields['code_dossier_j'].queryset = Dossier_J.objects.filter(active=True).filter(num_client_j=pk).filter(status='open')
 
 
 class Dossier_JForm(ModelForm):
@@ -375,6 +377,11 @@ class Dossier_JForm(ModelForm):
                 raise ValidationError(
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -462,6 +469,11 @@ class Doss_JForm(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
         return cleaned_data
 
     class Meta:
@@ -541,6 +553,11 @@ class Dossier_NForm(ModelForm):
                 raise ValidationError(
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -628,6 +645,12 @@ class Doss_NForm(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
 
     class Meta:
@@ -808,6 +831,12 @@ class Dossier_JFormUpdate(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
 
     class Meta:
@@ -892,7 +921,15 @@ class Dossier_NFormUpdate(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
+
 
     class Meta:
         model = Dossier_N
