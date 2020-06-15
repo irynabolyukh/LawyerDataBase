@@ -1031,6 +1031,8 @@ class Dossier_JUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVie
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+        data['opened'] = str(Dossier_J.objects.get(code_dossier_j=self.kwargs['pk']).date_signed.strftime('%Y-%m-%d'))
+
         return data
 
     def form_valid(self, form):

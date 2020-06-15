@@ -363,6 +363,11 @@ class Dossier_JForm(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -434,6 +439,11 @@ class Doss_JForm(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
         return cleaned_data
 
     class Meta:
@@ -498,6 +508,11 @@ class Dossier_NForm(ModelForm):
                 raise ValidationError(
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
         return cleaned_data
 
@@ -570,6 +585,12 @@ class Doss_NForm(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
 
     class Meta:
@@ -750,6 +771,12 @@ class Dossier_JFormUpdate(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
 
     class Meta:
@@ -834,7 +861,15 @@ class Dossier_NFormUpdate(ModelForm):
                     {'status': 'Якщо справа "закрита-виграна", то всі поля, що'
                                ' стосуються судового засідання повинні бути заповнені'},
                     code='invalid')
+
+        if c_date is not None or c_adr is not None or c_name is not None or lawyer is not None:
+            if c_date is None or c_adr is None or c_name is None or lawyer is None:
+                raise ValidationError(
+                    {'court_date': 'всі поля, що стосуються судового засідання повинні бути заповнені'},
+                    code='invalid')
+
         return cleaned_data
+
 
     class Meta:
         model = Dossier_N

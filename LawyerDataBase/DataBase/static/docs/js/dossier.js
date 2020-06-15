@@ -31,4 +31,5 @@ function main(){
         monthNames : MonthNames,
         monthNamesShort:monthNamesShort,
         })
+
 }
