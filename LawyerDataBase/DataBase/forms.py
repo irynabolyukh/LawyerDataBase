@@ -700,6 +700,18 @@ class Dossier_JFormUpdate(ModelForm):
         today = date.today()
         dossier_code = cleaned_data.get('code_dossier_j')
         futureAppointments = Appointment_J.objects.filter(active=True, code_dossier_j=dossier_code, app_date__gt=today)
+        dossier = Dossier_J.objects.filter(active=True).get(code_dossier_j=dossier_code)
+        open_date = dossier.__getattribute__('date_signed')
+
+        if date_closed:
+            if date_closed < open_date:
+                raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату відкриття'},
+                                      code='invalid')
+
+        if c_date:
+            if date_closed < c_date.date():
+                raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату засідання'},
+                                      code='invalid')
 
         if date_closed:
             if futureAppointments:
@@ -767,6 +779,18 @@ class Dossier_NFormUpdate(ModelForm):
         today = date.today()
         dossier_code = cleaned_data.get('code_dossier_n')
         futureAppointments = Appointment_N.objects.filter(active=True, code_dossier_n=dossier_code, app_date__gt=today)
+        dossier = Dossier_N.objects.filter(active=True).get(code_dossier_n=dossier_code)
+        open_date = dossier.__getattribute__('date_signed')
+
+        if date_closed:
+            if date_closed < open_date:
+                raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату відкриття'},
+                                          code='invalid')
+
+        if c_date:
+            if date_closed < c_date.date():
+                raise ValidationError({'date_closed': 'Дата закриття не може бути меншою за дату засідання'},
+                                          code='invalid')
 
         if date_closed:
             if futureAppointments:
