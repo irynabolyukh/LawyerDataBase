@@ -87,8 +87,7 @@ LPhoneFormSet = inlineformset_factory(Lawyer, LPhone, max_num=2, fields=['phone_
 class LawyerServiceForm(forms.Form):
     service_code = forms.CharField(label='Код послуги', disabled=True)
     lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
-                                             queryset=Lawyer.objects.all().filter(active=True),
-                                             widget=CheckboxSelectMultiple)
+                                             queryset=Lawyer.objects.all().filter(active=True))
 
     def __init__(self, *args, **kwargs):
         pk = kwargs.pop('pk')
@@ -111,8 +110,7 @@ class ServicesForm(ModelForm):
     nominal_value = forms.DecimalField(label='Номінальна вартість', max_digits=6, decimal_places=2)
     bonus_value = forms.DecimalField(label='Бонусна вартість', max_digits=6, decimal_places=2)
     lawyers = forms.ModelMultipleChoiceField(label='Адвокати', required=False,
-                                             queryset=Lawyer.objects.all().filter(active=True),
-                                             widget=CheckboxSelectMultiple)
+                                             queryset=Lawyer.objects.all().filter(active=True))
     service_group = forms.ModelChoiceField(label='Група послуг', required=False, queryset=ServiceGroup.objects.all())
 
     class Meta:

@@ -635,7 +635,7 @@ class LawyerServiceCreateView(LoginRequiredMixin, PermissionRequiredMixin, FormV
         return kwargs
 
     def get_success_url(self):
-        return reverse("service-detailed-view", kwargs={'pk': self.object.pk, 'mail': self.object.mail_info})
+        return reverse("service-detailed-view", kwargs={'pk': self.kwargs['pk']})
 
 
 class Client_juridicalCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

@@ -4,7 +4,9 @@
 {% block navbar %}
     <a class="navbar-brand container-fluid" href="{% url 'services' %}">🢀Усі послуги</a>
 {% endblock %}
-
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/css/bootstrap-select.min.css" type="text/css">
+{% endblock %}
 {% block content %}
     <h1 class="row align-items-center justify-content-center">Нова послуга</h1>
 <div class="row align-items-center justify-content-center">
@@ -21,5 +23,8 @@
 
 {% block script %}
 {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.17/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="{% static 'docs/js/servicesFormSelectMultiple.js' %}"></script>
+
     <script src="{% static 'docs/js/highlightRequired.js' %}"></script>
 {% endblock %}
