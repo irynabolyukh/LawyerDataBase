@@ -137,7 +137,7 @@
         <tr>
             <th>Номери клієнта:</th>
             <td>{% for phone in phones %}
-                <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
             {% endfor %}
             </td>
         </tr>
@@ -162,7 +162,7 @@
          <tr>
             <th>Номери адвоката:</th>
             <td>{% for phone in lphones %}
-                <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
             {% endfor %}
             </td>
         </tr>
@@ -230,7 +230,7 @@
             <td>
                 {% for phone in all_lphones %}
                     {% if phone.lawyer_id == appointment.lawyer_code.lawyer_code %}
-                        <div><a href="tel:+380{{phone.phone_num}}">+380{{phone.phone_num}}</a></div>
+                        <div><a href="tel:+38{{phone.phone_num}}">+38{{phone.phone_num}}</a></div>
                     {% endif %}
                 {% endfor %}
             </td>{% endif %}
