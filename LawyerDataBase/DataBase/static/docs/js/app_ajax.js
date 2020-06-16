@@ -88,7 +88,7 @@ function lawyer_workdays_request(event){
         disableTextInput: true,
         disableTimeRanges: blockedTime,
     }).on('change',checkTime);
-    console.log(dosN)
+
     $.ajax({
                 type: "POST",
                 async: true,
@@ -135,6 +135,7 @@ function time_blocked_request(event) {
 function setblockedTime(data){
     var timestamp = ''
     var plusHour = ''
+    blockedTime = []
     for (item of data['time']){
 
         timestamp = item['time'].split(':');
@@ -163,7 +164,7 @@ function setWorkDays(data){
     try {
         var maxdateSplit = data['maxday']
         maxdateSplit = maxdateSplit.split('-')
-        var maxDate = new Date(maxdateSplit[0], maxdateSplit[1], maxdateSplit[2])
+        var maxDate = new Date(maxdateSplit[0], maxdateSplit[1]-1, maxdateSplit[2])
         $('#id_app_date').datepicker('option', 'maxDate', maxDate)
     }
     catch (e) {

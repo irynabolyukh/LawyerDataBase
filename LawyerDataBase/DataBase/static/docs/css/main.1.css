@@ -91,6 +91,9 @@ ul{
         size: a4; !important;
     }
 
+.print_on_other{
+
+}
 
 @media print {
      a:link {
@@ -98,6 +101,10 @@ ul{
     }
     a {
         color: black;
+    }
+
+    .print_on_other{
+        page-break-before: always;
     }
 }
 
